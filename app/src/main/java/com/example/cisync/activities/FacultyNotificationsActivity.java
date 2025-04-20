@@ -1,0 +1,49 @@
+package com.example.cisync.activities;
+
+import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.widget.*;
+import com.example.cisync.R;
+import com.example.cisync.database.DBHelper;
+import java.util.ArrayList;
+
+public class FacultyNotificationsActivity extends Activity {
+
+    ListView lvFacultyNotifications;
+    ArrayAdapter<String> adapter;
+    ArrayList<String> notifications = new ArrayList<>();
+    DBHelper dbHelper;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_faculty_notifications);
+
+        lvFacultyNotifications = findViewById(R.id.lvFacultyNotifications);
+        dbHelper = new DBHelper(this);
+
+        loadNotifications();
+    }
+
+    private void loadNotifications() {
+        notifications.clear();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT message, timestamp FROM transactions WHERE faculty_id = ?", new String[]{"1"}); // static for demo
+
+        if (cursor.moveToFirst()) {
+            do {
+                String msg = cursor.getString(0);
+                String time = cursor.getString(1);
+                notifications.add(msg + "\n(" + time + ")");
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notifications);
+        lvFacultyNotifications.setAdapter(adapter);
+    }
+}
