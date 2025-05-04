@@ -4,52 +4,228 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class AdminRosterActivity extends Activity {
+public class AdminRosterActivity extends FragmentActivity {
 
-    ListView lvRoster;
-    DBHelper dbHelper;
-    ArrayList<String> rosterList = new ArrayList<>();
-    ArrayAdapter<String> adapter;
-    String roleToView;
+    TabLayout tabLayout;
+    ViewPager2 viewPager;
+    RosterPagerAdapter pagerAdapter;
+
+    // Same organization positions as in RegisterActivity
+    public static final List<String> ORG_POSITIONS = Arrays.asList(
+            "All Positions", // Added for filtering
+            "Chairperson",
+            "Vice-Chairperson (Internal)",
+            "Vice-Chairperson (External)",
+            "Secretary",
+            "Associate Secretary",
+            "Treasurer",
+            "Associate Treasurer",
+            "Auditor",
+            "1st Year Representative",
+            "2nd Year Representative",
+            "3rd Year Representative",
+            "4th Year Representative",
+            "Committee Member"
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_roster);
 
-        roleToView = getIntent().getStringExtra("role");
-        lvRoster = findViewById(R.id.lvRoster);
-        dbHelper = new DBHelper(this);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
 
-        loadRoster(roleToView);
+        // Setup ViewPager with fragments
+        pagerAdapter = new RosterPagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
+
+        // Connect TabLayout with ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) {
+                tab.setText("Admin Roster");
+            } else {
+                tab.setText("Student Roster");
+            }
+        }).attach();
     }
 
-    private void loadRoster(String role) {
-        rosterList.clear();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor;
-        if (role.equals("Organization")) {
-            cursor = db.rawQuery("SELECT name, email FROM users WHERE role='Student' AND has_org=1", null);
-        } else {
-            cursor = db.rawQuery("SELECT name, email FROM users WHERE role=?", new String[]{role});
+    // ViewPager adapter to manage the roster fragments
+    private static class RosterPagerAdapter extends FragmentStateAdapter {
+        public RosterPagerAdapter(FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
         }
 
-        if (cursor.moveToFirst()) {
-            do {
-                rosterList.add(cursor.getString(0) + " - " + cursor.getString(1));
-            } while (cursor.moveToNext());
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            if (position == 0) {
+                return new AdminRosterFragment();
+            } else {
+                return new StudentRosterFragment();
+            }
         }
 
-        cursor.close();
+        @Override
+        public int getItemCount() {
+            return 2; // Two tabs: Admin and Student
+        }
+    }
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, rosterList);
-        lvRoster.setAdapter(adapter);
+    // Fragment for displaying Admin roster
+    public static class AdminRosterFragment extends Fragment {
+        ListView lvAdminRoster;
+        DBHelper dbHelper;
+        ArrayList<String> rosterList = new ArrayList<>();
+        ArrayAdapter<String> adapter;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_faculty_roster, container, false);
+
+            lvAdminRoster = view.findViewById(R.id.lvFacultyRoster);
+            dbHelper = new DBHelper(requireContext());
+
+            loadAdminRoster();
+
+            return view;
+        }
+
+        private void loadAdminRoster() {
+            rosterList.clear();
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery(
+                    "SELECT name, email FROM users WHERE role='Admin'",
+                    null
+            );
+
+            if (cursor.moveToFirst()) {
+                do {
+                    rosterList.add(cursor.getString(0) + " - " + cursor.getString(1));
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+
+            adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, rosterList);
+            lvAdminRoster.setAdapter(adapter);
+        }
+    }
+
+    // Fragment for displaying Student roster with organization filtering
+    public static class StudentRosterFragment extends Fragment {
+        ListView lvStudentRoster;
+        Spinner spStudentPositionFilter;
+        Button btnStudentApplyFilter, btnStudentClearFilter;
+        DBHelper dbHelper;
+        ArrayList<String> rosterList = new ArrayList<>();
+        ArrayAdapter<String> adapter;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_student_roster, container, false);
+
+            lvStudentRoster = view.findViewById(R.id.lvStudentRoster);
+            spStudentPositionFilter = view.findViewById(R.id.spStudentPositionFilter);
+            btnStudentApplyFilter = view.findViewById(R.id.btnStudentApplyFilter);
+            btnStudentClearFilter = view.findViewById(R.id.btnStudentClearFilter);
+
+            dbHelper = new DBHelper(requireContext());
+
+            setupOrgPositionFilter();
+
+            btnStudentApplyFilter.setOnClickListener(v -> {
+                String selectedPosition = spStudentPositionFilter.getSelectedItem().toString();
+                if (selectedPosition.equals("All Positions")) {
+                    loadStudentRoster(); // Load all
+                } else {
+                    loadStudentRosterByPosition(selectedPosition); // Load filtered
+                }
+            });
+
+            btnStudentClearFilter.setOnClickListener(v -> {
+                spStudentPositionFilter.setSelection(0); // Select "All Positions"
+                loadStudentRoster();
+            });
+
+            loadStudentRoster();
+
+            return view;
+        }
+
+        private void setupOrgPositionFilter() {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    ORG_POSITIONS
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spStudentPositionFilter.setAdapter(adapter);
+        }
+
+        private void loadStudentRoster() {
+            rosterList.clear();
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery(
+                    "SELECT name, email, org_role FROM users WHERE role='Student' AND has_org=1",
+                    null
+            );
+
+            if (cursor.moveToFirst()) {
+                do {
+                    String orgRole = cursor.getString(2);
+                    rosterList.add(cursor.getString(0) + " - " + cursor.getString(1) + " [" + orgRole + "]");
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+
+            adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, rosterList);
+            lvStudentRoster.setAdapter(adapter);
+        }
+
+        private void loadStudentRosterByPosition(String position) {
+            rosterList.clear();
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery(
+                    "SELECT name, email, org_role FROM users WHERE role='Student' AND has_org=1 AND org_role=?",
+                    new String[]{position}
+            );
+
+            if (cursor.moveToFirst()) {
+                do {
+                    String orgRole = cursor.getString(2);
+                    rosterList.add(cursor.getString(0) + " - " + cursor.getString(1) + " [" + orgRole + "]");
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+
+            adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, rosterList);
+            lvStudentRoster.setAdapter(adapter);
+        }
     }
 }
