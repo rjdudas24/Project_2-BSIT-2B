@@ -10,10 +10,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Welcome, Student!"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="100dp" />
+
+
+<!-- g diritso na nako ug CSCO ang org kay sa CISC raman ta taman-->
+    <TextView
+        android:id="@+id/tvOrganizationLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ORGANIZATION: CSCO"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_constraintBottom_toTopOf="@+id/tvOrganizationValue"
+        android:gravity="center"
+        />
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvOrganizationValue"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="CSCO"-->
+<!--        android:textSize="22sp"-->
+<!--        android:textStyle="normal"-->
+<!--        android:gravity="center"-->
+<!--        />-->
+
+    <!--    partial code, need pa i connect sa database kay daghan man ang position sa CSCO (I think)-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="POSITION: "
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="100dp"
+        />
 
     <TextView
         android:id="@+id/tvPosition"
