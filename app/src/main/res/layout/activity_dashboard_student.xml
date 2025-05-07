@@ -1,55 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/dark_blue"
+    android:background="@drawable/BG"
     >
 
-
-    <TextView
-        android:id="@+id/tvWelcome"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome, Student!"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="100dp" />
+        android:orientation="horizontal">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:layout_marginEnd="260dp"
+            android:contentDescription="Close"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@android:drawable/btn_dialog" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:srcCompat="@drawable/common_full_open_on_phone" />
 
 
-<!-- g diritso na nako ug CSCO ang org kay sa CISC raman ta taman-->
+    </LinearLayout>
+
+
+    <!-- g diritso na nako ug CSCO ang org kay sa CISC raman ta taman-->
+
     <TextView
         android:id="@+id/tvOrganizationLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ORGANIZATION: CSCO"
+        android:text="ORGANIZATION: "
+        android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_constraintBottom_toTopOf="@+id/tvOrganizationValue"
+        android:layout_marginTop="70dp"
         android:gravity="center"
         />
 
-<!--    <TextView-->
-<!--        android:id="@+id/tvOrganizationValue"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="CSCO"-->
-<!--        android:textSize="22sp"-->
-<!--        android:textStyle="normal"-->
-<!--        android:gravity="center"-->
-<!--        />-->
 
     <!--    partial code, need pa i connect sa database kay daghan man ang position sa CSCO (I think)-->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="POSITION: "
+        android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="100dp"
+
         />
 
     <TextView
@@ -62,6 +75,8 @@
         android:visibility="gone"
         android:layout_marginBottom="24dp" />
 
+
+    <!--    buttons -->
     <LinearLayout
         android:id="@+id/layoutFacultyInquiry"
         android:layout_width="match_parent"
@@ -125,5 +140,6 @@
             android:text="Post Organization Notice"
             android:textColor="@android:color/white" />
     </LinearLayout>
+
 
 </LinearLayout>
