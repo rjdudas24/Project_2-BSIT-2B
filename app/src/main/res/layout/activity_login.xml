@@ -13,35 +13,41 @@
         android:layout_height="200dp"
         android:layout_marginTop="28dp"
         android:contentDescription="App Logo"
-        android:src="@drawable/CISynC2"
+        android:src="@drawable/cisync2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etLoginPassword"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etLoginEmail" />
-
+    <!-- Fixed touch target size -->
     <EditText
         android:id="@+id/etLoginEmail"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_marginTop="268dp"
         android:hint="Email"
         android:inputType="textEmailAddress"
+        android:padding="12dp"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Fixed touch target size -->
+    <EditText
+        android:id="@+id/etLoginPassword"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etLoginEmail" />
 
     <ImageButton
         android:id="@+id/btnGoRegister"
@@ -56,20 +62,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/black" />
 
+    <!-- Fixed text color contrast -->
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_marginTop="68dp"
-        android:background="#FEFFFF"
         android:text="Login"
-        app:cornerRadius="0dp"
+        android:textColor="#FFFFFF"
+        app:cornerRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etLoginPassword"
-        app:strokeColor="#FDFDFD"
-        app:strokeWidth="2dp" />
-
+        app:layout_constraintTop_toBottomOf="@id/etLoginPassword" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
