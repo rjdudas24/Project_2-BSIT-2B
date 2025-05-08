@@ -33,7 +33,7 @@ public class DashboardStudentActivity extends Activity {
         }
 
         // Initialize views
-        tvWelcome = findViewById(R.id.tvWelcome);
+        //tvWelcome = findViewById(R.id.tvWelcome);
         tvPosition = findViewById(R.id.tvPosition);
         layoutInquire = findViewById(R.id.layoutFacultyInquiry);
         layoutAccountabilities = findViewById(R.id.layoutAccountabilities);

@@ -23,7 +23,7 @@ public class LoginActivity extends Activity {
         etEmail = findViewById(R.id.etLoginEmail);
         etPassword = findViewById(R.id.etLoginPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        btnGoRegister = findViewById(R.id.btnGoRegister);
+        ImageButton btnGoRegister = findViewById(R.id.btnGoRegister);
 
         dbHelper = new DBHelper(this);
 
