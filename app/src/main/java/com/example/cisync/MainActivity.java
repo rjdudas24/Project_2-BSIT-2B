@@ -9,8 +9,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Redirect to Login Activity
-        startActivity(new Intent(this, com.example.cisync.activities.LoginActivity.class));
+        // Redirect to Welcome Activity
+        startActivity(new Intent(this, com.example.cisync.activities.WelcomeActivity.class));
         finish(); // Prevent returning to MainActivity
     }
 }
