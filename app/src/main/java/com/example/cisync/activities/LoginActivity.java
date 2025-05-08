@@ -23,13 +23,13 @@ public class LoginActivity extends Activity {
         etEmail = findViewById(R.id.etLoginEmail);
         etPassword = findViewById(R.id.etLoginPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        ImageButton btnGoRegister = findViewById(R.id.btnGoRegister);
+        ImageButton btnGoBack = findViewById(R.id.btnGoBack);
 
         dbHelper = new DBHelper(this);
 
         btnLogin.setOnClickListener(v -> loginUser());
-        btnGoRegister.setOnClickListener(v ->
-                startActivity(new Intent(this, RegisterActivity.class))
+        btnGoBack.setOnClickListener(v ->
+                startActivity(new Intent(this, WelcomeActivity.class))
         );
     }
 
