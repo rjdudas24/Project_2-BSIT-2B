@@ -5,65 +5,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/BG"
-    >
+    android:background="@drawable/background"
+>
 
+    <!-- Organization and Position Text Views remain the same -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="39dp"
+            android:layout_height="37dp"
+            android:layout_marginRight="300dp"
+            android:src="@drawable/bg_white_square" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton2"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="39dp"
+            android:layout_height="37dp"
+            android:src="@drawable/bg_white_square"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:layout_marginEnd="260dp"
-            android:contentDescription="Close"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            app:srcCompat="@android:drawable/btn_dialog" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:srcCompat="@drawable/common_full_open_on_phone" />
-
-
+            android:layout_weight="1"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:tint="@color/black"/>
     </LinearLayout>
-
-
-    <!-- g diritso na nako ug CSCO ang org kay sa CISC raman ta taman-->
-
-    <TextView
-        android:id="@+id/tvOrganizationLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ORGANIZATION: "
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_constraintBottom_toTopOf="@+id/tvOrganizationValue"
-        android:layout_marginTop="70dp"
-        android:gravity="center"
-        />
-
-
-    <!--    partial code, need pa i connect sa database kay daghan man ang position sa CSCO (I think)-->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="POSITION: "
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="100dp"
-
-        />
 
     <TextView
         android:id="@+id/tvPosition"
@@ -75,31 +46,54 @@
         android:visibility="gone"
         android:layout_marginBottom="24dp" />
 
+    <!-- Faculty Inquiry button - centered -->
+    <TextView
+        android:id="@+id/tvOrganizationLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+        android:text="ORGANIZATION: "
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
-    <!--    buttons -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:gravity="center"
+        android:text="POSITION: "
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/layoutFacultyInquiry"
         android:layout_width="150dp"
         android:layout_height="70dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="40dp"
         android:background="@android:color/darker_gray"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="15dp"
-        android:gravity="center_horizontal">
-
+        android:layout_gravity="center_horizontal">
 
         <TextView
-            android:layout_width="101dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Faculty Inquiry"
+            android:textSize="12sp"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
+    <!-- Middle row buttons remain the same -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
         android:padding="16dp">
 
         <LinearLayout
@@ -116,6 +110,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accountabilities"
+                android:textSize="12sp"
+
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
@@ -132,27 +128,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Track Organization Documents"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
         </LinearLayout>
-
     </LinearLayout>
 
+    <!-- Post Notice button - centered -->
     <LinearLayout
         android:id="@+id/layoutPostNotice"
         android:layout_width="150dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@android:color/holo_green_dark"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="15dp"
-        android:gravity="center_horizontal">
+        android:layout_gravity="center_horizontal">
 
         <TextView
-            android:layout_width="121dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post Organization Notice"
+            android:textSize="12sp"
             android:textColor="@android:color/white" />
     </LinearLayout>
-
 
 </LinearLayout>
