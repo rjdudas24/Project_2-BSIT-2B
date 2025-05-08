@@ -11,7 +11,7 @@
       android:layout_height="wrap_content"
       android:orientation="vertical">
 
-    <!-- Added arrow button at the top -->
+    <!-- Back arrow button at the top -->
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -30,48 +30,224 @@
           android:src="@drawable/baseline_arrow_back_24" />
     </FrameLayout>
 
+    <!-- CISync logo -->
+    <ImageView
+        android:layout_width="274dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ciscync2" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
         android:gravity="center"
         android:text="Register"
         android:textSize="24sp"
         android:textColor="@color/white"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/etName"
+    <!-- ID Number field -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Full Name"
-        android:inputType="textPersonName"
-        android:layout_marginBottom="12dp" />
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
 
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:layout_marginBottom="12dp" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="ID NUMBER"
+          android:textSize="14sp"
+          android:textColor="#78CAFF"
+          android:background="#004080"
+          android:padding="8dp" />
 
-    <EditText
-        android:id="@+id/etPassword"
+      <EditText
+          android:id="@+id/etIdNumber"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:hint="Enter ID Number"
+          android:inputType="text"
+          android:padding="12dp"
+          android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- First Name field -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_marginBottom="12dp" />
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="FIRST NAME"
+          android:textSize="14sp"
+          android:textColor="#78CAFF"
+          android:background="#004080"
+          android:padding="8dp" />
+
+      <EditText
+          android:id="@+id/etFirstName"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:hint="Enter First Name"
+          android:inputType="textPersonName"
+          android:padding="12dp"
+          android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Middle Name field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="MIDDLE NAME"
+          android:textSize="14sp"
+          android:textColor="#78CAFF"
+          android:background="#004080"
+          android:padding="8dp" />
+
+      <EditText
+          android:id="@+id/etMiddleName"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:hint="Enter Middle Name"
+          android:inputType="textPersonName"
+          android:padding="12dp"
+          android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Last Name field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="LAST NAME"
+          android:textSize="14sp"
+          android:textColor="#78CAFF"
+          android:background="#004080"
+          android:padding="8dp" />
+
+      <EditText
+          android:id="@+id/etLastName"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:hint="Enter Last Name"
+          android:inputType="textPersonName"
+          android:padding="12dp"
+          android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Email field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="EMAIL"
+          android:textSize="14sp"
+          android:textColor="#78CAFF"
+          android:background="#004080"
+          android:padding="8dp" />
+
+      <EditText
+          android:id="@+id/etEmail"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:hint="Enter Email"
+          android:inputType="textEmailAddress"
+          android:padding="12dp"
+          android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Password field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="PASSWORD"
+          android:textSize="14sp"
+          android:textColor="#78CAFF"
+          android:background="#004080"
+          android:padding="8dp" />
+
+      <EditText
+          android:id="@+id/etPassword"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:hint="Enter Password"
+          android:inputType="textPassword"
+          android:padding="12dp"
+          android:textColor="#000000" />
+    </LinearLayout>
+
+<!-- Repeat Password -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="CONFIRM PASSWORD"
+          android:textSize="14sp"
+          android:textColor="#78CAFF"
+          android:background="#004080"
+          android:padding="8dp" />
+
+      <EditText
+          android:id="@+id/etPassword"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:hint="Repeat Password"
+          android:inputType="textPassword"
+          android:padding="12dp"
+          android:textColor="#000000" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select Role:"
         android:textStyle="bold"
+        android:textColor="#78CAFF"
         android:layout_marginBottom="8dp" />
 
+    <!-- Radio buttons for Student and Teacher roles -->
     <RadioGroup
         android:id="@+id/rgRole"
         android:layout_width="match_parent"
@@ -83,14 +259,17 @@
           android:id="@+id/rbStudent"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Student" />
+          android:text="Student"
+          android:textColor="@android:color/white"
+          android:buttonTint="#78CAFF" />
 
       <RadioButton
           android:id="@+id/rbTeacher"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Teacher" />
-
+          android:text="Teacher"
+          android:textColor="@android:color/white"
+          android:buttonTint="#78CAFF" />
     </RadioGroup>
 
     <CheckBox
@@ -98,6 +277,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="I am a member of an organization"
+        android:textColor="@android:color/white"
         android:visibility="gone"
         android:layout_marginBottom="12dp" />
 
@@ -106,6 +286,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select your position in the organization:"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="4dp"
         android:visibility="gone" />
 
@@ -116,25 +297,32 @@
         android:layout_marginBottom="24dp"
         android:visibility="gone" />
 
+    <!-- Buttons for Back and Register with light blue background and black text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:layout_marginTop="16dp">
 
       <Button
           android:id="@+id/btnBack"
-          android:layout_width="wrap_content"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
+          android:layout_weight="1"
           android:text="Back"
-          android:layout_marginEnd="16dp" />
+          android:textColor="#000000"
+          android:layout_marginEnd="8dp"
+          android:backgroundTint="#78CAFF" />
 
       <Button
           android:id="@+id/btnRegister"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
-          android:text="Register" />
+          android:text="Register"
+          android:textColor="#000000"
+          android:layout_marginStart="8dp"
+          android:backgroundTint="#78CAFF" />
     </LinearLayout>
 
   </LinearLayout>
