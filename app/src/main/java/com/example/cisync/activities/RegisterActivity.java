@@ -40,6 +40,12 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        ImageView ivBackArrow = findViewById(R.id.imageView6);
+        ivBackArrow.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, WelcomeActivity.class));
+            finish();
+        });
+
         // Initialize UI components
         etFirstName = findViewById(R.id.etFirstName);
         etMiddleName = findViewById(R.id.etMiddleName);
