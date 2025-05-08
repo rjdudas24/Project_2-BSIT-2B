@@ -258,33 +258,65 @@
 
 <!--    Comment lng nako kay murag dli sya ga work lol-->
     <!-- Radio buttons for Student and Teacher roles -->
-<!--    <RadioGroup-->
-<!--        android:id="@+id/rgRole"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="vertical"-->
-<!--        android:layout_marginBottom="20dp">-->
+    <RadioGroup
+        android:id="@+id/rgRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp">
 
-<!--      <RadioButton-->
-<!--          android:id="@+id/rbStudent"-->
-<!--          android:layout_width="wrap_content"-->
-<!--          android:layout_height="wrap_content"-->
-<!--          android:buttonTint="#78CAFF"-->
-<!--          android:padding="8dp"-->
-<!--          android:text="Student"-->
-<!--          android:textColor="@android:color/white"-->
-<!--          android:textSize="16sp" />-->
+      <RadioButton
+          android:id="@+id/rbStudent"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:buttonTint="#78CAFF"
+          android:padding="8dp"
+          android:text="Student"
+          android:textColor="@android:color/white"
+          android:textSize="16sp" />
 
-<!--      <RadioButton-->
-<!--          android:id="@+id/rbTeacher"-->
-<!--          android:layout_width="wrap_content"-->
-<!--          android:layout_height="wrap_content"-->
-<!--          android:buttonTint="#78CAFF"-->
-<!--          android:padding="8dp"-->
-<!--          android:text="Teacher"-->
-<!--          android:textColor="@android:color/white"-->
-<!--          android:textSize="16sp" />-->
-<!--    </RadioGroup>-->
+      <RadioButton
+          android:id="@+id/rbTeacher"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:buttonTint="#78CAFF"
+          android:padding="8dp"
+          android:text="Faculty"
+          android:textColor="@android:color/white"
+          android:textSize="16sp" />
+    </RadioGroup>
+
+    <!-- Checkbox: Are you an organization member? -->
+    <CheckBox
+        android:id="@+id/cbOrgMember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I am a member of an organization"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"
+        android:buttonTint="#78CAFF"
+        android:textSize="16sp" />
+
+    <!-- Label for org position -->
+    <TextView
+        android:id="@+id/tvOrgPositionLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Organization Position"
+        android:textColor="#78CAFF"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <!-- Spinner for selecting organization role -->
+    <Spinner
+        android:id="@+id/spOrgPosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
 
 
 
