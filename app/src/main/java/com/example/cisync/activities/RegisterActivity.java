@@ -1,6 +1,7 @@
 package com.example.cisync.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -69,7 +70,11 @@ public class RegisterActivity extends Activity {
         });
 
         btnRegister.setOnClickListener(v -> registerUser());
-        btnBack.setOnClickListener(v -> finish());
+        //Redirect to Welcome Page
+        btnBack.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, com.example.cisync.activities.WelcomeActivity.class));
+            finish();
+        });
     }
 
     /**
@@ -145,7 +150,8 @@ public class RegisterActivity extends Activity {
         long result = db.insert("users", null, values);
         if (result != -1) {
             Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
-            finish(); // Go back to Login
+            startActivity(new Intent(RegisterActivity.this, com.example.cisync.activities.WelcomeActivity.class));
+            finish();
         } else {
             Toast.makeText(this, "Registration failed. Email may already exist.", Toast.LENGTH_SHORT).show();
         }
