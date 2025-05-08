@@ -20,7 +20,7 @@
         android:id="@+id/tvTagline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Campus Inquiry &amp; Synchronization Center"
+        android:text="CISC Inquiry &amp; Synchronization Center"
         android:textSize="16sp"
         android:textColor="#AAAAAA"
         android:layout_below="@id/tvAppTitle"

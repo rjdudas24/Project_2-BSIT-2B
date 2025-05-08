@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import com.example.cisync.R;
 
 public class WelcomeActivity extends Activity {
-    private static final int SPLASH_DELAY = 2000; // 2 seconds
+    private static final int SPLASH_DELAY = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
