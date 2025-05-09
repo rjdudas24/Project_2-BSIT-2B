@@ -24,221 +24,240 @@
 
       <ImageView
           android:id="@+id/imageView6"
-          android:layout_width="40dp"
+          android:layout_width="match_parent"
           android:layout_height="40dp"
           android:padding="8dp"
           android:src="@drawable/baseline_arrow_back_24" />
     </FrameLayout>
 
-    <!-- CISync logo -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="419dp"
-        android:layout_height="184dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/cisync2" />
+      <!-- CISync logo -->
+      <!-- Register over the logo -->
+      <ImageView
+          android:id="@+id/imgLogo"
+          android:layout_width="419dp"
+          android:layout_height="184dp"
+          android:layout_marginTop="4dp"
+          android:adjustViewBounds="true"
+          android:src="@drawable/cisync2"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Register"
+          android:textSize="24sp"
+          android:textColor="@color/white"
+          android:textStyle="bold"
+          android:gravity="center"
+          android:translationY="70dp"
+          app:layout_constraintTop_toTopOf="@id/imgLogo"
+          app:layout_constraintBottom_toBottomOf="@id/imgLogo"
+          app:layout_constraintStart_toStartOf="@id/imgLogo"
+          app:layout_constraintEnd_toEndOf="@id/imgLogo"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ID Number Field-->
+
+    <EditText
+        android:id="@+id/etIdNumber"
+        android:layout_width="285dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:hint="    Enter ID Number"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/etLoginEmail" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/tvIdLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:text="Register"
-        android:textSize="24sp"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:text="  ID NUMBER"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:background="@drawable/label_bg"
+        android:paddingEnd="8dp"
+        android:translationY="-60dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="@+id/etIdNumber"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- ID Number field -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="ID NUMBER"
-          android:textSize="14sp"
-          android:textColor="#78CAFF"
-          android:background="#004080"
-          android:padding="8dp" />
-
-      <EditText
-          android:id="@+id/etIdNumber"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@android:color/white"
-          android:hint="Enter ID Number"
-          android:inputType="text"
-          android:padding="12dp"
-          android:textColor="#000000" />
-    </LinearLayout>
 
     <!-- First Name field -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etFirstName"
+        android:layout_width="285dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:hint="    Enter First Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/etIdNumber" />
+
+    <TextView
+        android:id="@+id/tvFirstNameLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="FIRST NAME"
-          android:textSize="14sp"
-          android:textColor="#78CAFF"
-          android:background="#004080"
-          android:padding="8dp" />
-
-      <EditText
-          android:id="@+id/etFirstName"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@android:color/white"
-          android:hint="Enter First Name"
-          android:inputType="textPersonName"
-          android:padding="12dp"
-          android:textColor="#000000" />
-    </LinearLayout>
+        android:text="  FIRST NAME"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:background="@drawable/label_bg"
+        android:paddingEnd="8dp"
+        android:translationY="-60dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="@+id/etFirstName"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Middle Name field -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etMiddleName"
+        android:layout_width="285dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:hint="    Enter Middle Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/etFirstName" />
+
+    <TextView
+        android:id="@+id/tvMiddleNameLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
+        android:text="  MIDDLE NAME"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:background="@drawable/label_bg"
+        android:paddingEnd="8dp"
+        android:translationY="-60dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="@+id/etMiddleName"
+        app:layout_constraintStart_toStartOf="parent" />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="MIDDLE NAME"
-          android:textSize="14sp"
-          android:textColor="#78CAFF"
-          android:background="#004080"
-          android:padding="8dp" />
-
-      <EditText
-          android:id="@+id/etMiddleName"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@android:color/white"
-          android:hint="Enter Middle Name"
-          android:inputType="textPersonName"
-          android:padding="12dp"
-          android:textColor="#000000" />
-    </LinearLayout>
 
     <!-- Last Name field -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etLastName"
+        android:layout_width="285dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:hint="    Enter Last Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/etMiddleName" />
+
+    <TextView
+        android:id="@+id/tvLastNameLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
+        android:text="  LAST NAME"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:background="@drawable/label_bg"
+        android:paddingEnd="8dp"
+        android:translationY="-60dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="@+id/etLastName"
+        app:layout_constraintStart_toStartOf="parent" />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="LAST NAME"
-          android:textSize="14sp"
-          android:textColor="#78CAFF"
-          android:background="#004080"
-          android:padding="8dp" />
-
-      <EditText
-          android:id="@+id/etLastName"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@android:color/white"
-          android:hint="Enter Last Name"
-          android:inputType="textPersonName"
-          android:padding="12dp"
-          android:textColor="#000000" />
-    </LinearLayout>
 
     <!-- Email field -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="285dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:hint="    Enter Email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/etLastName" />
+
+    <TextView
+        android:id="@+id/tvEmailLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
+        android:text="  EMAIL"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:background="@drawable/label_bg"
+        android:paddingEnd="8dp"
+        android:translationY="-60dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="@+id/etEmail"
+        app:layout_constraintStart_toStartOf="parent" />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="EMAIL"
-          android:textSize="14sp"
-          android:textColor="#78CAFF"
-          android:background="#004080"
-          android:padding="8dp" />
-
-      <EditText
-          android:id="@+id/etEmail"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@android:color/white"
-          android:hint="Enter Email"
-          android:inputType="textEmailAddress"
-          android:padding="12dp"
-          android:textColor="#000000" />
-    </LinearLayout>
 
     <!-- Password field -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="285dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:hint="    Enter Password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <TextView
+        android:id="@+id/tvPasswordLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
+        android:text="  PASSWORD"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:background="@drawable/label_bg"
+        android:paddingEnd="8dp"
+        android:translationY="-60dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="@+id/etPassword"
+        app:layout_constraintStart_toStartOf="parent" />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="PASSWORD"
-          android:textSize="14sp"
-          android:textColor="#78CAFF"
-          android:background="#004080"
-          android:padding="8dp" />
 
-      <EditText
-          android:id="@+id/etPassword"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@android:color/white"
-          android:hint="Enter Password"
-          android:inputType="textPassword"
-          android:padding="12dp"
-          android:textColor="#000000" />
-    </LinearLayout>
+    <!-- Confirm Password field -->
+    <EditText
+        android:id="@+id/etRepeatPassword"
+        android:layout_width="285dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:hint="    Repeat Password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
-<!-- Repeat Password -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvRepeatPasswordLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
+        android:text="  CONFIRM PASSWORD"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:background="@drawable/label_bg"
+        android:paddingEnd="8dp"
+        android:translationY="-60dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintTop_toTopOf="@+id/etRepeatPassword"
+        app:layout_constraintStart_toStartOf="parent" />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="CONFIRM PASSWORD"
-          android:textSize="14sp"
-          android:textColor="#78CAFF"
-          android:background="#004080"
-          android:padding="8dp" />
-
-      <EditText
-          android:id="@+id/etRepeatPassword"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@android:color/white"
-          android:hint="Repeat Password"
-          android:inputType="textPassword"
-          android:padding="12dp"
-          android:textColor="#000000" />
-    </LinearLayout>
 
     <!-- Role Selection Section with improved visibility -->
     <TextView
