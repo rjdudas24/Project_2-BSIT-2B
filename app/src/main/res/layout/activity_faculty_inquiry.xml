@@ -22,35 +22,36 @@
 
     <!-- CISynC Logo -->
 
+    <!-- Inquire Text -->
+
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="322dp"
-        android:layout_height="157dp"
-        android:layout_marginTop="76dp"
+        android:layout_width="414dp"
+        android:layout_height="273dp"
+        android:layout_marginTop="36dp"
         android:contentDescription="CISynC Logo"
         android:src="@drawable/cisync2"
         app:layout_constraintEnd_toEndOf="parent"
-
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Inquire Text -->
+    <!-- Faculty Name Field -->
+
     <TextView
         android:id="@+id/tvInquireTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
+        android:layout_width="131dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:text="INQUIRE"
         android:textColor="@android:color/white"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/imgLogo"
-        app:layout_constraintEnd_toEndOf="@+id/imgLogo"
-        app:layout_constraintTop_toTopOf="@+id/imgLogo"
         app:layout_constraintBottom_toBottomOf="@+id/imgLogo"
-        android:gravity="center" />
-
-    <!-- Faculty Name Field -->
+        app:layout_constraintEnd_toEndOf="@+id/imgLogo"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="@+id/imgLogo" />
 
     <TextView
         android:id="@+id/tvFacultyLabel"
@@ -174,7 +175,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/edit_text_background"
+        android:background="@drawable/bg_white_square_with_border"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -184,9 +185,9 @@
             android:id="@+id/tvPurposeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_white_square"
-            android:padding="8dp"
+            android:background="@android:color/transparent"
             android:hint="Enter Subject"
+            android:padding="8dp"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
@@ -194,7 +195,7 @@
             android:id="@+id/tvPurposeDescription"
             android:layout_width="match_parent"
             android:layout_height="82dp"
-            android:background="@drawable/bg_white_square"
+            android:background="@android:color/transparent"
             android:hint="Write purpose..."
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
@@ -203,19 +204,21 @@
     </LinearLayout>
 
     <!-- Submit Button -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSubmit"
         android:layout_width="255dp"
         android:layout_height="50dp"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
         android:layout_marginBottom="136dp"
-        android:background=""
+        android:background="@drawable/bg_submit_btn"
         android:text="Submit"
-        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:textColor="#002549"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
