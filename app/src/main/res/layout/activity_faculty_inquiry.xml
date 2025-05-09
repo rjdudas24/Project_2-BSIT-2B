@@ -101,7 +101,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/layoutFaculty" />
 
-    <!-- DEPARTMENT FIELD (Input) -->
+<!--    Department Name Field-->
     <LinearLayout
         android:id="@+id/layoutDepartment"
         android:layout_width="260dp"
@@ -152,8 +152,6 @@
         app:layout_constraintTop_toTopOf="@+id/layoutDepartment" />
 
     <!-- Purpose Field -->
-    <!-- PURPOSE FIELD (Input) -->
-    <!-- PURPOSE FIELD (Input) -->
     <LinearLayout
         android:id="@+id/layoutPurpose"
         android:layout_width="261dp"
@@ -189,7 +187,6 @@
             android:textColor="@android:color/black" />
     </LinearLayout>
 
-    <!-- PURPOSE LABEL (Placed AFTER to appear on top) -->
 
     <!-- Submit Button -->
     <androidx.appcompat.widget.AppCompatButton
