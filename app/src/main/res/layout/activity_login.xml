@@ -13,7 +13,7 @@
         android:layout_height="200dp"
         android:layout_marginTop="28dp"
         android:contentDescription="App Logo"
-        android:src="@drawable/CISynC2"
+        android:src="@drawable/cisync2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnGoRegister"
+        android:id="@+id/btnGoBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="0dp"

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="12dp"
+    android:background="#0D2952">
+
+    <TextView
+        android:id="@+id/tvFeeName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:paddingStart="16dp" />
+
+    <TextView
+        android:id="@+id/tvAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:gravity="center" />
+
+    <ImageView
+        android:id="@+id/ivStatus"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:contentDescription="Payment Status" />
+</LinearLayout>
