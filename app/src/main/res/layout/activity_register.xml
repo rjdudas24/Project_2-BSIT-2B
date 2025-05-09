@@ -250,13 +250,6 @@
         android:layout_marginBottom="12dp" />
 
 
-
-
-
-
-
-
-<!--    Comment lng nako kay murag dli sya ga work lol-->
     <!-- Radio buttons for Student and Teacher roles -->
     <RadioGroup
         android:id="@+id/rgRole"
@@ -316,15 +309,6 @@
         android:background="@android:color/white"
         android:padding="12dp"
         android:layout_marginBottom="16dp" />
-
-
-
-
-
-
-
-
-
 
 
     <!-- Buttons for back nregister-->
