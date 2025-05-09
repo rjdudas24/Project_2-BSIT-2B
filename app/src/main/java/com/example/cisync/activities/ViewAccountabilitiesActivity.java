@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.*;
-        import com.example.cisync.R;
+import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
 
 import java.util.ArrayList;
