@@ -25,6 +25,7 @@ public class TrackDocumentsActivity extends Activity {
     ArrayList<String> documentsList = new ArrayList<>();
     ArrayAdapter<String> adapter;
     String userPosition;
+    int studentId = -1;
     boolean isLeadershipPosition = false;
 
     // Define which positions are considered leadership positions
@@ -35,7 +36,8 @@ public class TrackDocumentsActivity extends Activity {
             "Secretary",
             "Associate Secretary",
             "Treasurer",
-            "Associate Treasurer"
+            "Associate Treasurer",
+            "Auditor"
     };
 
     @Override
@@ -43,8 +45,10 @@ public class TrackDocumentsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_documents);
 
-        // Get position from intent or database
+        // Get data from intent
         userPosition = getIntent().getStringExtra("position");
+        studentId = getIntent().getIntExtra("studentId", -1);
+
         if (userPosition == null || userPosition.isEmpty()) {
             userPosition = "Member"; // Default
         }
@@ -99,6 +103,9 @@ public class TrackDocumentsActivity extends Activity {
                         "\nCreated by: " + creator + " on " + time);
 
             } while (cursor.moveToNext());
+        } else {
+            // No documents found
+            documentsList.add("No documents available");
         }
 
         cursor.close();
@@ -116,12 +123,19 @@ public class TrackDocumentsActivity extends Activity {
             return;
         }
 
+        // Check if we have a valid student ID
+        if (studentId == -1) {
+            Toast.makeText(this, "Error: Invalid user ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("name", name);
         cv.put("description", desc);
         cv.put("status", "Pending");
         cv.put("created_by", userPosition);
+        cv.put("student_id", studentId); // Add the student ID
         cv.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
 
         long result = db.insert("documents", null, cv);

@@ -20,7 +20,7 @@ public class PostNoticeActivity extends Activity {
     Button btnSubmit;
     DBHelper dbHelper;
     String userPosition = "";
-    int studentId = 1; // static ID for demo
+    int studentId = -1; // Default invalid value
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,9 @@ public class PostNoticeActivity extends Activity {
         tvCurrentPosition = findViewById(R.id.tvCurrentPosition);
         btnSubmit = findViewById(R.id.btnPostNotice);
         dbHelper = new DBHelper(this);
+
+        // Get studentId from intent
+        studentId = getIntent().getIntExtra("studentId", -1);
 
         // Get current user's org position
         getUserPosition();
@@ -65,6 +68,13 @@ public class PostNoticeActivity extends Activity {
     }
 
     private void getUserPosition() {
+        // Only proceed if we have a valid student ID
+        if (studentId == -1) {
+            tvCurrentPosition.setText("Error: Invalid user");
+            btnSubmit.setEnabled(false);
+            return;
+        }
+
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(
                 "SELECT org_role FROM users WHERE id = ?",

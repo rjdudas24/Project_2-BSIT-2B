@@ -21,6 +21,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE notices (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id INTEGER, content TEXT)");
         db.execSQL("CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id INTEGER, faculty_id INTEGER, message TEXT, timestamp TEXT)");
         db.execSQL("CREATE TABLE applications (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id INTEGER, org_name TEXT, status TEXT)");
+
+        // Insert default admin user
+        db.execSQL("INSERT INTO users (name, email, password, role, has_org, org_role) VALUES " +
+                "('Admin', 'admin@gmail.com', 'admin123', 'admin', 0, NULL)");
     }
 
     @Override
