@@ -16,7 +16,7 @@ public class DashboardStudentActivity extends Activity {
     TextView tvWelcome, tvPosition;
     boolean hasOrg;
     String orgPosition = "";
-    int studentId = 1; // demo static ID
+    int studentId; // No longer a static value
     DBHelper dbHelper;
 
     @Override
@@ -24,11 +24,15 @@ public class DashboardStudentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_student);
 
+        // Get data from intent
         hasOrg = getIntent().getBooleanExtra("hasOrg", false);
+        studentId = getIntent().getIntExtra("studentId", -1); // Get actual studentId
+
+        // Initialize dbHelper
+        dbHelper = new DBHelper(this);
 
         // Get org position if available
-        if (hasOrg) {
-            dbHelper = new DBHelper(this);
+        if (hasOrg && studentId != -1) {
             loadOrgPosition();
         }
 
@@ -52,17 +56,27 @@ public class DashboardStudentActivity extends Activity {
 
         // Set click listeners
         layoutInquire.setOnClickListener(v -> Toast.makeText(this, "Inquire Faculty feature", Toast.LENGTH_SHORT).show());
-        layoutAccountabilities.setOnClickListener(v -> startActivity(new Intent(this, ViewAccountabilitiesActivity.class)));
+
+        layoutAccountabilities.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ViewAccountabilitiesActivity.class);
+            intent.putExtra("studentId", studentId); // Pass the student ID
+            startActivity(intent);
+        });
 
         // Organization-specific features
         if (hasOrg) {
             layoutTrackDocuments.setOnClickListener(v -> {
                 Intent intent = new Intent(this, TrackDocumentsActivity.class);
                 intent.putExtra("position", orgPosition);
+                intent.putExtra("studentId", studentId); // Pass the student ID
                 startActivity(intent);
             });
 
-            layoutPostNotice.setOnClickListener(v -> startActivity(new Intent(this, PostNoticeActivity.class)));
+            layoutPostNotice.setOnClickListener(v -> {
+                Intent intent = new Intent(this, PostNoticeActivity.class);
+                intent.putExtra("studentId", studentId); // Pass the student ID
+                startActivity(intent);
+            });
         }
     }
 

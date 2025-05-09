@@ -14,12 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,12 +38,7 @@ public class AdminRosterActivity extends FragmentActivity {
             "Associate Secretary",
             "Treasurer",
             "Associate Treasurer",
-            "Auditor",
-            "1st Year Representative",
-            "2nd Year Representative",
-            "3rd Year Representative",
-            "4th Year Representative",
-            "Committee Member"
+            "Auditor"
     );
 
     @Override
@@ -63,7 +56,7 @@ public class AdminRosterActivity extends FragmentActivity {
         // Connect TabLayout with ViewPager2
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0) {
-                tab.setText("Admin Roster");
+                tab.setText("Faculty Roster");
             } else {
                 tab.setText("Student Roster");
             }
@@ -106,17 +99,17 @@ public class AdminRosterActivity extends FragmentActivity {
             lvAdminRoster = view.findViewById(R.id.lvFacultyRoster);
             dbHelper = new DBHelper(requireContext());
 
-            loadAdminRoster();
+            loadFacultyRoster();
 
             return view;
         }
 
-        private void loadAdminRoster() {
+        private void loadFacultyRoster() {
             rosterList.clear();
             SQLiteDatabase db = dbHelper.getReadableDatabase();
 
             Cursor cursor = db.rawQuery(
-                    "SELECT name, email FROM users WHERE role='Admin'",
+                    "SELECT name, email FROM users WHERE role='Faculty'",
                     null
             );
 
@@ -157,7 +150,7 @@ public class AdminRosterActivity extends FragmentActivity {
 
             btnStudentApplyFilter.setOnClickListener(v -> {
                 String selectedPosition = spStudentPositionFilter.getSelectedItem().toString();
-                if (selectedPosition.equals("All Positions")) {
+                if (selectedPosition.equals("Select Filter")) {
                     loadStudentRoster(); // Load all
                 } else {
                     loadStudentRosterByPosition(selectedPosition); // Load filtered
@@ -189,14 +182,23 @@ public class AdminRosterActivity extends FragmentActivity {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
 
             Cursor cursor = db.rawQuery(
-                    "SELECT name, email, org_role FROM users WHERE role='Student' AND has_org=1",
+                    "SELECT name, email, has_org, org_role FROM users WHERE role='Student'",
                     null
             );
 
+
             if (cursor.moveToFirst()) {
                 do {
-                    String orgRole = cursor.getString(2);
-                    rosterList.add(cursor.getString(0) + " - " + cursor.getString(1) + " [" + orgRole + "]");
+                    String name = cursor.getString(0);
+                    String email = cursor.getString(1);
+                    int hasOrg = cursor.getInt(2);
+                    String orgRole = cursor.getString(3);
+
+                    if (hasOrg == 1 && orgRole != null) {
+                        rosterList.add(name + " - " + email + " [" + orgRole + "]");
+                    } else {
+                        rosterList.add(name + " - " + email + " [Student]");
+                    }
                 } while (cursor.moveToNext());
             }
 
