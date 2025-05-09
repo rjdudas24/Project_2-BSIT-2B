@@ -31,12 +31,13 @@
     </FrameLayout>
 
     <!-- CISync logo -->
+
     <ImageView
-        android:layout_width="274dp"
-        android:layout_height="62dp"
+        android:layout_width="419dp"
+        android:layout_height="184dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
         android:src="@drawable/cisync2" />
 
