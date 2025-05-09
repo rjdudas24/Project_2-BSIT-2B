@@ -22,8 +22,6 @@
 
     <!-- CISynC Logo -->
 
-    <!-- Inquire Text -->
-
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="414dp"
@@ -36,8 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Faculty Name Field -->
-
+    <!-- Inquire Text -->
     <TextView
         android:id="@+id/tvInquireTitle"
         android:layout_width="131dp"
@@ -53,31 +50,20 @@
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="@+id/imgLogo" />
 
-    <TextView
-        android:id="@+id/tvFacultyLabel"
-        android:layout_width="122dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="36dp"
-        android:background="@drawable/label_bg"
-        android:text="   NAME OF FACULTY"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvInquireTitle" />
 
+    <!-- Faculty Name Field -->
     <LinearLayout
         android:id="@+id/layoutFaculty"
         android:layout_width="260dp"
         android:layout_height="43dp"
+        android:layout_marginTop="36dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/bg_white_square_with_border"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInquireTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFacultyLabel">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
             android:id="@+id/etFacultyName"
@@ -96,45 +82,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="Clear"
-            android:layout_marginTop="2dp"
             android:padding="8dp"
             android:src="@drawable/removeicon"
-            android:background="@android:color/transparent"
-            />
+            android:background="@android:color/transparent" />
     </LinearLayout>
 
-    <!-- Department Field -->
-
     <TextView
-        android:id="@+id/tvDepartmentLabel"
-        android:layout_width="90"
+        android:id="@+id/tvFacultyLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="88dp"
         android:background="@drawable/label_bg"
-        android:text="  DEPARTMENT  "
+        android:paddingRight="8dp"
+        android:text="  NAME OF FACULTY"
         android:textColor="@android:color/black"
         android:textSize="12sp"
+        android:translationY="-10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutFaculty" />
+        app:layout_constraintTop_toTopOf="@+id/layoutFaculty" />
 
+<!--    Department Name Field-->
     <LinearLayout
         android:id="@+id/layoutDepartment"
         android:layout_width="260dp"
         android:layout_height="43dp"
+        android:layout_marginTop="36dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/bg_white_square_with_border"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutFaculty"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDepartmentLabel">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
             android:id="@+id/etDepartment"
-            android:layout_width="232dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:hint="Enter Department"
@@ -142,44 +126,44 @@
             android:textColor="@android:color/black" />
 
         <ImageButton
-            android:id="@+id/btnClearFaculty"
+            android:id="@+id/btnClearDepartment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="Clear"
-            android:layout_marginTop="2dp"
             android:padding="8dp"
             android:src="@drawable/removeicon"
-            android:background="@android:color/transparent"
-            />
+            android:background="@android:color/transparent"/>
     </LinearLayout>
 
-    <!-- Purpose Field -->
 
     <TextView
-        android:id="@+id/tvPurposeLabel"
-        android:layout_width="65dp"
+        android:id="@+id/tvDepartmentLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="88dp"
         android:background="@drawable/label_bg"
-        android:text="  PURPOSE"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="DEPARTMENT"
         android:textColor="@android:color/black"
         android:textSize="12sp"
+        android:translationY="-10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutDepartment" />
+        app:layout_constraintTop_toTopOf="@+id/layoutDepartment" />
 
+    <!-- Purpose Field -->
     <LinearLayout
         android:id="@+id/layoutPurpose"
         android:layout_width="261dp"
-        android:layout_height="117dp"
+        android:layout_height="177dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/bg_white_square_with_border"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPurposeLabel">
+        app:layout_constraintTop_toBottomOf="@+id/layoutDepartment">
 
         <TextView
             android:id="@+id/tvPurposeTitle"
@@ -194,7 +178,7 @@
         <TextView
             android:id="@+id/tvPurposeDescription"
             android:layout_width="match_parent"
-            android:layout_height="82dp"
+            android:layout_height="139dp"
             android:background="@android:color/transparent"
             android:hint="Write purpose..."
             android:paddingStart="8dp"
@@ -202,6 +186,7 @@
             android:paddingBottom="8dp"
             android:textColor="@android:color/black" />
     </LinearLayout>
+
 
     <!-- Submit Button -->
     <androidx.appcompat.widget.AppCompatButton
@@ -218,6 +203,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvPurposeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/label_bg"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_marginLeft="50dp"
+        android:text="PURPOSE"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:translationY="-2dp"
+        tools:layout_editor_absoluteX="87dp"
+        tools:layout_editor_absoluteY="487dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
