@@ -46,7 +46,6 @@ public class LoginActivity extends Activity {
         Cursor cursor = db.rawQuery("SELECT * FROM users WHERE email=? AND password=?", new String[]{email, password});
 
         if (cursor.moveToFirst()) {
-            int userId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
             String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
             boolean hasOrg = cursor.getInt(cursor.getColumnIndexOrThrow("has_org")) == 1;
 
@@ -54,7 +53,6 @@ public class LoginActivity extends Activity {
             if (role.equals("Student")) {
                 intent = new Intent(this, DashboardStudentActivity.class);
                 intent.putExtra("hasOrg", hasOrg);
-                intent.putExtra("studentId", userId);
             } else if (role.equals("Faculty")) {
                 intent = new Intent(this, DashboardFacultyActivity.class);
             } else {
