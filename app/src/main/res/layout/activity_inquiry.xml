@@ -50,12 +50,13 @@
 
     <TextView
         android:id="@+id/tvFacultyLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="122dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="104dp"
+        android:layout_marginStart="76dp"
         android:layout_marginTop="36dp"
-        android:text="NAME OF FACULTY"
-        android:textColor="@android:color/white"
+        android:background="@drawable/label_bg"
+        android:text="   NAME OF FACULTY"
+        android:textColor="@android:color/black"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvInquireTitle" />
@@ -67,7 +68,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/bg_white_square"
+        android:background="@drawable/bg_white_square_with_border"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,14 +76,15 @@
 
         <EditText
             android:id="@+id/etFacultyName"
-            android:layout_width="222dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_white_square"
+            android:background="@android:color/transparent"
             android:hint="Enter faculty name"
             android:padding="12dp"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:inputType="textPersonName"/>
 
         <ImageButton
             android:id="@+id/btnClearFaculty"
@@ -100,12 +102,13 @@
 
     <TextView
         android:id="@+id/tvDepartmentLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="90"
         android:layout_height="wrap_content"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="24dp"
-        android:text="DEPARTMENT"
-        android:textColor="@android:color/white"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/label_bg"
+        android:text="  DEPARTMENT  "
+        android:textColor="@android:color/black"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutFaculty" />
@@ -117,7 +120,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/bg_white_square"
+        android:background="@drawable/bg_white_square_with_border"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -128,7 +131,7 @@
             android:layout_width="232dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_white_square"
+            android:background="@android:color/transparent"
             android:hint="Enter Department"
             android:padding="8dp"
             android:textColor="@android:color/black" />
@@ -149,12 +152,13 @@
 
     <TextView
         android:id="@+id/tvPurposeLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="24dp"
-        android:text="PURPOSE"
-        android:textColor="@android:color/white"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/label_bg"
+        android:text="  PURPOSE"
+        android:textColor="@android:color/black"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutDepartment" />
