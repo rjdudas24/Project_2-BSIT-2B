@@ -162,11 +162,18 @@ public class RegisterActivity extends Activity {
         values.put("role", role);
         values.put("has_org", hasOrg);
         values.put("org_role", orgPosition);
+        values.put("verified", 0); // All new users start as unverified
 
         long result = db.insert("users", null, values);
         if (result != -1) {
-            Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(RegisterActivity.this, com.example.cisync.activities.WelcomeActivity.class));
+            // Alert the user that their account needs verification
+            Toast.makeText(this, "Registration successful! Your account requires admin verification before you can log in.", Toast.LENGTH_LONG).show();
+
+            // Log this registration in the transactions table
+            logRegistration(db, result, fullName, role, hasOrg, orgPosition);
+
+            // Return to welcome screen
+            startActivity(new Intent(RegisterActivity.this, WelcomeActivity.class));
             finish();
         } else {
             Toast.makeText(this, "Registration failed.", Toast.LENGTH_SHORT).show();
@@ -174,4 +181,9 @@ public class RegisterActivity extends Activity {
 
         db.close();
     }
-}
+
+    /**
+     * Log the registration action in the transactions table
+     */
+    private void logRegistration(SQLiteDatabase db, long userId, String name, String role, int hasOrg, String orgPosition) {
+        ContentValues values

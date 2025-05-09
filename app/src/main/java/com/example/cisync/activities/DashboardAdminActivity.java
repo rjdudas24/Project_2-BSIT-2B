@@ -5,32 +5,36 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import com.example.cisync.R;
+import com.google.android.material.card.MaterialCardView;
 
 public class DashboardAdminActivity extends Activity {
 
-    LinearLayout layoutStudent, layoutFaculty, layoutOrg, layoutTx, layoutApps;
+    MaterialCardView cardUsers, cardOrgRoster, cardTransactions, cardVerifyApplications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_admin);
 
-        layoutStudent = findViewById(R.id.layoutStudentRoster);
-        layoutFaculty = findViewById(R.id.layoutFacultyRoster);
-        layoutOrg = findViewById(R.id.layoutOrgRoster);
-        layoutTx = findViewById(R.id.layoutAdminTransactions);
-        layoutApps = findViewById(R.id.layoutVerifyApplications);
+        // Find views
+        cardUsers = findViewById(R.id.cardUsers);
+        cardVerifyApplications = findViewById(R.id.cardVerifyApplications);
+        cardTransactions = findViewById(R.id.cardTransactions);
 
-        layoutStudent.setOnClickListener(v -> openRoster("Student"));
-        layoutFaculty.setOnClickListener(v -> openRoster("Faculty"));
-        layoutOrg.setOnClickListener(v -> openRoster("Organization"));
-        layoutTx.setOnClickListener(v -> startActivity(new Intent(this, AdminTransactionsActivity.class)));
-        layoutApps.setOnClickListener(v -> startActivity(new Intent(this, AdminVerifyApplicationsActivity.class)));
-    }
+        // Set click listeners
+        cardUsers.setOnClickListener(v -> {
+            // Navigate to AdminRosterActivity without specifying a role
+            // The activity will handle showing both student and faculty in tabs
+            Intent intent = new Intent(this, AdminRosterActivity.class);
+            startActivity(intent);
+        });
 
-    private void openRoster(String role) {
-        Intent intent = new Intent(this, AdminRosterActivity.class);
-        intent.putExtra("role", role);
-        startActivity(intent);
+        cardVerifyApplications.setOnClickListener(v ->
+                startActivity(new Intent(this, AdminVerifyApplicationsActivity.class)));
+
+        cardTransactions.setOnClickListener(v ->
+                startActivity(new Intent(this, AdminTransactionsActivity.class)));
+
+
     }
 }

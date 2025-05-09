@@ -4,77 +4,59 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.widget.*;
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ViewAccountabilitiesActivity extends Activity {
 
-    private RecyclerView rvAccountabilities;
-    private DBHelper dbHelper;
-    private List<Accountability> accountabilityList;
-    private AccountabilityAdapter adapter;
+    ListView lvAccountabilities;
+    DBHelper dbHelper;
+    ArrayList<String> accountList = new ArrayList<>();
+    ArrayAdapter<String> adapter;
+    int studentId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_accountabilities);
 
-        // Initialize UI components
-        rvAccountabilities = findViewById(R.id.rvAccountabilities);
-        ImageButton btnBack = findViewById(R.id.btnBack);
-
-        // Set up back button click listener
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        // Set up RecyclerView
-        rvAccountabilities.setLayoutManager(new LinearLayoutManager(this));
-
-        // Initialize database helper
+        lvAccountabilities = findViewById(R.id.lvAccountabilities);
         dbHelper = new DBHelper(this);
 
-        // Load data
-        accountabilityList = new ArrayList<>();
-        loadAccountabilities();
+        // Get student ID from intent
+        studentId = getIntent().getIntExtra("studentId", -1);
 
-        // Set up adapter
-        adapter = new AccountabilityAdapter(accountabilityList);
-        rvAccountabilities.setAdapter(adapter);
+        loadAccountabilities();
     }
 
     private void loadAccountabilities() {
+        accountList.clear();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // For demo: using static student_id = 1
-        Cursor cursor = db.rawQuery(
-                "SELECT id, description, '₱' || CAST((id * 500) AS TEXT), " +
-                        "(CASE WHEN id % 2 = 0 THEN 1 ELSE 0 END) FROM accountabilities WHERE student_id=?",
-                new String[]{"1"});
+        // Use the actual student ID passed from intent
+        if (studentId != -1) {
+            Cursor cursor = db.rawQuery("SELECT description FROM accountabilities WHERE student_id=?",
+                    new String[]{String.valueOf(studentId)});
 
-        if (cursor.moveToFirst()) {
-            do {
-                String feeName = cursor.getString(1);
-                String amount = cursor.getString(2);
-                boolean isPaid = cursor.getInt(3) == 1;
+            if (cursor.moveToFirst()) {
+                do {
+                    accountList.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            } else {
+                // No accountabilities found
+                accountList.add("No accountabilities found");
+            }
 
-                accountabilityList.add(new Accountability(feeName, amount, isPaid));
-            } while (cursor.moveToNext());
+            cursor.close();
+        } else {
+            // Invalid student ID
+            accountList.add("Error: Invalid user ID");
         }
 
-        cursor.close();
-
-
-        }
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, accountList);
+        lvAccountabilities.setAdapter(adapter);
     }
+}
