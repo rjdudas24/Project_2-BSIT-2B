@@ -35,17 +35,17 @@
         android:layout_height="match_parent">
 
       <!-- CISync logo -->
-      <!-- Register over the logo -->
       <ImageView
           android:id="@+id/imgLogo"
           android:layout_width="419dp"
-          android:layout_height="184dp"
+          android:layout_height="255dp"
           android:layout_marginTop="4dp"
           android:adjustViewBounds="true"
           android:src="@drawable/cisync2"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+          app:layout_constraintTop_toTopOf="parent"
+          android:translationY="-35dp"/>
 
       <TextView
           android:layout_width="wrap_content"
