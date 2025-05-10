@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_faculty">
 
-    <!-- Header with back button and centered title -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0D47A1"
         android:padding="16dp">
 
         <!-- Back button -->
@@ -24,8 +23,34 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             app:tint="@color/black" />
+    </RelativeLayout>
 
-        <!-- Centered title -->
+    <!-- CISynC Logo -->
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="363dp"
+        android:layout_height="228dp"
+        android:contentDescription="CISynC Logo"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/cisync2"
+        android:translationY="-58dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Content area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:translationY="-85dp"
+        android:background="@drawable/bg_border_box">
+
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -34,19 +59,13 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:layout_centerInParent="true"/>
-    </RelativeLayout>
-
-    <!-- Content area -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="24dp">
+            android:layout_gravity="center_horizontal"/>
 
         <ListView
             android:id="@+id/lvFacultyNotifications"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
+            android:scrollbarTrackVertical="@android:color/transparent"/>
     </LinearLayout>
 </LinearLayout>
