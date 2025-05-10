@@ -65,7 +65,7 @@
     <<androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnPostNotice"
         android:layout_width="120dp"
-        android:layout_height="35dp"
+        android:layout_height="48dp"
         android:text="Post Notice"
         android:textColor="#002549"
         android:background="@drawable/bg_submit_btn"
