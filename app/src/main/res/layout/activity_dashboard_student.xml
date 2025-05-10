@@ -62,28 +62,60 @@
         android:visibility="gone"
         android:layout_marginBottom="24dp" />
 
-    <TextView
-        android:id="@+id/tvOrganizationLabel"
+    <!-- Field Label + Dynamic Value -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="70dp"
-        android:layout_marginLeft="35dp"
-        android:text="ORGANIZATION: "
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:layout_marginStart="35dp">
 
-    <TextView
+        <TextView
+            android:id="@+id/tvOrganizationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ORGANIZATION: "
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvOrganizationValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[User Org Here]"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-        android:text="POSITION: "
-        android:layout_marginLeft="35dp"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal"
+        android:layout_marginStart="35dp"
+        android:layout_marginBottom="100dp">
 
-<!--INQUIRY BUTTON-->
+        <TextView
+            android:id="@+id/tvPositionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="POSITION: "
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvPositionValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[User Position Here]"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+
+    <!--INQUIRY BUTTON-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
