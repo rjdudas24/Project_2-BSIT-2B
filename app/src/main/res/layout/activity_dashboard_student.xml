@@ -78,29 +78,32 @@
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:translationY="25dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Faculty Inquiry"
-            android:textSize="14sp"
+            android:text="FACULTY INQUIRE"
+            android:textSize="10sp"
+            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="5dp" />
 
         <LinearLayout
             android:id="@+id/layoutFacultyInquiry"
-            android:layout_width="80dp"
+            android:layout_width="85dp"
             android:layout_height="80dp"
             android:background="@drawable/bg_submit_btn"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="1dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:src="@drawable/inquiry_icon" />
 
         </LinearLayout>
@@ -121,28 +124,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginEnd="48dp">
+            android:layout_marginEnd="115dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accountabilities"
-                android:textSize="14sp"
+                android:text="ACCOUNTABILITIES"
+                android:textSize="10sp"
+                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="5dp"
+                />
 
             <LinearLayout
                 android:id="@+id/layoutAccountabilities"
-                android:layout_width="80dp"
+                android:layout_width="85dp"
                 android:layout_height="80dp"
                 android:background="@drawable/bg_submit_btn"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="1dp">
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
                     android:src="@drawable/accountabilities_icon" />
             </LinearLayout>
         </LinearLayout>
@@ -157,23 +163,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Track Documents"
-                android:textSize="14sp"
+                android:text="TRACK DOCUMENTS"
+                android:textSize="10sp"
+                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="5dp" />
 
             <LinearLayout
                 android:id="@+id/layoutTrackDocuments"
-                android:layout_width="80dp"
+                android:layout_width="85dp"
                 android:layout_height="80dp"
                 android:background="@drawable/bg_submit_btn"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="1dp">
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
                     android:src="@drawable/document_icon" />
             </LinearLayout>
         </LinearLayout>
@@ -186,28 +194,31 @@
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:translationY="-25dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post Notice"
-            android:textSize="14sp"
+            android:text="POST NOTICE"
+            android:textSize="10sp"
+            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="5dp" />
 
         <LinearLayout
             android:id="@+id/layoutPostNotice"
-            android:layout_width="80dp"
+            android:layout_width="85dp"
             android:layout_height="80dp"
             android:background="@drawable/bg_submit_btn"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="1dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
                 android:src="@drawable/notice_icon" />
         </LinearLayout>
     </LinearLayout>
