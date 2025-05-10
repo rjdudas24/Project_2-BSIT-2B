@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/bg">
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Organization Documents"
+        android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -19,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Position: [Not Set]"
+        android:textColor="@android:color/white"
         android:textStyle="italic"
         android:layout_marginBottom="16dp" />
 
@@ -28,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#e8f5e9"
+        android:background="#002549"
         android:padding="12dp"
         android:layout_marginBottom="16dp">
 
@@ -36,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add New Document"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
@@ -53,9 +58,10 @@
             android:hint="Description"
             android:layout_marginBottom="8dp" />
 
-        <Button
+        <<androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnAddDocument"
             android:layout_width="match_parent"
+            android:background="@drawable/bg_submit_btn"
             android:layout_height="wrap_content"
             android:text="Add Document" />
     </LinearLayout>
@@ -64,11 +70,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Document Tracking"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
     <ListView
         android:id="@+id/lvDocuments"
+        android:background="#002549"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
