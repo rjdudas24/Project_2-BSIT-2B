@@ -1,8 +1,10 @@
 package com.example.cisync.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -14,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RegisterActivity extends Activity {
-    EditText etName, etEmail, etPassword;
+    EditText etFirstName, etMiddleName, etLastName, etEmail, etPassword, etRepeatPassword;
     RadioGroup rgRole;
     CheckBox cbOrgMember;
     Spinner spOrgPosition;
@@ -38,10 +40,19 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        ImageView ivBackArrow = findViewById(R.id.imageView6);
+        ivBackArrow.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, WelcomeActivity.class));
+            finish();
+        });
+
         // Initialize UI components
-        etName = findViewById(R.id.etName);
+        etFirstName = findViewById(R.id.etFirstName);
+        etMiddleName = findViewById(R.id.etMiddleName);
+        etLastName = findViewById(R.id.etLastName);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        etRepeatPassword = findViewById(R.id.etRepeatPassword);
         rgRole = findViewById(R.id.rgRole);
         cbOrgMember = findViewById(R.id.cbOrgMember);
         spOrgPosition = findViewById(R.id.spOrgPosition); // New spinner replacing etOrgRole
@@ -53,36 +64,34 @@ public class RegisterActivity extends Activity {
         // Setup organization position spinner
         setupOrgPositionSpinner();
 
-        // Setup role radio group listener
-        rgRole.setOnCheckedChangeListener((group, checkedId) -> {
-            RadioButton selected = findViewById(checkedId);
-            boolean isStudent = selected.getText().toString().equals("Student");
-            cbOrgMember.setVisibility(isStudent ? View.VISIBLE : View.GONE);
+        if (rgRole != null) {
+            rgRole.setOnCheckedChangeListener((group, checkedId) -> updateOrgPositionVisibility());
+        }
 
-            // Hide or show organization position spinner based on selection
-            updateOrgPositionVisibility();
-        });
-
-        // Setup organization membership checkbox listener
-        cbOrgMember.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            updateOrgPositionVisibility();
-        });
+        if (cbOrgMember != null) {
+            cbOrgMember.setOnCheckedChangeListener((buttonView, isChecked) -> updateOrgPositionVisibility());
+        }
 
         btnRegister.setOnClickListener(v -> registerUser());
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, WelcomeActivity.class));
+            finish();
+        });
     }
 
     /**
      * Setup the organization position spinner with predefined positions
      */
     private void setupOrgPositionSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                ORG_POSITIONS
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spOrgPosition.setAdapter(adapter);
+        if (spOrgPosition != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_spinner_item,
+                    ORG_POSITIONS
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spOrgPosition.setAdapter(adapter);
+        }
     }
 
     /**
@@ -90,64 +99,91 @@ public class RegisterActivity extends Activity {
      * based on the role and org membership selections
      */
     private void updateOrgPositionVisibility() {
-        if (rgRole.getCheckedRadioButtonId() != -1) {
+        if (rgRole != null && cbOrgMember != null && spOrgPosition != null) {
             RadioButton selected = findViewById(rgRole.getCheckedRadioButtonId());
-            boolean isStudent = selected.getText().toString().equals("Student");
+            boolean isStudent = selected != null && selected.getText().toString().equals("Student");
             boolean isOrgMember = cbOrgMember.isChecked();
 
-            spOrgPosition.setVisibility((isStudent && isOrgMember) ? View.VISIBLE : View.GONE);
-
-            // If position spinner is now visible, also show a label for it
-            View positionLabel = findViewById(R.id.tvOrgPositionLabel);
-            if (positionLabel != null) {
-                positionLabel.setVisibility((isStudent && isOrgMember) ? View.VISIBLE : View.GONE);
-            }
+            int visibility = (isStudent && isOrgMember) ? View.VISIBLE : View.GONE;
+            spOrgPosition.setVisibility(visibility);
         }
     }
+
 
     /**
      * Register the user with the provided information
      */
     private void registerUser() {
-        String name = etName.getText().toString().trim();
+        String firstName = etFirstName.getText().toString().trim();
+        String middleName = etMiddleName.getText().toString().trim();
+        String lastName = etLastName.getText().toString().trim();
+        String fullName = firstName + " " + middleName + " " + lastName;
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
+        String repeatPassword = etRepeatPassword.getText().toString().trim();
         int selectedId = rgRole.getCheckedRadioButtonId();
 
         // Validate inputs
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || selectedId == -1) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty() || selectedId == -1) {
+            Toast.makeText(this, "Please complete all required fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(repeatPassword)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Get selected role
-        RadioButton selected = findViewById(selectedId);
-        String role = selected.getText().toString();
+        RadioButton selectedRole = findViewById(selectedId);
+        String role = selectedRole.getText().toString();
 
         // Check if user is a student with organization membership
-        int hasOrg = (role.equals("Student") && cbOrgMember.isChecked()) ? 1 : 0;
-        String orgPosition = "";
+        int hasOrg = (cbOrgMember != null && cbOrgMember.isChecked() && role.equals("Student")) ? 1 : 0;
+        String orgPosition = (hasOrg == 1 && spOrgPosition != null) ? spOrgPosition.getSelectedItem().toString() : "";
 
-        if (hasOrg == 1) {
-            orgPosition = spOrgPosition.getSelectedItem().toString();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Check for existing email
+        Cursor cursor = db.query("users", null, "email = ?", new String[]{email}, null, null, null);
+        if (cursor.moveToFirst()) {
+            Toast.makeText(this, "Email already exists.", Toast.LENGTH_SHORT).show();
+            cursor.close();
+            db.close();
+            return;
         }
+        cursor.close();
 
         // Save user to database
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", name);
+        values.put("name", fullName);
         values.put("email", email);
         values.put("password", password);
         values.put("role", role);
         values.put("has_org", hasOrg);
         values.put("org_role", orgPosition);
+        values.put("verified", 0); // All new users start as unverified
 
         long result = db.insert("users", null, values);
         if (result != -1) {
-            Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
-            finish(); // Go back to Login
+            // Alert the user that their account needs verification
+            Toast.makeText(this, "Registration successful! Your account requires admin verification before you can log in.", Toast.LENGTH_LONG).show();
+
+            // Log this registration in the transactions table
+            logRegistration(db, result, fullName, role, hasOrg, orgPosition);
+
+            // Return to welcome screen
+            startActivity(new Intent(RegisterActivity.this, WelcomeActivity.class));
+            finish();
         } else {
-            Toast.makeText(this, "Registration failed. Email may already exist.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Registration failed.", Toast.LENGTH_SHORT).show();
         }
+
+        db.close();
     }
-}
+
+    /**
+     * Log the registration action in the transactions table
+     */
+    private void logRegistration(SQLiteDatabase db, long userId, String name, String role, int hasOrg, String orgPosition) {
+        ContentValues values

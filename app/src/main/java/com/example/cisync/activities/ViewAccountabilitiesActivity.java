@@ -16,6 +16,7 @@ public class ViewAccountabilitiesActivity extends Activity {
     DBHelper dbHelper;
     ArrayList<String> accountList = new ArrayList<>();
     ArrayAdapter<String> adapter;
+    int studentId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,9 @@ public class ViewAccountabilitiesActivity extends Activity {
         lvAccountabilities = findViewById(R.id.lvAccountabilities);
         dbHelper = new DBHelper(this);
 
+        // Get student ID from intent
+        studentId = getIntent().getIntExtra("studentId", -1);
+
         loadAccountabilities();
     }
 
@@ -32,16 +36,26 @@ public class ViewAccountabilitiesActivity extends Activity {
         accountList.clear();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // For demo: static student_id = 1
-        Cursor cursor = db.rawQuery("SELECT description FROM accountabilities WHERE student_id=?", new String[]{"1"});
+        // Use the actual student ID passed from intent
+        if (studentId != -1) {
+            Cursor cursor = db.rawQuery("SELECT description FROM accountabilities WHERE student_id=?",
+                    new String[]{String.valueOf(studentId)});
 
-        if (cursor.moveToFirst()) {
-            do {
-                accountList.add(cursor.getString(0));
-            } while (cursor.moveToNext());
+            if (cursor.moveToFirst()) {
+                do {
+                    accountList.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            } else {
+                // No accountabilities found
+                accountList.add("No accountabilities found");
+            }
+
+            cursor.close();
+        } else {
+            // Invalid student ID
+            accountList.add("Error: Invalid user ID");
         }
 
-        cursor.close();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, accountList);
         lvAccountabilities.setAdapter(adapter);
     }
