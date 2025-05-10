@@ -1,84 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@drawable/bg">
 
+    <!-- Back Button -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="37dp"
+        android:layout_height="36dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="29dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/bg_white_square"
+        android:contentDescription="Back"
+        android:src="@drawable/baseline_arrow_back_24" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Organization Documents"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/tvUserPosition"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Position: [Not Set]"
-        android:textColor="@android:color/white"
-        android:textStyle="italic"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Document creation UI (only visible to leadership positions) -->
     <LinearLayout
-        android:id="@+id/layoutAddDocument"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#002549"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add New Document"
-            android:textColor="@color/white"
+            android:text="Organization Documents"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="50dp"/>
+
+        <TextView
+            android:id="@+id/tvUserPosition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Position: [Not Set]"
+            android:textColor="@android:color/white"
+            android:textStyle="italic"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutAddDocument"
+            android:layout_width="match_parent"
+            android:layout_height="197dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_border_box"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="8dp"
+                android:text="Add New Document"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etDocumentName"
+                android:layout_width="328dp"
+                android:layout_height="38dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_white_square_with_border"
+                android:hint="   Document Name"
+                android:hintTextColor="#B0BEC5"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:id="@+id/etDocumentDesc"
+                android:layout_width="328dp"
+                android:layout_height="38dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_white_square_with_border"
+                android:hint="   Description"
+                android:hintTextColor="#B0BEC5"
+                android:textColor="@android:color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnAddDocument"
+                android:layout_width="328dp"
+                android:layout_height="34dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/bg_submit_btn"
+                android:text="Add Document"
+                android:textColor="#002549" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Document Tracking"
+            android:textColor="@android:color/white"
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/etDocumentName"
+        <ListView
+            android:id="@+id/lvDocuments"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Document Name"
-            android:layout_marginBottom="8dp" />
+            android:layout_height="400dp"
+            android:background="#002549" />
 
-        <EditText
-            android:id="@+id/etDocumentDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description"
-            android:layout_marginBottom="8dp" />
-
-        <<androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnAddDocument"
-            android:layout_width="match_parent"
-            android:background="@drawable/bg_submit_btn"
-            android:layout_height="wrap_content"
-            android:text="Add Document" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Document Tracking"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
-
-    <ListView
-        android:id="@+id/lvDocuments"
-        android:background="#002549"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-</LinearLayout>
+</ScrollView>
