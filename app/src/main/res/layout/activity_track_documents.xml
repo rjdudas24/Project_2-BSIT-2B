@@ -16,7 +16,6 @@
         android:contentDescription="Back"
         android:src="@drawable/baseline_arrow_back_24" />
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,25 +33,15 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvUserPosition"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Position: [Not Set]"
-            android:textColor="@android:color/white"
-            android:textStyle="italic" />
-
         <LinearLayout
             android:id="@+id/layoutAddDocument"
             android:layout_width="343dp"
-            android:layout_height="197dp"
+            android:layout_height="222dp"
             android:layout_marginLeft="17dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/bg_border_box"
             android:orientation="vertical"
             android:padding="12dp">
-
 
             <TextView
                 android:layout_width="match_parent"
@@ -78,7 +67,7 @@
             <EditText
                 android:id="@+id/etDocumentDesc"
                 android:layout_width="290dp"
-                android:layout_height="38dp"
+                android:layout_height="69dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
@@ -96,48 +85,49 @@
                 android:textColor="#002549" />
         </LinearLayout>
 
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="8dp"-->
-<!--            android:text="Document Tracking"-->
-<!--            android:textColor="@android:color/white"-->
-<!--            android:textSize="20dp"-->
-<!--            android:textStyle="bold" />-->
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="8dp"-->
+        <!--            android:text="Document Tracking"-->
+        <!--            android:textColor="@android:color/white"-->
+        <!--            android:textSize="20dp"-->
+        <!--            android:textStyle="bold" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:layout_marginTop="-21dp"
             android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:background="@drawable/bg_border_box"
+                android:orientation="vertical"
                 android:padding="12dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:layout_marginBottom="8dp"
+                    android:background="@android:color/transparent"
                     android:text="Document Tracking"
                     android:textColor="@android:color/white"
-                    android:background="@android:color/transparent"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="15dp"/>
+                    android:textStyle="bold" />
 
                 <ListView
                     android:id="@+id/lvDocuments"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="414dp"
                     android:layout_weight="1"
+                    android:background="@android:color/transparent"
                     android:divider="@android:color/transparent"
-                    android:dividerHeight="8dp"
-                    android:background="@android:color/transparent" />
+                    android:dividerHeight="8dp" />
             </LinearLayout>
         </LinearLayout>
 
