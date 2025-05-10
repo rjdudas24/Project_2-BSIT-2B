@@ -32,12 +32,24 @@
                 android:src="@drawable/baseline_arrow_back_24" />
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="40dp"
+        <FrameLayout
+            android:layout_width="38dp"
             android:layout_height="40dp"
-            android:src="@drawable/bg_white_square"
-            android:clickable="true" />
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_white_square" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/buttonicon" />
+        </FrameLayout>
+
     </LinearLayout>
 
     <TextView
@@ -55,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
-        android:gravity="center"
+        android:layout_marginLeft="35dp"
         android:text="ORGANIZATION: "
         android:textColor="@color/white"
         android:textSize="22sp"
@@ -65,8 +77,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
-        android:gravity="center"
         android:text="POSITION: "
+        android:layout_marginLeft="35dp"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -85,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="FACULTY INQUIRE"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:layout_marginBottom="5dp" />
@@ -130,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ACCOUNTABILITIES"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="5dp"
@@ -164,7 +176,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TRACK DOCUMENTS"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="5dp" />
@@ -201,7 +213,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="POST NOTICE"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:layout_marginBottom="5dp" />
