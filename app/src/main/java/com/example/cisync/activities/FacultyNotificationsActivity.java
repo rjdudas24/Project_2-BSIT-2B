@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.*;
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
@@ -15,6 +16,7 @@ public class FacultyNotificationsActivity extends Activity {
     ArrayAdapter<String> adapter;
     ArrayList<String> notifications = new ArrayList<>();
     DBHelper dbHelper;
+    ImageView btnBackNotifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +24,17 @@ public class FacultyNotificationsActivity extends Activity {
         setContentView(R.layout.activity_faculty_notifications);
 
         lvFacultyNotifications = findViewById(R.id.lvFacultyNotifications);
+        btnBackNotifications = findViewById(R.id.btnBackNotifications);
         dbHelper = new DBHelper(this);
 
         loadNotifications();
+
+        btnBackNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Close this activity and return to previous
+            }
+        });
     }
 
     private void loadNotifications() {
@@ -46,5 +56,10 @@ public class FacultyNotificationsActivity extends Activity {
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notifications);
         lvFacultyNotifications.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed(); // Ensure system back button works too
     }
 }
