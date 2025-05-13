@@ -45,28 +45,32 @@
         android:textStyle="italic"
         android:textSize="16sp"
         android:textColor="@color/white"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="18dp"/>
 
     <EditText
         android:id="@+id/etNoticeContent"
-        android:layout_width="match_parent"
+        android:layout_width="344dp"
         android:layout_height="150dp"
-        android:hint="Enter notice content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_white_square_with_border"
         android:gravity="top|start"
-        android:textSize="16sp"
-        android:textColor="@color/black"
+        android:hint="Enter notice content"
         android:inputType="textMultiLine"
-        android:background="@android:drawable/edit_text"
         android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginLeft="18dp"/>
 
-    <Button
+    <<androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnPostNotice"
-        android:layout_width="102dp"
-        android:layout_height="35dp"
+        android:layout_width="120dp"
+        android:layout_height="48dp"
         android:text="Post Notice"
-        android:textColor="@color/white"
-        android:background="@color/dark_blue"
+        android:textColor="#002549"
+        android:background="@drawable/bg_submit_btn"
+        android:layout_marginLeft="225dp"
+        android:translationY="-30dp"
         android:textSize="16sp"
         android:gravity="center"/>
 

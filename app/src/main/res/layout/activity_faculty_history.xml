@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_faculty">
 
-    <!-- Header with back button and centered title -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0D47A1"
         android:padding="16dp">
 
         <!-- Back button -->
@@ -25,28 +24,34 @@
             android:layout_centerVertical="true"
             app:tint="@color/black" />
 
-        <!-- Centered title -->
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TRANSACTION HISTORY"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:layout_centerInParent="true"/>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TRANSACTION HISTORY"
+        android:translationY="5dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_horizontal"/>
     <!-- Content area -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/bg_border_box"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:translationY="34dp">
 
         <ListView
             android:id="@+id/lvHistory"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
+            android:scrollbarTrackVertical="@android:color/transparent" />
     </LinearLayout>
 </LinearLayout>
