@@ -266,3 +266,4 @@
                 android:src="@drawable/notice_icon" />
         </LinearLayout>
     </LinearLayout>
+</LinearLayout>
