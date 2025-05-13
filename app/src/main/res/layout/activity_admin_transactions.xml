@@ -10,7 +10,7 @@
 
     <!-- Back arrow button at the top -->
     <FrameLayout
-        android:layout_width="322dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content">
 
         <ImageView
