@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ViewAccountabilitiesActivity extends Activity {
 
-    ListView lvAccountabilities;
+    ListView rvAccountabilities;
     DBHelper dbHelper;
     ArrayList<String> accountList = new ArrayList<>();
     ArrayAdapter<String> adapter;
@@ -23,7 +23,7 @@ public class ViewAccountabilitiesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_accountabilities);
 
-        lvAccountabilities = findViewById(R.id.lvAccountabilities);
+        rvAccountabilities = findViewById(R.id.rvAccountabilities);
         dbHelper = new DBHelper(this);
 
         // Get student ID from intent
@@ -57,6 +57,6 @@ public class ViewAccountabilitiesActivity extends Activity {
         }
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, accountList);
-        lvAccountabilities.setAdapter(adapter);
+        rvAccountabilities.setAdapter(adapter);
     }
 }

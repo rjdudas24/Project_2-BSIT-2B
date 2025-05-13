@@ -71,7 +71,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
                 android:hint="   Document Name"
-                android:hintTextColor="#B0BEC5"
+                android:textColorHint="#B0BEC5"
                 android:textColor="@android:color/white" />
 
             <EditText
@@ -82,7 +82,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
                 android:hint="   Description"
-                android:hintTextColor="#B0BEC5"
+                android:textColorHint="#B0BEC5"
                 android:textColor="@android:color/white" />
 
             <androidx.appcompat.widget.AppCompatButton

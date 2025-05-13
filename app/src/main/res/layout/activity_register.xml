@@ -35,17 +35,17 @@
         android:layout_height="match_parent">
 
       <!-- CISync logo -->
-      <!-- Register over the logo -->
       <ImageView
           android:id="@+id/imgLogo"
           android:layout_width="419dp"
-          android:layout_height="184dp"
+          android:layout_height="255dp"
           android:layout_marginTop="4dp"
           android:adjustViewBounds="true"
           android:src="@drawable/cisync2"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+          app:layout_constraintTop_toTopOf="parent"
+          android:translationY="-35dp"/>
 
       <TextView
           android:layout_width="wrap_content"
@@ -298,6 +298,7 @@
           android:text="Faculty"
           android:textColor="@android:color/white"
           android:textSize="16sp" />
+
     </RadioGroup>
 
     <!-- Checkbox: Are you an organization member? -->
@@ -307,30 +308,34 @@
         android:layout_height="wrap_content"
         android:text="I am a member of an organization"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="2dp"
         android:buttonTint="#78CAFF"
         android:textSize="16sp" />
 
-    <!-- Label for org position -->
-    <TextView
-        android:id="@+id/tvOrgPositionLabel"
+    <LinearLayout
+        android:id="@+id/layoutOrgPosition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Organization Position"
-        android:textColor="#78CAFF"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <!-- Spinner for selecting organization role -->
-    <Spinner
-        android:id="@+id/spOrgPosition"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="@android:color/white"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+      <TextView
+          android:id="@+id/tvOrgPositionLabel"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="Select Organization Position"
+          android:textColor="#78CAFF"
+          android:layout_marginBottom="8dp" />
 
+      <Spinner
+          android:id="@+id/spOrgPosition"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/white"
+          android:padding="12dp"
+          android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
 
     <!-- Buttons: Back and Register -->
     <LinearLayout
