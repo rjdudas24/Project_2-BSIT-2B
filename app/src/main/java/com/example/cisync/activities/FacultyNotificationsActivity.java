@@ -31,13 +31,14 @@ public class FacultyNotificationsActivity extends Activity {
         notifications.clear();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT message, timestamp FROM transactions WHERE faculty_id = ?", new String[]{"1"}); // static for demo
+        Cursor cursor = db.rawQuery("SELECT description, timestamp FROM transactions WHERE user_id = ?", new String[]{"1"}); // static for demo
 
         if (cursor.moveToFirst()) {
             do {
-                String msg = cursor.getString(0);
-                String time = cursor.getString(1);
-                notifications.add(msg + "\n(" + time + ")");
+                String description = cursor.getString(0);
+                long timestamp = cursor.getLong(1);
+                String formatted = description + "\n(" + android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss a", timestamp) + ")";
+                notifications.add(formatted);
             } while (cursor.moveToNext());
         }
 
