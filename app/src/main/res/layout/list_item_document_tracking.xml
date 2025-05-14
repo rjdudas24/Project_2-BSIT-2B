@@ -1,6 +1,3 @@
-<!--&lt;!&ndash;List items ni sa Document Tracking didto-->
-<!--sa activity_track_document.xml&ndash;&gt;-->
-
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
