@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/background"
+>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <!-- BACK BUTTON -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/bg_white_square" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:layout_marginRight="300dp"
+                android:src="@drawable/baseline_arrow_back_24" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_white_square" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/buttonicon" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvPosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Position: [Not Set]"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Field Label + Dynamic Value -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="35dp">
+
+        <TextView
+            android:id="@+id/tvOrganizationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ORGANIZATION: "
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvOrganizationValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[User Org Here]"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="35dp"
+        android:layout_marginBottom="100dp">
+
+        <TextView
+            android:id="@+id/tvPositionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="POSITION: "
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvPositionValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[User Position Here]"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+
+    <!--INQUIRY BUTTON-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:translationY="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FACULTY INQUIRE"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="5dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutFacultyInquiry"
+            android:layout_width="85dp"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_submit_btn"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="1dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
+                android:src="@drawable/inquiry_icon" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:padding="16dp">
+
+<!--ACCOUNTABILITIES BUTTON-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="115dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACCOUNTABILITIES"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/layoutAccountabilities"
+                android:layout_width="85dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_submit_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:src="@drawable/accountabilities_icon" />
+            </LinearLayout>
+        </LinearLayout>
+
+<!--TRACK DOCU BUTTONS-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TRACK DOCUMENTS"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutTrackDocuments"
+                android:layout_width="85dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_submit_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:src="@drawable/document_icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+<!--POST NOTICE BUTTON-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:translationY="-25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="POST NOTICE"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="5dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutPostNotice"
+            android:layout_width="85dp"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_submit_btn"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="1dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:src="@drawable/notice_icon" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

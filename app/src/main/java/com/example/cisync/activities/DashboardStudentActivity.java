@@ -12,11 +12,9 @@ import com.example.cisync.database.DBHelper;
 
 public class DashboardStudentActivity extends Activity {
 
-    LinearLayout layoutInquire, layoutAccountabilities, layoutTrackDocuments, layoutPostNotice;
-    TextView tvWelcome, tvOrganizationValue, tvPositionValue;
-    boolean hasOrg;
-    String orgPosition = "";
-    int studentId; // No longer a static value
+    LinearLayout layoutInquire, layoutAccountabilities;
+    TextView tvWelcome, tvUsername;
+    int studentId;
     DBHelper dbHelper;
 
     @Override
@@ -25,85 +23,44 @@ public class DashboardStudentActivity extends Activity {
         setContentView(R.layout.activity_dashboard_student);
 
         // Get data from intent
-        hasOrg = getIntent().getBooleanExtra("hasOrg", false);
-        studentId = getIntent().getIntExtra("studentId", -1); // Get actual studentId
+        studentId = getIntent().getIntExtra("studentId", -1);
 
         // Initialize dbHelper
         dbHelper = new DBHelper(this);
 
         // Initialize views
-        //tvWelcome = findViewById(R.id.tvWelcome);
-        tvOrganizationValue = findViewById(R.id.tvOrganizationValue);
-        tvPositionValue = findViewById(R.id.tvPositionValue);
+        tvWelcome = findViewById(R.id.tvWelcome);
+        tvUsername = findViewById(R.id.tvUsername);
         layoutInquire = findViewById(R.id.layoutFacultyInquiry);
         layoutAccountabilities = findViewById(R.id.layoutAccountabilities);
-        layoutTrackDocuments = findViewById(R.id.layoutTrackDocuments);
-        layoutPostNotice = findViewById(R.id.layoutPostNotice);
 
-        // Get org position if available
-        if (hasOrg && studentId != -1) {
-            loadOrgPosition();
-        }
-
-        // Show organization-specific UI elements
-        layoutTrackDocuments.setVisibility(hasOrg ? View.VISIBLE : View.GONE);
-        layoutPostNotice.setVisibility(hasOrg ? View.VISIBLE : View.GONE);
-
-        // Show position if student is part of an organization
-        if (hasOrg && !orgPosition.isEmpty()) {
-            tvPositionValue.setText(orgPosition);
-        }
+        // Load username from database
+        loadUsername();
 
         // Set click listeners
-        layoutInquire.setOnClickListener(v -> Toast.makeText(this, "Inquire Faculty feature", Toast.LENGTH_SHORT).show());
+        layoutInquire.setOnClickListener(v ->
+                Toast.makeText(this, "Inquire Faculty feature", Toast.LENGTH_SHORT).show()
+        );
 
         layoutAccountabilities.setOnClickListener(v -> {
             Intent intent = new Intent(this, ViewAccountabilitiesActivity.class);
-            intent.putExtra("studentId", studentId); // Pass the student ID
+            intent.putExtra("studentId", studentId);
             startActivity(intent);
         });
-
-        // Organization-specific features
-        if (hasOrg) {
-            layoutTrackDocuments.setOnClickListener(v -> {
-                Intent intent = new Intent(this, TrackDocumentsActivity.class);
-                intent.putExtra("position", orgPosition);
-                intent.putExtra("studentId", studentId); // Pass the student ID
-                startActivity(intent);
-            });
-
-            layoutPostNotice.setOnClickListener(v -> {
-                Intent intent = new Intent(this, PostNoticeActivity.class);
-                intent.putExtra("studentId", studentId); // Pass the student ID
-                startActivity(intent);
-            });
-        }
     }
 
-    private void loadOrgPosition() {
+    private void loadUsername() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT org_role FROM users WHERE id = ?",
-                new String[]{String.valueOf(studentId)}
-        );
-
-        if (cursor.moveToFirst()) {
-            orgPosition = cursor.getString(0);
-        }
-
-        cursor.close();
-
-        // Now also load organization name and set it in the UI
-        cursor = db.rawQuery(
                 "SELECT name FROM users WHERE id = ?",
                 new String[]{String.valueOf(studentId)}
         );
 
         if (cursor.moveToFirst()) {
             String name = cursor.getString(0);
-            // Set organization name
-            if (tvOrganizationValue != null) {
-                tvOrganizationValue.setText("CSCo"); // You might want to replace this with organization name from DB
+            // Set username in welcome message
+            if (tvUsername != null) {
+                tvUsername.setText(name);
             }
         }
 
