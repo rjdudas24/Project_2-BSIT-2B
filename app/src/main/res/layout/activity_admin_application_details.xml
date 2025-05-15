@@ -9,7 +9,7 @@
         android:id="@+id/tvApplicationTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Application Details"
+        android:text="Student Application Details"
         android:textSize="18sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -26,9 +26,9 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:padding="4dp"
-                android:text="Student ID:" />
+                android:text="ID Number:" />
             <TextView
-                android:id="@+id/tvFacultyName"
+                android:id="@+id/tvStudentID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
@@ -80,7 +80,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Verify that the user belongs to the department before approving."
+        android:text="Verify student organization affiliation if applicable."
         android:textStyle="italic"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp" />
