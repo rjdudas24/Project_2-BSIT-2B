@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.*;
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
 
 public class LoginActivity extends Activity {
 
+    private static final String TAG = "LoginActivity";
     EditText etEmail, etPassword;
     Button btnLogin;
     ImageButton btnGoBack;
@@ -45,68 +47,96 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+            // First query to check if user exists
+            Cursor cursor = db.rawQuery(
+                    "SELECT * FROM users WHERE email=? AND password=?",
+                    new String[]{email, password}
+            );
 
+            if (cursor.moveToFirst()) {
+                // User exists, proceed with login
+                int userId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
 
-        // Add verification check to the query
-        Cursor cursor = db.rawQuery(
-                "SELECT * FROM users WHERE email=? AND password=?",
-                new String[]{email, password}
-        );
+                // Add debug info
+                Log.d(TAG, "User found: ID=" + userId + ", Name=" + name + ", Role=" + role);
 
-        if (cursor.moveToFirst()) {
-            int userId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-            String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
-            int verifiedStatus = 1; // Default to verified for backward compatibility
+                // Check verification status with safe default
+                int verifiedStatus = 1; // Default to verified
+                int verifiedColumnIndex = cursor.getColumnIndex("verified");
+                if (verifiedColumnIndex != -1) {
+                    verifiedStatus = cursor.getInt(verifiedColumnIndex);
+                    Log.d(TAG, "Verification status: " + verifiedStatus);
+                } else {
+                    Log.d(TAG, "Verified column not found in result");
+                }
 
-            // Check if verified column exists and get its value
-            int verifiedColumnIndex = cursor.getColumnIndex("verified");
-            if (verifiedColumnIndex != -1) {
-                verifiedStatus = cursor.getInt(verifiedColumnIndex);
+                // If not verified, show message and return
+                if (verifiedStatus == 0) {
+                    Toast.makeText(this, "Your account is pending verification by an administrator.",
+                            Toast.LENGTH_LONG).show();
+                    cursor.close();
+                    db.close();
+                    return;
+                }
+
+                // Safely check if user has an organization
+                boolean hasOrg = false;
+                int hasOrgColumnIndex = cursor.getColumnIndex("has_org");
+                if (hasOrgColumnIndex != -1) {
+                    hasOrg = cursor.getInt(hasOrgColumnIndex) == 1;
+                    Log.d(TAG, "Has organization: " + hasOrg);
+                } else {
+                    Log.d(TAG, "has_org column not found in result");
+                }
+
+                // Proceed to appropriate dashboard based on role
+                Intent intent;
+                if ("Student".equals(role)) {
+                    if (hasOrg) {
+                        Log.d(TAG, "Routing to Student with Org dashboard");
+                        intent = new Intent(this, DashboardStudentwOrgActivity.class);
+                        intent.putExtra("hasOrg", true);
+                    } else {
+                        Log.d(TAG, "Routing to Student without Org dashboard");
+                        intent = new Intent(this, DashboardStudentActivity.class);
+                    }
+                    intent.putExtra("studentId", userId);
+                } else if ("Faculty".equals(role)) {
+                    Log.d(TAG, "Routing to Faculty dashboard");
+                    intent = new Intent(this, DashboardFacultyActivity.class);
+                } else if ("Admin".equals(role)) {
+                    Log.d(TAG, "Routing to Admin dashboard");
+                    intent = new Intent(this, DashboardAdminActivity.class);
+                } else {
+                    Log.d(TAG, "Unknown role: " + role);
+                    Toast.makeText(this, "Unknown role: " + role, Toast.LENGTH_SHORT).show();
+                    cursor.close();
+                    db.close();
+                    return;
+                }
+
+                // Add user ID to intent and start activity
+                intent.putExtra("userId", userId);
+                startActivity(intent);
+                finish(); // Close login activity
+            } else {
+                // User not found or invalid credentials
+                Toast.makeText(this, "Invalid login credentials", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Invalid login attempt for email: " + email);
             }
-
-            // Check if user is verified
-            if (verifiedStatus == 0) {
-                Toast.makeText(this, "Your account is pending verification by an administrator.",
-                        Toast.LENGTH_LONG).show();
-                cursor.close();
-                db.close();
-                return;
-            }
-
-            // Get additional user data
-            boolean hasOrg = false;
-            int hasOrgColumnIndex = cursor.getColumnIndex("has_org");
-            if (hasOrgColumnIndex != -1) {
-                hasOrg = cursor.getInt(hasOrgColumnIndex) == 1;
-            }
-
-            Intent intent;
-            if (role.equals("Student")) {
-                intent = new Intent(this, DashboardStudentActivity.class);
-                intent.putExtra("hasOrg", hasOrg);
-                intent.putExtra("studentId", userId);
-            } else if (role.equals("Faculty")) {
-                intent = new Intent(this, DashboardFacultyActivity.class);
-            } else if (role.equals("Admin")) { // Explicit check for Admin
-                intent = new Intent(this, DashboardAdminActivity.class);
-            } else { // Any other role as fallback
-                Toast.makeText(this, "Unknown role: " + role, Toast.LENGTH_SHORT).show();
-                return; // Don't proceed with invalid role
-            }
-
-
-            // Add user ID to any intent for consistency
-            intent.putExtra("userId", userId);
-
-            startActivity(intent);
-            finish(); // Close login activity to prevent it from staying in background
-        } else {
-            Toast.makeText(this, "Invalid login credentials", Toast.LENGTH_SHORT).show();
+            cursor.close();
+            db.close();
+        } catch (Exception e) {
+            // Handle any exceptions that might occur
+            Log.e(TAG, "Error during login process", e);
+            Toast.makeText(this, "Error during login: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
         }
-        cursor.close();
-        db.close();
     }
 
     @Override

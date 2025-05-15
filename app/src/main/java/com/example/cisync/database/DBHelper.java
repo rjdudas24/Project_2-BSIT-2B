@@ -1,6 +1,7 @@
 package com.example.cisync.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -76,5 +77,26 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS transactions");
         db.execSQL("DROP TABLE IF EXISTS applications");
         onCreate(db);
+    }
+
+    public void addSampleAccountabilities(int studentId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Clear any existing accountabilities for this student
+        db.delete("accountabilities", "student_id = ?", new String[]{String.valueOf(studentId)});
+
+        // Add sample data
+        String[] feeNames = {"College Fee", "Fines"};
+        String[] amounts = {"500", "210"};
+        int[] statuses = {1, 0,};  // 1 = paid, 0 = unpaid
+
+        for (int i = 0; i < feeNames.length; i++) {
+            db.execSQL(
+                    "INSERT INTO accountabilities (student_id, fee_name, amount, status) VALUES (?, ?, ?, ?)",
+                    new Object[]{studentId, feeNames[i], amounts[i], statuses[i]}
+            );
+        }
+
+        db.close();
     }
 }
