@@ -47,6 +47,9 @@
             android:name=".activities.DashboardFacultyActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.DashboardStudentwOrgActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.DashboardStudentActivity"
             android:exported="false" />
         <activity
