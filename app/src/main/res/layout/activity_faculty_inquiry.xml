@@ -109,29 +109,19 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/bg_white_square_with_border"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/layoutFaculty"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/etDepartment"
-            android:layout_width="0dp"
+        <Spinner
+            android:id="@+id/spinnerDepartment"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:hint="Enter Department"
-            android:padding="8dp"
-            android:textColor="@android:color/black" />
-
-        <ImageButton
-            android:id="@+id/btnClearDepartment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Clear"
-            android:padding="8dp"
-            android:src="@drawable/removeicon"
-            android:background="@android:color/transparent"/>
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textAlignment="center" />
     </LinearLayout>
 
 

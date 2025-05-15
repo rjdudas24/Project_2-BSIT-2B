@@ -12,9 +12,6 @@ import android.widget.*;
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class RegisterActivity extends Activity {
     EditText etIdNumber, etFirstName, etMiddleName, etLastName, etEmail, etPassword, etRepeatPassword;
     RadioGroup rgRole;
@@ -25,23 +22,12 @@ public class RegisterActivity extends Activity {
     Button btnRegister, btnBack;
     DBHelper dbHelper;
 
-    private static final List<String> ORG_POSITIONS = Arrays.asList(
-            "Chairperson",
-            "Vice-Chairperson (Internal)",
-            "Vice-Chairperson (External)",
-            "Secretary",
-            "Associate Secretary",
-            "Treasurer",
-            "Associate Treasurer",
-            "Auditor"
-    );
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // findViewById…
+        // Initialize UI elements
         etIdNumber       = findViewById(R.id.etIdNumber);
         etFirstName      = findViewById(R.id.etFirstName);
         etMiddleName     = findViewById(R.id.etMiddleName);
@@ -65,35 +51,30 @@ public class RegisterActivity extends Activity {
 
         setupOrgPositionSpinner();
 
-        // Back arrow/ImageView
         findViewById(R.id.imageView6).setOnClickListener(v -> finish());
 
-        // 1) Role change: show/hide checkbox & position layout
+        // Role toggle logic
         rgRole.setOnCheckedChangeListener((group, checkedId) -> {
             boolean studentSelected = (checkedId == R.id.rbStudent);
             cbOrgMember.setVisibility(studentSelected ? View.VISIBLE : View.GONE);
-
-            // if switching away, always hide the position block
-            if (!studentSelected) {
-                layoutOrgPosition.setVisibility(View.GONE);
-                cbOrgMember.setChecked(false);
-            }
+            layoutOrgPosition.setVisibility(studentSelected && cbOrgMember.isChecked() ? View.VISIBLE : View.GONE);
         });
 
-        // 2) Checkbox change: show/hide position only if Student is selected
         cbOrgMember.setOnCheckedChangeListener((button, isChecked) -> {
             if (rbStudent.isChecked()) {
                 layoutOrgPosition.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             }
         });
 
-        // Register & Back buttons
-        btnRegister.setOnClickListener(v -> registerUser());
+        btnRegister.setOnClickListener(v -> {
+            if (validateInput()) {
+                registerUser();
+            }
+        });
+
         btnBack.setOnClickListener(v -> finish());
 
-        // Initialize visibility based on default selection
-        boolean isStudent = rbStudent.isChecked();
-        cbOrgMember.setVisibility(isStudent ? View.VISIBLE : View.GONE);
+        cbOrgMember.setVisibility(rbStudent.isChecked() ? View.VISIBLE : View.GONE);
         layoutOrgPosition.setVisibility(View.GONE);
     }
 
@@ -101,95 +82,100 @@ public class RegisterActivity extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
-                ORG_POSITIONS
+                new String[]{"Chairperson", "Vice-Chairperson", "Secretary", "Treasurer", "Auditor"}
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spOrgPosition.setAdapter(adapter);
     }
 
+    private boolean validateInput() {
+        if (etIdNumber.getText().toString().trim().isEmpty()) {
+            showToast("Please enter your ID Number"); return false;
+        }
+        if (etFirstName.getText().toString().trim().isEmpty()) {
+            showToast("Please enter your First Name"); return false;
+        }
+        if (etLastName.getText().toString().trim().isEmpty()) {
+            showToast("Please enter your Last Name"); return false;
+        }
+        if (etEmail.getText().toString().trim().isEmpty() ||
+                !android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString().trim()).matches()) {
+            showToast("Enter a valid Email"); return false;
+        }
+        if (etPassword.getText().toString().length() < 6) {
+            showToast("Password must be at least 6 characters"); return false;
+        }
+        if (!etPassword.getText().toString().equals(etRepeatPassword.getText().toString())) {
+            showToast("Passwords do not match"); return false;
+        }
+        if (rgRole.getCheckedRadioButtonId() == -1) {
+            showToast("Select a role"); return false;
+        }
+        return true;
+    }
+
     private void registerUser() {
         String idNumber = etIdNumber.getText().toString().trim();
-        String firstName= etFirstName.getText().toString().trim();
-        String middle  = etMiddleName.getText().toString().trim();
-        String lastName= etLastName.getText().toString().trim();
-        String fullName= firstName +
-                (middle.isEmpty() ? "" : " " + middle) +
-                " " + lastName;
-        String email   = etEmail.getText().toString().trim();
-        String pwd     = etPassword.getText().toString().trim();
-        String rptPwd  = etRepeatPassword.getText().toString().trim();
-        int checkedId  = rgRole.getCheckedRadioButtonId();
-
-        if (idNumber.isEmpty() || firstName.isEmpty() || lastName.isEmpty()
-                || email.isEmpty() || pwd.isEmpty() || rptPwd.isEmpty()
-                || checkedId == -1) {
-            Toast.makeText(this, "Please complete all required fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!pwd.equals(rptPwd)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String role = ((RadioButton)findViewById(checkedId)).getText().toString();
-        int hasOrg = (rbStudent.isChecked() && cbOrgMember.isChecked()) ? 1 : 0;
+        String fullName = etFirstName.getText().toString().trim() + " " +
+                etMiddleName.getText().toString().trim() + " " +
+                etLastName.getText().toString().trim();
+        String email    = etEmail.getText().toString().trim();
+        String pwd      = etPassword.getText().toString();
+        String role     = ((RadioButton)findViewById(rgRole.getCheckedRadioButtonId())).getText().toString();
+        boolean isStudent = role.equals("Student");
+        boolean isFaculty = role.equals("Faculty");
+        int hasOrg = (isStudent && cbOrgMember.isChecked()) ? 1 : 0;
         String orgPos = (hasOrg == 1) ? spOrgPosition.getSelectedItem().toString() : "";
 
         try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
-            // check email
             Cursor c = db.query("users", null, "email=?", new String[]{email}, null, null, null);
             if (c.moveToFirst()) {
-                Toast.makeText(this, "Email already exists.", Toast.LENGTH_SHORT).show();
-                c.close();
-                return;
+                showToast("Email already exists.");
+                c.close(); return;
             }
             c.close();
 
-            ContentValues vals = new ContentValues();
-            vals.put("name", fullName);
-            vals.put("email", email);
-            vals.put("password", pwd);
-            vals.put("role", role);
-            vals.put("has_org", hasOrg);
-            vals.put("org_role", orgPos);
-            vals.put("verified", 1);
+            db.beginTransaction();
+            try {
+                ContentValues vals = new ContentValues();
+                vals.put("name", fullName);
+                vals.put("email", email);
+                vals.put("password", pwd);
+                vals.put("role", role);
+                vals.put("has_org", hasOrg);
+                vals.put("org_role", orgPos);
+                vals.put("verified", 0);
 
-            long userId = db.insert("users", null, vals);
-            if (userId != -1) {
-                Toast.makeText(this,
-                        "Registration successful! Await admin verification.",
-                        Toast.LENGTH_LONG).show();
-                logRegistration(db, userId, fullName, role, hasOrg, orgPos);
-                startActivity(new Intent(this, WelcomeActivity.class));
-                finish();
-            } else {
-                Toast.makeText(this, "Registration failed.", Toast.LENGTH_SHORT).show();
+                long userId = db.insert("users", null, vals);
+                if (userId != -1) {
+                    ContentValues appVals = new ContentValues();
+                    appVals.put("student_id", userId);
+                    appVals.put("status", "Pending");
+                    appVals.put("org_name", isStudent ? "Student Org" : "Faculty");
+                    db.insert("applications", null, appVals);
+
+                    ContentValues log = new ContentValues();
+                    log.put("user_id", userId);
+                    log.put("action_type", "REGISTRATION");
+                    log.put("description", "Registered as " + role);
+                    log.put("timestamp", System.currentTimeMillis());
+                    db.insert("transactions", null, log);
+
+                    db.setTransactionSuccessful();
+                    showToast("Registration successful! Await admin verification.");
+                    startActivity(new Intent(this, WelcomeActivity.class));
+                    finish();
+                }
+            } finally {
+                db.endTransaction();
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            showToast("Error: " + e.getMessage());
         }
     }
 
-    private void logRegistration(SQLiteDatabase db, long userId,
-                                 String name, String role, int hasOrg, String orgPos) {
-        try {
-            ContentValues v = new ContentValues();
-            v.put("user_id", userId);
-            v.put("action_type", "REGISTRATION");
-            v.put("description", "New user: " + name + " (" + role + ")" +
-                    (hasOrg == 1 ? " - Org: " + orgPos : ""));
-            v.put("timestamp", System.currentTimeMillis());
-            db.insert("transactions", null, v);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // nothing extra needed here for org fields
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

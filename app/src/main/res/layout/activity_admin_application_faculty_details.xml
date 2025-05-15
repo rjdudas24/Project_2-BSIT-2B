@@ -1,64 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_faculty">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-
-        <!-- Back button -->
-        <ImageView
-            android:id="@+id/btnBackHistory"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/baseline_arrow_back_24"
-            android:clickable="true"
-            android:background="@android:color/white"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            app:tint="@color/black" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TRANSACTION HISTORY"
-        android:translationY="5dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_gravity="center_horizontal"/>
-    <!-- Content area -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/bg_border_box"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:translationY="34dp">
-
-        <ListView
-            android:id="@+id/lvHistory"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
-            android:scrollbarTrackVertical="@android:color/transparent" />
-    </LinearLayout>
     <TextView
         android:id="@+id/tvApplicationTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Application Details"
+        android:text="Faculty Application Details"
         android:textSize="18sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -75,9 +26,23 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:padding="4dp"
+                android:text="Faculty ID:" />
+            <TextView
+                android:id="@+id/tvFacultyID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:padding="4dp"
                 android:text="Name:" />
             <TextView
-                android:id="@+id/tvStudentName"
+                android:id="@+id/tvFacultyName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
@@ -91,7 +56,7 @@
                 android:padding="4dp"
                 android:text="Email:" />
             <TextView
-                android:id="@+id/tvStudentEmail"
+                android:id="@+id/tvFacultyEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
@@ -104,23 +69,9 @@
                 android:textStyle="bold"
                 android:padding="4dp"
                 android:text="Department:" />
-            <TextView
-                android:id="@+id/tvDepartment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:padding="4dp"
-                android:text="Organization:" />
-            <TextView
-                android:id="@+id/tvOrgName"
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/spFacultyType"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
         </TableRow>
@@ -129,7 +80,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Verify that the user belongs to the department before approving."
+        android:text="Verify faculty credentials and department affiliation before approving."
         android:textStyle="italic"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp" />
