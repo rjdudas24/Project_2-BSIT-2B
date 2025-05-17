@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingVertical="12dp"
-    android:background="#0D2952">
+    android:background="#102447">
 
     <TextView
         android:id="@+id/tvFeeName"
@@ -30,5 +30,6 @@
         android:layout_height="24dp"
         android:layout_weight="3"
         android:gravity="center"
+        android:layout_gravity="center"
         android:contentDescription="Payment Status" />
 </LinearLayout>

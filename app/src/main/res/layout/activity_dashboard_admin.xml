@@ -91,6 +91,37 @@
 
         <!-- Card for Transaction History -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLoginHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_history"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="Transaction Icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Log-in History"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>\
+
+        <!-- Card for Transaction History -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTransactions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
