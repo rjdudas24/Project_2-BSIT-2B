@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.*;
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
+import com.example.cisync.activities.FacultyInquiryActivity;
 
 public class DashboardStudentActivity extends Activity {
 
@@ -38,9 +39,14 @@ public class DashboardStudentActivity extends Activity {
         loadUsername();
 
         // Set click listeners
-        layoutInquire.setOnClickListener(v ->
-                Toast.makeText(this, "Inquire Faculty feature", Toast.LENGTH_SHORT).show()
-        );
+        layoutInquire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardStudentActivity.this, com.example.cisync.activities.FacultyInquiryActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            }
+        });
 
         layoutAccountabilities.setOnClickListener(v -> {
             Intent intent = new Intent(this, ViewAccountabilitiesActivity.class);
