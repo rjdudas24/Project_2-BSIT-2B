@@ -32,6 +32,9 @@
             android:name=".activities.FacultyNotificationsActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.FacultyInquiryActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.PostNoticeActivity"
             android:exported="false" />
         <activity
