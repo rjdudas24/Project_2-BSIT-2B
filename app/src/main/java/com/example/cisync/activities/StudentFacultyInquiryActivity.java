@@ -27,7 +27,7 @@ public class StudentFacultyInquiryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_faculty_inquiry); 
+        setContentView(R.layout.activity_faculty_inquiry);
 
         // Initialize views
         etFacultyName = findViewById(R.id.etFacultyName);
