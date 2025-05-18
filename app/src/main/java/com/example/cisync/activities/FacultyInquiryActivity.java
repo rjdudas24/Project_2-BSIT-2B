@@ -33,7 +33,6 @@ public class FacultyInquiryActivity extends AppCompatActivity {
     private Button btnSubmit;
 
 
-
     private ArrayList<String> departments;
     private int studentId;
     private DBHelper dbHelper;
@@ -60,8 +59,8 @@ public class FacultyInquiryActivity extends AppCompatActivity {
         btnClearFaculty = findViewById(R.id.btnClearFaculty);
         etFacultyName = findViewById(R.id.etFacultyName);
         spinnerDepartment = findViewById(R.id.spinnerDepartment);
-        tvPurposeTitle = findViewById(R.id.tvPurposeTitle);
-        tvPurposeDescription = findViewById(R.id.tvPurposeDescription);
+        tvPurposeTitle = findViewById(R.id.etPurposeTitle);
+        tvPurposeDescription = findViewById(R.id.etPurposeDescription);
         btnSubmit = findViewById(R.id.btnSubmit);
     }
 
