@@ -27,14 +27,14 @@ public class StudentFacultyInquiryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_faculty_inquiry); // Match this with your XML file name
+        setContentView(R.layout.activity_faculty_inquiry); 
 
         // Initialize views
         etFacultyName = findViewById(R.id.etFacultyName);
         btnClearFaculty = findViewById(R.id.btnClearFaculty);
         spinnerDepartment = findViewById(R.id.spinnerDepartment);
-        tvPurposeTitle = findViewById(R.id.tvPurposeTitle);
-        tvPurposeDescription = findViewById(R.id.tvPurposeDescription);
+        tvPurposeTitle = findViewById(R.id.etPurposeTitle);
+        tvPurposeDescription = findViewById(R.id.etPurposeDescription);
         btnSubmit = findViewById(R.id.btnSubmit);
         btnBack = findViewById(R.id.btnBack);
 
