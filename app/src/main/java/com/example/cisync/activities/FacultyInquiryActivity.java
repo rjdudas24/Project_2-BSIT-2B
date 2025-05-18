@@ -1,8 +1,8 @@
 package com.example.cisync.activities;
 
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.database.sqlite.SQLiteDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,15 +23,11 @@ import java.util.Arrays;
 
 public class FacultyInquiryActivity extends AppCompatActivity {
 
-    private ImageButton btnBack;
-    private ImageButton btnClearFaculty;
+    private ImageButton btnBack, btnClearFaculty;
     private EditText etFacultyName;
     private Spinner spinnerDepartment;
-    private TextView tvPurposeTitle;
-    private TextView tvPurposeDescription;
+    private TextView tvPurposeTitle, tvPurposeDescription;
     private Button btnSubmit;
-
-
 
     private ArrayList<String> departments;
     private int studentId;
@@ -43,12 +38,8 @@ public class FacultyInquiryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faculty_inquiry);
 
-
         studentId = getIntent().getIntExtra("studentId", -1);
-
-
         dbHelper = new DBHelper(this);
-
 
         initializeViews();
         setupListeners();
@@ -60,15 +51,13 @@ public class FacultyInquiryActivity extends AppCompatActivity {
         btnClearFaculty = findViewById(R.id.btnClearFaculty);
         etFacultyName = findViewById(R.id.etFacultyName);
         spinnerDepartment = findViewById(R.id.spinnerDepartment);
-        tvPurposeTitle = findViewById(R.id.tvPurposeTitle);
-        tvPurposeDescription = findViewById(R.id.tvPurposeDescription);
+        tvPurposeTitle = findViewById(R.id.etPurposeTitle);
+        tvPurposeDescription = findViewById(R.id.etPurposeDescription);
         btnSubmit = findViewById(R.id.btnSubmit);
     }
 
     private void setupListeners() {
-
         btnBack.setOnClickListener(v -> onBackPressed());
-
 
         btnClearFaculty.setOnClickListener(v -> etFacultyName.setText(""));
 
@@ -79,19 +68,15 @@ public class FacultyInquiryActivity extends AppCompatActivity {
         });
 
         tvPurposeTitle.setOnClickListener(v -> showEditTitleDialog());
-
-
         tvPurposeDescription.setOnClickListener(v -> showEditDescriptionDialog());
     }
 
     private void setupDepartmentSpinner() {
-        // Initialize departments list
         departments = new ArrayList<>(Arrays.asList(
                 "Select Department",
                 "Information Technology",
                 "SDD"
         ));
-
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -102,15 +87,6 @@ public class FacultyInquiryActivity extends AppCompatActivity {
 
         spinnerDepartment.setAdapter(adapter);
         spinnerDepartment.setSelection(0);
-
-        spinnerDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
     }
 
     private boolean validateForm() {
@@ -126,14 +102,14 @@ public class FacultyInquiryActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        if (tvPurposeTitle.getText().toString().equals("Enter Subject") ||
-                tvPurposeTitle.getText().toString().trim().isEmpty()) {
+        String title = tvPurposeTitle.getText().toString().trim();
+        if (title.isEmpty() || title.equals("Enter Subject")) {
             Toast.makeText(this, "Please enter a subject for your inquiry", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
 
-        if (tvPurposeDescription.getText().toString().equals("Write purpose...") ||
-                tvPurposeDescription.getText().toString().trim().isEmpty()) {
+        String description = tvPurposeDescription.getText().toString().trim();
+        if (description.isEmpty() || description.equals("Write purpose...")) {
             Toast.makeText(this, "Please enter a description for your inquiry", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
@@ -155,7 +131,8 @@ public class FacultyInquiryActivity extends AppCompatActivity {
         boolean success = saveInquiryToDatabase(facultyName, department, purposeTitle, purposeDescription);
 
         if (success) {
-            Toast.makeText(this, "Inquiry submitted successfully", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(FacultyInquiryActivity.this, FacultyInquirySent.class);
+            startActivity(intent);
             finish();
         } else {
             Toast.makeText(this, "Failed to submit inquiry. Please try again.", Toast.LENGTH_SHORT).show();
@@ -186,18 +163,15 @@ public class FacultyInquiryActivity extends AppCompatActivity {
     private void showEditTitleDialog() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         final EditText input = new EditText(this);
-        input.setText(tvPurposeTitle.getText().toString().equals("Enter Subject") ?
-                "" : tvPurposeTitle.getText().toString());
+        String current = tvPurposeTitle.getText().toString();
+        input.setText(current.equals("Enter Subject") ? "" : current);
+
         builder.setTitle("Enter Subject");
         builder.setView(input);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             String title = input.getText().toString().trim();
-            if (!title.isEmpty()) {
-                tvPurposeTitle.setText(title);
-            } else {
-                tvPurposeTitle.setText("Enter Subject");
-            }
+            tvPurposeTitle.setText(title.isEmpty() ? "Enter Subject" : title);
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -208,18 +182,15 @@ public class FacultyInquiryActivity extends AppCompatActivity {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         final EditText input = new EditText(this);
         input.setMinLines(4);
-        input.setText(tvPurposeDescription.getText().toString().equals("Write purpose...") ?
-                "" : tvPurposeDescription.getText().toString());
+        String current = tvPurposeDescription.getText().toString();
+        input.setText(current.equals("Write purpose...") ? "" : current);
+
         builder.setTitle("Write Purpose");
         builder.setView(input);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             String description = input.getText().toString().trim();
-            if (!description.isEmpty()) {
-                tvPurposeDescription.setText(description);
-            } else {
-                tvPurposeDescription.setText("Write purpose...");
-            }
+            tvPurposeDescription.setText(description.isEmpty() ? "Write purpose..." : description);
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
