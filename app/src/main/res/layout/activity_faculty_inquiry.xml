@@ -143,53 +143,59 @@
     <!-- Purpose Field -->
     <LinearLayout
         android:id="@+id/layoutPurpose"
-        android:layout_width="261dp"
+        android:layout_width="260dp"
         android:layout_height="177dp"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="36dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/bg_white_square_with_border"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutDepartment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutDepartment">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/tvPurposeTitle"
+        <EditText
+            android:id="@+id/etPurposeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:hint="Enter Subject"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvPurposeDescription"
+        <EditText
+            android:id="@+id/etPurposeDescription"
             android:layout_width="match_parent"
-            android:layout_height="139dp"
-            android:background="@android:color/transparent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:hint="Write purpose..."
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="8dp"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/tvPurposeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/label_bg"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:layout_marginLeft="50dp"
-            android:text="PURPOSE"
+            android:background="@android:color/transparent"
             android:textColor="@android:color/black"
-            android:textSize="12sp"
-            android:translationY="-2dp"
-            tools:layout_editor_absoluteX="87dp"
-            tools:layout_editor_absoluteY="487dp" />
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:lines="5" />
     </LinearLayout>
+
+    <!-- Purpose Label -->
+    <TextView
+        android:id="@+id/tvPurposeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:background="@drawable/label_bg"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="PURPOSE"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:translationY="-10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/layoutPurpose" />
+
 
 
     <!-- Submit Button -->
