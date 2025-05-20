@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_gradient_background">
+    android:background="@drawable/bg">
 
     <!-- Header with back button and title -->
     <RelativeLayout

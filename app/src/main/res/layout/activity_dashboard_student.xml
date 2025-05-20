@@ -5,16 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/background"
->
-
-    <!-- Organization and Position Text Views remain the same -->
+    android:background="@drawable/background">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
-        <!-- Back arrow button at the top -->
+        <!-- BACK BUTTON -->
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -34,129 +31,125 @@
                 android:src="@drawable/baseline_arrow_back_24" />
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/bg_white_square"
-            android:clickable="true" />
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_white_square" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/buttonicon" />
+        </FrameLayout>
+
     </LinearLayout>
 
+    <!-- Welcome message with username from database -->
     <TextView
-        android:id="@+id/tvPosition"
+        android:id="@+id/tvWelcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Position: [Not Set]"
-        android:textStyle="italic"
-        android:gravity="center"
-        android:visibility="gone"
-        android:layout_marginBottom="24dp" />
-
-    <!-- Faculty Inquiry button - centered -->
-    <TextView
-        android:id="@+id/tvOrganizationLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:gravity="center"
-        android:text="ORGANIZATION: "
+        android:text="WELCOME"
         android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="12dp" />
 
     <TextView
+        android:id="@+id/tvUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-        android:gravity="center"
-        android:text="POSITION: "
+        android:text="[Username]"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:id="@+id/layoutFacultyInquiry"
-        android:layout_width="150dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="40dp"
-        android:background="@android:color/darker_gray"
+        android:textSize="26sp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="15dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_marginBottom="120dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Faculty Inquiry"
-            android:textSize="12sp"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-
-    <!-- Middle row buttons remain the same -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
         android:padding="16dp">
 
+        <!--FACULTY INQUIRY BUTTON-->
         <LinearLayout
-            android:id="@+id/layoutAccountabilities"
-            android:layout_width="150dp"
-            android:layout_height="70dp"
-            android:layout_marginEnd="48dp"
-            android:background="@android:color/darker_gray"
-            android:orientation="horizontal"
-            android:padding="15dp"
-            android:gravity="center_horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="115dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accountabilities"
+                android:text="FACULTY INQUIRE"
                 android:textSize="12sp"
-
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layoutTrackDocuments"
-            android:layout_width="150dp"
-            android:layout_height="70dp"
-            android:background="@android:color/holo_green_dark"
-            android:orientation="horizontal"
-            android:padding="15dp"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Track Organization Documents"
+                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="12sp" />
+                android:layout_marginBottom="5dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/layoutFacultyInquiry"
+                android:layout_width="85dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_submit_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="7dp"
+                    android:src="@drawable/inquiry_icon" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <!-- Post Notice button - centered -->
-    <LinearLayout
-        android:id="@+id/layoutPostNotice"
-        android:layout_width="150dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/holo_green_dark"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="15dp"
-        android:layout_gravity="center_horizontal">
-
-        <TextView
+        <!--ACCOUNTABILITIES BUTTON-->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post Organization Notice"
-            android:textSize="12sp"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:gravity="center">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACCOUNTABILITIES"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutAccountabilities"
+                android:layout_width="85dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_submit_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:src="@drawable/accountabilities_icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

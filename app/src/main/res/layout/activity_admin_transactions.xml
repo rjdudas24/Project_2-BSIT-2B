@@ -10,7 +10,7 @@
 
     <!-- Back arrow button at the top -->
     <FrameLayout
-        android:layout_width="322dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -30,21 +30,26 @@
 
 
     <TextView
-        android:layout_width="210dp"
-        android:layout_height="69dp"
+        android:layout_width="266dp"
+        android:layout_height="86dp"
         android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="12dp"
+        android:gravity="center"
         android:text="TRANSACTION HISTORY"
         android:textColor="@color/white"
-        android:textSize="26dp"
+        android:textSize="32dp"
         android:textStyle="bold" />
 
     <ListView
         android:id="@+id/lvAllTransactions"
         android:layout_width="match_parent"
-        android:layout_height="573dp"
-        android:background="@color/dark_blue"
-        android:textColor="@color/white" />
+        android:layout_height="683dp"
+        android:background="@drawable/list_view_border"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
+        android:scrollbarTrackVertical="@android:color/transparent" />
 
 </LinearLayout>
