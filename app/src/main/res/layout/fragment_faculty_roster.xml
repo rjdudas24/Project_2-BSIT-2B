@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!-- Student roster section -->
     <TextView
+        android:id="@+id/tvEmptyRoster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Faculty Roster"
+        android:text="No faculty members found"
+        android:gravity="center"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:textStyle="italic"
+        android:padding="16dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
 
     <ListView
-        android:id="@+id/lvFacultyRoster"
+        android:id="@+id/lvRoster"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp" />
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_popup_sync"
+        app:tint="@android:color/white"
+        app:backgroundTint="#0D47A1" />
+
+</RelativeLayout>

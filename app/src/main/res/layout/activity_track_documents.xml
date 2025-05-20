@@ -70,9 +70,10 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
-                android:hint="   Document Name"
-                android:textColorHint="#B0BEC5"
-                android:textColor="@android:color/white" />
+                android:hint="Document Name"
+                android:paddingStart="12dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray" />
 
             <EditText
                 android:id="@+id/etDocumentDesc"
@@ -81,9 +82,10 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
-                android:hint="   Description"
-                android:textColorHint="#B0BEC5"
-                android:textColor="@android:color/white" />
+                android:hint="Description"
+                android:paddingStart="12dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnAddDocument"

@@ -63,6 +63,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 "department TEXT, " +
                 "created_at LONG DEFAULT (strftime('%s','now') * 1000))");
 
+        // Faculty Inquiries table
+        db.execSQL("CREATE TABLE faculty_inquiries (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "student_id INTEGER NOT NULL, " +
+                "faculty_name TEXT NOT NULL, " +
+                "department TEXT NOT NULL, " +
+                "subject TEXT NOT NULL, " +
+                "description TEXT NOT NULL, " +
+                "status TEXT NOT NULL, " +
+                "created_at TEXT NOT NULL, " +
+                "FOREIGN KEY (student_id) REFERENCES users(id))");
+
         // Default admin account
         db.execSQL("INSERT INTO users (name, email, password, role, has_org, org_role, verified) VALUES " +
                 "('Admin', 'admin@cisync.com', 'admin', 'Admin', 0, NULL, 1)");

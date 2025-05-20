@@ -82,7 +82,7 @@ public class RegisterActivity extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
-                new String[]{"Chairperson", "Vice-Chairperson", "Secretary", "Treasurer", "Auditor"}
+                new String[]{"Chairperson", "Vice-Chairperson (Internal)", "Vice-Chairperson (External)" , "Secretary", "Associate Secretary", "Treasurer", "Associate Treasurer", "Auditor"}
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spOrgPosition.setAdapter(adapter);
