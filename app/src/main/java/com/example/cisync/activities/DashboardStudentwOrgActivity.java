@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.example.cisync.R;
@@ -55,7 +56,14 @@ public class DashboardStudentwOrgActivity extends Activity {
         }
 
         // Set click listeners
-        layoutInquire.setOnClickListener(v -> Toast.makeText(this, "Inquire Faculty feature", Toast.LENGTH_SHORT).show());
+        layoutInquire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardStudentwOrgActivity.this, FacultyInquiryActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            }
+        });
 
         layoutAccountabilities.setOnClickListener(v -> {
             Intent intent = new Intent(this, ViewAccountabilitiesActivity.class);
@@ -66,16 +74,15 @@ public class DashboardStudentwOrgActivity extends Activity {
         // Organization-specific features
         if (hasOrg) {
             layoutTrackDocuments.setOnClickListener(v -> {
-                Intent intent = new Intent(this, TrackDocumentsActivity.class);
-                intent.putExtra("position", orgPosition);
-                intent.putExtra("studentId", studentId); // Pass the student ID
-                startActivity(intent);
-            });
-
-            layoutPostNotice.setOnClickListener(v -> {
-                Intent intent = new Intent(this, PostNoticeActivity.class);
-                intent.putExtra("studentId", studentId); // Pass the student ID
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(this, TrackDocumentsActivity.class);
+                    intent.putExtra("position", orgPosition);
+                    intent.putExtra("studentId", studentId);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e("DashboardStudentOrg", "Error launching Track Documents: " + e.getMessage(), e);
+                    Toast.makeText(this, "Error opening document tracking: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             });
         }
     }

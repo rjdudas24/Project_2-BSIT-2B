@@ -38,7 +38,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE documents (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "student_id INTEGER, " +
-                "status TEXT)");
+                "name TEXT, " +
+                "description TEXT, " +
+                "status TEXT, " +
+                "created_by TEXT, " +
+                "timestamp TEXT)");
 
         // Notices table
         db.execSQL("CREATE TABLE notices (" +
@@ -52,7 +56,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "user_id INTEGER, " +
                 "action_type TEXT, " +
                 "description TEXT, " +
-                "timestamp LONG)");
+                "timestamp LONG, " +
+                "read_status INTEGER DEFAULT 0)");
 
         // Applications table - for the approval system
         db.execSQL("CREATE TABLE applications (" +
