@@ -132,6 +132,8 @@ public class FacultyInquiryActivity extends AppCompatActivity {
 
         if (success) {
             Intent intent = new Intent(FacultyInquiryActivity.this, FacultyInquirySent.class);
+            // Make sure to pass the studentId to the FacultyInquirySent activity
+            intent.putExtra("studentId", studentId);
             startActivity(intent);
             finish();
         } else {

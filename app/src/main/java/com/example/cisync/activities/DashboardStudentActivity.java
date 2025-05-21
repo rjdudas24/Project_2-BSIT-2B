@@ -18,6 +18,9 @@ public class DashboardStudentActivity extends Activity {
     int studentId;
     DBHelper dbHelper;
 
+    private ImageButton btnBack;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,12 @@ public class DashboardStudentActivity extends Activity {
 
         // Load username from database
         loadUsername();
+//
+//        // Set click listener for back button
+//        btnBack.setOnClickListener(v -> {
+//            // Go back to login or previous screen
+//            finish();
+//        });
 
         // Set click listeners
         layoutInquire.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +63,13 @@ public class DashboardStudentActivity extends Activity {
             startActivity(intent);
         });
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // Reload username when returning to this activity
+//        loadUsername();
+//    }
 
     private void loadUsername() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
