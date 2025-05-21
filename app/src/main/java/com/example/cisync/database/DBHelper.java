@@ -38,7 +38,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE documents (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "student_id INTEGER, " +
-                "status TEXT)");
+                "name TEXT, " +
+                "description TEXT, " +
+                "status TEXT, " +
+                "created_by TEXT, " +
+                "timestamp TEXT)");
 
         // Notices table
         db.execSQL("CREATE TABLE notices (" +
