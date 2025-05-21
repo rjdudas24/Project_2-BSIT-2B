@@ -20,7 +20,7 @@
             android:src="@drawable/bg_white_square" />
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/btnBackTransactions"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginRight="300dp"
@@ -31,7 +31,7 @@
 
     <TextView
         android:layout_width="266dp"
-        android:layout_height="86dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="12dp"
@@ -41,15 +41,68 @@
         android:textSize="32dp"
         android:textStyle="bold" />
 
-    <ListView
-        android:id="@+id/lvAllTransactions"
+    <!-- Filter controls container -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="683dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/list_view_border"
-        android:padding="10dp"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
-        android:scrollbarTrackVertical="@android:color/transparent" />
+        android:padding="8dp">
+
+        <Spinner
+            android:id="@+id/spinnerTransactionFilter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnApplyFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter"
+            android:layout_marginStart="8dp" />
+
+        <Button
+            android:id="@+id/btnClearFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Frame layout to hold both ListView and empty state TextView -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/lvAllTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/list_view_border"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
+            android:scrollbarTrackVertical="@android:color/transparent" />
+
+        <!-- Empty state message -->
+        <TextView
+            android:id="@+id/tvNoTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="No transactions found"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:background="@drawable/list_view_border"
+            android:padding="16dp"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>
