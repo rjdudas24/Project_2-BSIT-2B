@@ -74,7 +74,7 @@ public class DashboardStudentwOrgActivity extends Activity {
                     startActivity(intent);
                 } catch (Exception e) {
                     Log.e("DashboardStudentOrg", "Error launching Track Documents: " + e.getMessage(), e);
-                    Toast.makeText(this, "Error opening Document Tracker", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error opening document tracking: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

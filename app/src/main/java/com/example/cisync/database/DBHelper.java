@@ -56,7 +56,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "user_id INTEGER, " +
                 "action_type TEXT, " +
                 "description TEXT, " +
-                "timestamp LONG)");
+                "timestamp LONG, " +
+                "read_status INTEGER DEFAULT 0)");
 
         // Applications table - for the approval system
         db.execSQL("CREATE TABLE applications (" +
