@@ -66,13 +66,15 @@ public class AdminTransactionsActivity extends Activity {
 
     private void setupFilterSpinner() {
         try {
-            // Create filter options
+            // Create filter options - Add Document Submission and Document Status Update
             ArrayList<String> filterOptions = new ArrayList<>();
             filterOptions.add("All");
             filterOptions.add("Registration");
             filterOptions.add("User Verification");
             filterOptions.add("Account Status Change");
             filterOptions.add("User Update");
+            filterOptions.add("Document Submission"); // Added for Track Documents
+            filterOptions.add("Document Status Update"); // Added for Track Documents
             filterOptions.add("RESEND");
 
             // Set up spinner adapter
@@ -163,15 +165,39 @@ public class AdminTransactionsActivity extends Activity {
                     String formattedDate = formatTimestamp(timestamp);
                     String userInfo = getUserInfo(userId);
 
-                    // Create display text
-                    String displayText = formattedDate + "\n" +
-                            (actionType != null ? actionType : "Unknown action");
+                    // Create display text with special formatting for Document actions
+                    String displayText;
 
-                    if (!userInfo.isEmpty()) {
-                        displayText += " (" + userInfo + ")";
+                    if ("Document Submission".equals(actionType)) {
+                        displayText = "📄 " + formattedDate + "\n" +
+                                actionType;
+
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
                     }
+                    else if ("Document Status Update".equals(actionType)) {
+                        displayText = "📝 " + formattedDate + "\n" +
+                                actionType;
 
-                    displayText += ":\n" + description;
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
+                    }
+                    else {
+                        displayText = formattedDate + "\n" +
+                                (actionType != null ? actionType : "Unknown action");
+
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
+                    }
 
                     txList.add(displayText);
                 } while (cursor.moveToNext());
@@ -262,6 +288,16 @@ public class AdminTransactionsActivity extends Activity {
                     "Role: " + userRole + "\n" +
                     "User ID: " + transaction.getUserId();
 
+            // If it's a document-related transaction, try to find more details
+            if ("Document Submission".equals(transaction.getActionType()) ||
+                    "Document Status Update".equals(transaction.getActionType())) {
+
+                String additionalInfo = getDocumentDetails(transaction);
+                if (!additionalInfo.isEmpty()) {
+                    message += "\n\nDocument Details:\n" + additionalInfo;
+                }
+            }
+
             builder.setMessage(message);
             builder.setPositiveButton("Close", null);
             builder.show();
@@ -269,6 +305,55 @@ public class AdminTransactionsActivity extends Activity {
             Log.e(TAG, "Error showing details: " + e.getMessage(), e);
             Toast.makeText(this, "Error showing transaction details", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Helper method to get document details for document-related transactions
+    private String getDocumentDetails(TransactionData transaction) {
+        String details = "";
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        try {
+            // Extract document name from description for Document Submission
+            String docName = "";
+
+            if ("Document Submission".equals(transaction.getActionType())) {
+                String desc = transaction.getDescription();
+                if (desc.startsWith("New document submitted: ")) {
+                    docName = desc.substring("New document submitted: ".length()).trim();
+                }
+            }
+            else if ("Document Status Update".equals(transaction.getActionType())) {
+                String desc = transaction.getDescription();
+                if (desc.startsWith("Your document '") && desc.indexOf("'") != desc.lastIndexOf("'")) {
+                    docName = desc.substring(desc.indexOf("'") + 1, desc.lastIndexOf("'")).trim();
+                }
+            }
+
+            if (!docName.isEmpty()) {
+                // Query document details
+                Cursor cursor = db.rawQuery(
+                        "SELECT status, created_by, timestamp FROM documents WHERE name = ?",
+                        new String[]{docName}
+                );
+
+                if (cursor.moveToFirst()) {
+                    String status = cursor.getString(0);
+                    String createdBy = cursor.getString(1);
+                    String timestamp = cursor.getString(2);
+
+                    details += "Document Name: " + docName + "\n";
+                    details += "Status: " + status + "\n";
+                    details += "Created by: " + createdBy + "\n";
+                    details += "Created on: " + timestamp;
+                }
+
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting document details: " + e.getMessage(), e);
+        }
+
+        return details;
     }
 
     @Override
