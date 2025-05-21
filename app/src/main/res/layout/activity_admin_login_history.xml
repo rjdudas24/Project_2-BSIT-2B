@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/admin_bg">
 
-
     <!-- Back arrow button at the top -->
     <FrameLayout
         android:layout_width="40dp"
@@ -20,14 +19,13 @@
             android:src="@drawable/bg_white_square" />
 
         <ImageView
-            android:id="@+id/btnBackTransactions"
+            android:id="@+id/btnBackLoginHistory"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginRight="300dp"
             android:padding="8dp"
             android:src="@drawable/baseline_arrow_back_24" />
     </FrameLayout>
-
 
     <TextView
         android:layout_width="266dp"
@@ -36,7 +34,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="12dp"
         android:gravity="center"
-        android:text="TRANSACTION HISTORY"
+        android:text="LOGIN HISTORY"
         android:textColor="@color/white"
         android:textSize="32dp"
         android:textStyle="bold" />
@@ -51,7 +49,7 @@
         android:padding="8dp">
 
         <Spinner
-            android:id="@+id/spinnerTransactionFilter"
+            android:id="@+id/spinnerRoleFilter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,7 +77,7 @@
         android:layout_weight="1">
 
         <ListView
-            android:id="@+id/lvAllTransactions"
+            android:id="@+id/lvLoginHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/list_view_border"
@@ -91,12 +89,12 @@
 
         <!-- Empty state message -->
         <TextView
-            android:id="@+id/tvNoTransactions"
+            android:id="@+id/tvNoLogins"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="No transactions found"
+            android:text="No login history found"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="italic"

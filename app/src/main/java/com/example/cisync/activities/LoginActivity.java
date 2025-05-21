@@ -1,6 +1,7 @@
 package com.example.cisync.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -84,6 +85,9 @@ public class LoginActivity extends Activity {
                     return;
                 }
 
+                // Record this login session
+                recordLoginSession(userId);
+
                 // Safely check if user has an organization
                 boolean hasOrg = false;
                 int hasOrgColumnIndex = cursor.getColumnIndex("has_org");
@@ -136,6 +140,40 @@ public class LoginActivity extends Activity {
             Log.e(TAG, "Error during login process", e);
             Toast.makeText(this, "Error during login: " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void recordLoginSession(int userId) {
+        try {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            // Get device information
+            String deviceInfo = android.os.Build.MANUFACTURER + " " +
+                    android.os.Build.MODEL + " / Android " +
+                    android.os.Build.VERSION.RELEASE;
+
+            // Record the login
+            AdminLoginHistoryActivity.recordLogin(db, userId, deviceInfo);
+            Log.d(TAG, "Login session recorded for user ID: " + userId);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error recording login session: " + e.getMessage(), e);
+            // Continue with login process even if recording fails
+        }
+    }
+
+    public static void recordLogoutSession(Context context, int userId) {
+        try {
+            DBHelper dbHelper = new DBHelper(context);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            // Record the logout
+            AdminLoginHistoryActivity.recordLogout(db, userId);
+            Log.d(TAG, "Logout session recorded for user ID: " + userId);
+
+            dbHelper.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Error recording logout: " + e.getMessage(), e);
         }
     }
 

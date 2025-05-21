@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.*;
-        import com.example.cisync.R;
+import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
 
 import java.text.SimpleDateFormat;
@@ -45,26 +45,41 @@ public class PostNoticeActivity extends Activity {
                 return;
             }
 
-            // Format: [Position] Notice content
-            String formattedContent = "[" + userPosition + "] " + content;
-
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            cv.put("student_id", studentId);
-            cv.put("content", formattedContent);
-
-            // Add timestamp to notices
-            cv.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
-
-            long result = db.insert("notices", null, cv);
-
-            if (result != -1) {
-                Toast.makeText(this, "Notice posted!", Toast.LENGTH_SHORT).show();
+            if (postNotice(content)) {
+                Toast.makeText(this, "Notice posted successfully!", Toast.LENGTH_SHORT).show();
                 etNotice.setText("");
-            } else {
-                Toast.makeText(this, "Failed to post notice.", Toast.LENGTH_SHORT).show();
+                finish(); // Return to previous screen
             }
         });
+    }
+
+    private boolean postNotice(String content) {
+        // Only proceed if we have a valid student ID
+        if (studentId == -1) {
+            Toast.makeText(this, "Error: Invalid user ID", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        try {
+            // Format: [Position] Notice content
+            String formattedContent = "[" + userPosition + "] " + content;
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("student_id", studentId);
+            values.put("content", formattedContent);
+            values.put("timestamp", timestamp);
+
+            long result = db.insert("notices", null, values);
+            db.close();
+
+            return result != -1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     private void getUserPosition() {
@@ -83,12 +98,16 @@ public class PostNoticeActivity extends Activity {
 
         if (cursor.moveToFirst()) {
             userPosition = cursor.getString(0);
-            tvCurrentPosition.setText("Posting as: " + userPosition);
+            // Handle null or empty position
+            if (userPosition == null || userPosition.isEmpty()) {
+                userPosition = "Member";
+            }
         } else {
             userPosition = "Member";
-            tvCurrentPosition.setText("Posting as: Member");
         }
 
+        tvCurrentPosition.setText("Posting as: " + userPosition);
         cursor.close();
+        db.close();
     }
 }

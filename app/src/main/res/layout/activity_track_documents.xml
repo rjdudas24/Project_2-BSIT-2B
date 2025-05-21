@@ -46,7 +46,7 @@
         <LinearLayout
             android:id="@+id/layoutAddDocument"
             android:layout_width="343dp"
-            android:layout_height="222dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/bg_border_box"
@@ -70,9 +70,10 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
-                android:hint="   Document Name"
-                android:textColorHint="#B0BEC5"
-                android:textColor="@android:color/white" />
+                android:hint="Document Name"
+                android:paddingStart="12dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray" />
 
             <EditText
                 android:id="@+id/etDocumentDesc"
@@ -81,9 +82,33 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
-                android:hint="   Description"
-                android:textColorHint="#B0BEC5"
-                android:textColor="@android:color/white" />
+                android:hint="Description"
+                android:paddingStart="12dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray" />
+
+            <!-- Faculty selection section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Send to Faculty:"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="4dp" />
+
+                <Spinner
+                    android:id="@+id/spFaculty"
+                    android:layout_width="290dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_white_square_with_border"
+                    android:layout_marginBottom="8dp" />
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnAddDocument"
@@ -124,7 +149,7 @@
                 <ListView
                     android:id="@+id/lvDocuments"
                     android:layout_width="match_parent"
-                    android:layout_height="414dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:divider="@android:color/transparent"

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.*;
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
+import com.example.cisync.activities.FacultyInquiryActivity;
 
 public class DashboardStudentActivity extends Activity {
 
@@ -16,6 +17,9 @@ public class DashboardStudentActivity extends Activity {
     TextView tvWelcome, tvUsername;
     int studentId;
     DBHelper dbHelper;
+
+    private ImageButton btnBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +40,22 @@ public class DashboardStudentActivity extends Activity {
 
         // Load username from database
         loadUsername();
+//
+//        // Set click listener for back button
+//        btnBack.setOnClickListener(v -> {
+//            // Go back to login or previous screen
+//            finish();
+//        });
 
         // Set click listeners
-        layoutInquire.setOnClickListener(v ->
-                Toast.makeText(this, "Inquire Faculty feature", Toast.LENGTH_SHORT).show()
-        );
+        layoutInquire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardStudentActivity.this, com.example.cisync.activities.FacultyInquiryActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            }
+        });
 
         layoutAccountabilities.setOnClickListener(v -> {
             Intent intent = new Intent(this, ViewAccountabilitiesActivity.class);
@@ -48,6 +63,13 @@ public class DashboardStudentActivity extends Activity {
             startActivity(intent);
         });
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // Reload username when returning to this activity
+//        loadUsername();
+//    }
 
     private void loadUsername() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
