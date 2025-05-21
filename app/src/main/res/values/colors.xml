@@ -5,4 +5,8 @@
     <color name="dark_blue">#1E77B2</color>
     <color name="darker_blue">#002549</color>
 
+    <color name="tab_text_default">#808080</color> <!-- Tab default color -->
+    <color name="tab_text_selected">#0D47A1</color> <!-- Selected tab color -->
+
+
 </resources>

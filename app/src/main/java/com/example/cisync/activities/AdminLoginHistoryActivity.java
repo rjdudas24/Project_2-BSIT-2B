@@ -185,9 +185,8 @@ public class AdminLoginHistoryActivity extends Activity {
                     String formattedLogoutTime = logoutTime > 0 ? formatTimestamp(logoutTime) : "Session Active";
 
                     // Create display text
-                    String displayText = formattedLoginTime + "\n" +
-                            name + " (" + role + ")" + "\n" +
-                            "Session: " + (logoutTime > 0 ? calculateSessionDuration(loginTime, logoutTime) : "Active");
+                    String displayText = "\n" + formattedLoginTime + "\n" +
+                            name + " (" + role + ")" + "\n";
 
                     loginList.add(displayText);
                 } while (cursor.moveToNext());
