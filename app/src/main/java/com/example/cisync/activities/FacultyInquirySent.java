@@ -1,4 +1,3 @@
-
 package com.example.cisync.activities;
 
 import android.content.Intent;
@@ -18,6 +17,7 @@ public class FacultyInquirySent extends AppCompatActivity {
 
     private Button btnOk;
     private DBHelper dbHelper;
+    private int studentId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +27,21 @@ public class FacultyInquirySent extends AppCompatActivity {
         // Initialize database helper
         dbHelper = new DBHelper(this);
 
+        // Get student ID from intent
+        studentId = getIntent().getIntExtra("studentId", -1);
+
         // Initialize UI components
         btnOk = findViewById(R.id.btnOk);
 
         // Set click listener for OK button
         btnOk.setOnClickListener(v -> {
-            // Record transaction in database (optional)
+            // Record transaction in database
             recordTransaction();
 
-            // Return to main activity or appropriate screen
+            // Return to dashboard activity
             Intent intent = new Intent(FacultyInquirySent.this, DashboardStudentActivity.class);
+            // Pass back the student ID
+            intent.putExtra("studentId", studentId);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear activity stack
             startActivity(intent);
             finish(); // Close this activity
@@ -45,13 +50,10 @@ public class FacultyInquirySent extends AppCompatActivity {
 
     /**
      * Records the inquiry submission as a transaction in the database
-     * This is optional but provides a record of user activity
+     * This provides a record of user activity
      */
     private void recordTransaction() {
         try {
-            // Get student ID if passed from previous activity
-            int studentId = getIntent().getIntExtra("studentId", -1);
-
             if (studentId != -1) {
                 // Insert directly into transactions table
                 long timestamp = System.currentTimeMillis();
