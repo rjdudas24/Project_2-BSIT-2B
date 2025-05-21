@@ -27,7 +27,7 @@ public class FacultyInquirySent extends AppCompatActivity {
         // Initialize database helper
         dbHelper = new DBHelper(this);
 
-        // Get student ID from intent
+        // Get student ID from intent - this is the key fix
         studentId = getIntent().getIntExtra("studentId", -1);
 
         // Initialize UI components
