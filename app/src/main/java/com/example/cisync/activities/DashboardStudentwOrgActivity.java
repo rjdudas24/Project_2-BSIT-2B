@@ -56,7 +56,14 @@ public class DashboardStudentwOrgActivity extends Activity {
         }
 
         // Set click listeners
-        layoutInquire.setOnClickListener(v -> Toast.makeText(this, "Inquire Faculty feature", Toast.LENGTH_SHORT).show());
+        layoutInquire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardStudentwOrgActivity.this, FacultyInquiryActivity.class);
+                intent.putExtra("studentId", studentId);
+                startActivity(intent);
+            }
+        });
 
         layoutAccountabilities.setOnClickListener(v -> {
             Intent intent = new Intent(this, ViewAccountabilitiesActivity.class);
