@@ -60,14 +60,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Filter"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="8dp"
+            android:background="@color/dark_blue"/>
 
         <Button
             android:id="@+id/btnClearFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Clear"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="8dp"
+            android:background="@color/dark_blue"/>
     </LinearLayout>
 
     <!-- Frame layout to hold both ListView and empty state TextView -->

@@ -2,7 +2,8 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/admin_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,6 +19,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center"
+            android:textColor="@color/white"
             android:layout_marginBottom="16dp" />
 
         <TextView
@@ -26,6 +28,7 @@
             android:layout_height="wrap_content"
             android:text="Welcome, Admin!"
             android:textSize="18sp"
+            android:textColor="@color/white"
             android:layout_marginBottom="24dp" />
 
         <!-- Card for Users (Combined Student and Faculty Rosters) -->
@@ -41,21 +44,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_user"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Users Icon" />
+                    android:contentDescription="Users Icon"
+                    android:src="@drawable/ic_user"
+                    app:tint="#002549" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:text="Users"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -71,21 +77,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_verify"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Verify Icon" />
+                    android:contentDescription="Verify Icon"
+                    app:tint="#002549"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Verify User Applications"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -102,21 +111,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_history"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Transaction Icon" />
+                    android:contentDescription="Transaction Icon"
+                    app:tint="#002549"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Log-in History"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>\
 
@@ -133,21 +145,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_history"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Transaction Icon" />
+                    android:contentDescription="Transaction Icon"
+                    app:tint="#002549"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Transaction History"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

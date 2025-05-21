@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/admin_bg">
 
     <!-- Header with back button and centered title -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0D47A1"
         android:padding="16dp">
 
         <!-- Back button -->
@@ -42,12 +43,17 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:background="@color/white"
+        app:tabTextColor="@color/tab_text_default"
+        app:tabSelectedTextColor="@color/tab_text_selected"
+        app:tabIndicatorColor="@color/tab_text_selected">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Student Roster" />
+            android:text="Student Roster"
+            />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

@@ -19,7 +19,8 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/tvUserStatus"
@@ -43,7 +44,8 @@
         android:text="user@example.com"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tvUserRole"
@@ -51,6 +53,7 @@
         android:layout_height="wrap_content"
         android:text="Student"
         android:textSize="14sp"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+        android:textColor="@color/white"/>
 
 </LinearLayout>
