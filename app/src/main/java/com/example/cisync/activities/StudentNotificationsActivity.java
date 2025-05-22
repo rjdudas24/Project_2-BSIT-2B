@@ -158,7 +158,7 @@ public class StudentNotificationsActivity extends Activity {
         String icon = getNotificationIcon(actionType);
         String status = isUnread ? " 🔴 NEW" : "";
 
-        return icon + " " + description + "\n" + time + status;
+        return "\n" + icon + " " + description + "\n" + time + status + "\n";
     }
 
     private String getNotificationIcon(String actionType) {
@@ -382,7 +382,7 @@ public class StudentNotificationsActivity extends Activity {
     // Custom adapter to handle visual distinction between read and unread notifications
     private class NotificationAdapter extends ArrayAdapter<String> {
         public NotificationAdapter() {
-            super(StudentNotificationsActivity.this, android.R.layout.simple_list_item_1, notifications);
+            super(StudentNotificationsActivity.this, R.layout.notif_list, notifications);
         }
 
         @Override

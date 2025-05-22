@@ -69,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="NOTIFICATIONS"
+            android:fontFamily="@font/saira_bold"
             android:textColor="@android:color/white"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -80,8 +81,9 @@
             android:layout_height="wrap_content"
             android:text="💬 Faculty responses, document updates, and important notices"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:gravity="center"
+            android:fontFamily="@font/saira_semibold"
             android:layout_marginBottom="12dp"
             android:textStyle="italic" />
 
@@ -122,6 +124,7 @@
             android:text="💡 Tap on any notification to view details and mark as read"
             android:textColor="#AAAAAA"
             android:textSize="12sp"
+            android:fontFamily="@font/saira_semibold"
             android:gravity="center"
             android:layout_marginTop="8dp" />
 
