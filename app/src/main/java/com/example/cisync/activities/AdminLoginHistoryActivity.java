@@ -58,6 +58,10 @@ public class AdminLoginHistoryActivity extends Activity {
             btnClearFilter = findViewById(R.id.btnClearFilter);
             btnBackLoginHistory = findViewById(R.id.btnBackLoginHistory);
             dbHelper = new DBHelper(this);
+
+            // Initialize adapter with custom layout - will be set up in loadLoginHistory()
+            adapter = new ArrayAdapter<>(this, R.layout.custom_login_history_item, loginList);
+            lvLoginHistory.setAdapter(adapter);
         } catch (Exception e) {
             Log.e(TAG, "Error initializing views: " + e.getMessage(), e);
             Toast.makeText(this, "Error initializing views", Toast.LENGTH_SHORT).show();
@@ -75,8 +79,8 @@ public class AdminLoginHistoryActivity extends Activity {
 
             // Set up spinner adapter
             ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, filterOptions);
-            filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_role_spinner, filterOptions);
+            filterAdapter.setDropDownViewResource(R.layout.custom_role_spinner);
             spinnerRoleFilter.setAdapter(filterAdapter);
         } catch (Exception e) {
             Log.e(TAG, "Error setting up filter spinner: " + e.getMessage(), e);
@@ -203,7 +207,7 @@ public class AdminLoginHistoryActivity extends Activity {
             cursor.close();
 
             // Update adapter
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, loginList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_login_history_item, loginList);
             lvLoginHistory.setAdapter(adapter);
 
         } catch (Exception e) {
