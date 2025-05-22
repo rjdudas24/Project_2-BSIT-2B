@@ -24,8 +24,11 @@ public class FacultyNotificationsActivity extends Activity {
     ArrayList<String> notifications = new ArrayList<>();
     ArrayList<Integer> transactionIds = new ArrayList<>();
     ArrayList<String> actionTypes = new ArrayList<>();
+    ArrayList<Boolean> readStatuses = new ArrayList<>();
+    ArrayList<Integer> inquiryIds = new ArrayList<>();
     DBHelper dbHelper;
     ImageView btnBackNotifications;
+    TextView tvUnreadCount;
     int facultyId;
 
     @Override
@@ -34,27 +37,27 @@ public class FacultyNotificationsActivity extends Activity {
         setContentView(R.layout.activity_faculty_notifications);
 
         try {
-            // Get faculty ID from intent
             facultyId = getIntent().getIntExtra("userId", 1);
 
             lvFacultyNotifications = findViewById(R.id.lvFacultyNotifications);
             btnBackNotifications = findViewById(R.id.btnBackNotifications);
+            tvUnreadCount = findViewById(R.id.tvFacultyLabel);
             dbHelper = new DBHelper(this);
 
-            // Load notifications
             loadNotifications();
 
-            // Set back button click listener
             btnBackNotifications.setOnClickListener(v -> finish());
 
-            // Set item click listener for notifications
             lvFacultyNotifications.setOnItemClickListener((parent, view, position, id) -> {
                 if (position < transactionIds.size() && position < actionTypes.size()) {
                     int transactionId = transactionIds.get(position);
                     String actionType = actionTypes.get(position);
+                    int inquiryId = inquiryIds.get(position);
 
                     // Handle different types of notifications
-                    if ("Document Submission".equals(actionType)) {
+                    if ("Faculty Inquiry".equals(actionType)) {
+                        showInquiryResponseDialog(transactionId, inquiryId);
+                    } else if ("Document Submission".equals(actionType)) {
                         showDocumentDetails(transactionId);
                     }
 
@@ -73,31 +76,19 @@ public class FacultyNotificationsActivity extends Activity {
         notifications.clear();
         transactionIds.clear();
         actionTypes.clear();
+        readStatuses.clear();
+        inquiryIds.clear();
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         int unreadCount = 0;
 
         try {
-            // Get column index to check if read_status exists
-            boolean hasReadStatus = false;
-            Cursor columnsCursor = db.rawQuery("PRAGMA table_info(transactions)", null);
-            if (columnsCursor.moveToFirst()) {
-                do {
-                    int nameIndex = columnsCursor.getColumnIndex("name");
-                    if (nameIndex >= 0 && columnsCursor.getString(nameIndex).equals("read_status")) {
-                        hasReadStatus = true;
-                        break;
-                    }
-                } while (columnsCursor.moveToNext());
-            }
-            columnsCursor.close();
-
-            // Query notifications
-            String query = "SELECT id, action_type, description, timestamp";
-            if (hasReadStatus) {
-                query += ", read_status";
-            }
-            query += " FROM transactions WHERE user_id = ? ORDER BY timestamp DESC";
+            String query = "SELECT t.id, t.action_type, t.description, t.timestamp, " +
+                    "COALESCE(t.read_status, 0) as read_status, " +
+                    "COALESCE(t.inquiry_id, -1) as inquiry_id " +
+                    "FROM transactions t " +
+                    "WHERE t.user_id = ? " +
+                    "ORDER BY t.timestamp DESC";
 
             Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(facultyId)});
 
@@ -107,60 +98,42 @@ public class FacultyNotificationsActivity extends Activity {
                     String actionType = cursor.getString(1);
                     String description = cursor.getString(2);
                     long timestamp = cursor.getLong(3);
-                    int readStatus = 0; // Default to unread
-
-                    // Check if read_status exists
-                    if (hasReadStatus) {
-                        int readStatusIdx = cursor.getColumnIndex("read_status");
-                        if (readStatusIdx >= 0) {
-                            readStatus = cursor.getInt(readStatusIdx);
-                        }
-                    }
+                    int readStatus = cursor.getInt(4);
+                    int inquiryId = cursor.getInt(5);
 
                     if (readStatus == 0) {
                         unreadCount++;
                     }
 
-                    // Format timestamp
                     String formattedTime = formatTimestamp(timestamp);
-
-                    // Format display text
-                    String displayText;
-                    if ("Document Submission".equals(actionType)) {
-                        displayText = "📄 " + description + "\n" + formattedTime;
-                        if (readStatus == 0) {
-                            displayText += " (NEW)";
-                        }
-                    } else {
-                        displayText = description + "\n(" + formattedTime + ")";
-                        if (readStatus == 0) {
-                            displayText += " (NEW)";
-                        }
-                    }
+                    String displayText = formatNotificationText(actionType, description, formattedTime, readStatus == 0);
 
                     notifications.add(displayText);
                     transactionIds.add(id);
                     actionTypes.add(actionType);
+                    readStatuses.add(readStatus == 0);
+                    inquiryIds.add(inquiryId);
 
                 } while (cursor.moveToNext());
             } else {
                 notifications.add("No notifications found");
+                transactionIds.add(-1);
+                actionTypes.add("");
+                readStatuses.add(false);
+                inquiryIds.add(-1);
             }
 
             cursor.close();
 
-            // Update UI with unread count if needed
-            try {
-                TextView tvUnread = findViewById(R.id.tvFacultyLabel);
-                if (tvUnread != null) {
-                    tvUnread.setText(unreadCount + " UNREAD");
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error updating unread count: " + e.getMessage());
+            // Update unread count
+            if (tvUnreadCount != null) {
+                tvUnreadCount.setText(unreadCount + " UNREAD");
             }
 
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notifications);
+            // Use custom adapter to handle read/unread visual distinction
+            adapter = new NotificationAdapter();
             lvFacultyNotifications.setAdapter(adapter);
+
         } catch (Exception e) {
             Log.e(TAG, "Error loading notifications: " + e.getMessage(), e);
             notifications.add("Error loading notifications: " + e.getMessage());
@@ -169,12 +142,134 @@ public class FacultyNotificationsActivity extends Activity {
         }
     }
 
-    private String formatTimestamp(long timestamp) {
+    private String formatNotificationText(String actionType, String description, String time, boolean isUnread) {
+        String icon = getNotificationIcon(actionType);
+        String status = isUnread ? " 🔴 NEW" : "";
+
+        return icon + " " + description + "\n" + time + status;
+    }
+
+    private String getNotificationIcon(String actionType) {
+        if ("Faculty Inquiry".equals(actionType)) {
+            return "❓";
+        } else if ("Document Submission".equals(actionType)) {
+            return "📄";
+        }
+        return "📝";
+    }
+
+    private void showInquiryResponseDialog(int transactionId, int inquiryId) {
+        if (inquiryId == -1) return;
+
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
-            return sdf.format(new Date(timestamp));
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            // Get inquiry details
+            Cursor inquiryCursor = db.rawQuery(
+                    "SELECT fi.student_id, fi.subject, fi.description, fi.status, u.name " +
+                            "FROM faculty_inquiries fi " +
+                            "JOIN users u ON fi.student_id = u.id " +
+                            "WHERE fi.id = ?",
+                    new String[]{String.valueOf(inquiryId)}
+            );
+
+            if (!inquiryCursor.moveToFirst()) {
+                inquiryCursor.close();
+                Toast.makeText(this, "Inquiry details not found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int studentId = inquiryCursor.getInt(0);
+            String subject = inquiryCursor.getString(1);
+            String description = inquiryCursor.getString(2);
+            String status = inquiryCursor.getString(3);
+            String studentName = inquiryCursor.getString(4);
+
+            inquiryCursor.close();
+
+            // Show response dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Faculty Inquiry Response");
+
+            String message = "From: " + studentName + "\n" +
+                    "Subject: " + subject + "\n\n" +
+                    "Description: " + description + "\n\n" +
+                    "Current Status: " + status + "\n\n" +
+                    "Choose your response:";
+
+            builder.setMessage(message);
+
+            builder.setPositiveButton("Available", (dialog, which) -> {
+                respondToInquiry(inquiryId, studentId, "Available", subject, studentName);
+            });
+
+            builder.setNegativeButton("Unavailable", (dialog, which) -> {
+                respondToInquiry(inquiryId, studentId, "Unavailable", subject, studentName);
+            });
+
+            builder.setNeutralButton("Close", null);
+            builder.show();
+
         } catch (Exception e) {
-            return "Unknown date";
+            Log.e(TAG, "Error showing inquiry response dialog: " + e.getMessage(), e);
+            Toast.makeText(this, "Error showing inquiry details", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void respondToInquiry(int inquiryId, int studentId, String response, String subject, String studentName) {
+        try {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db.beginTransaction();
+
+            // Update inquiry status
+            ContentValues inquiryUpdate = new ContentValues();
+            inquiryUpdate.put("status", response);
+            inquiryUpdate.put("response_time", System.currentTimeMillis());
+
+            int updateResult = db.update("faculty_inquiries", inquiryUpdate, "id=?",
+                    new String[]{String.valueOf(inquiryId)});
+
+            if (updateResult > 0) {
+                // Create notification for student
+                ContentValues studentNotification = new ContentValues();
+                studentNotification.put("user_id", studentId);
+                studentNotification.put("action_type", "Faculty Response");
+                studentNotification.put("description", "Faculty responded '" + response + "' to your inquiry: " + subject);
+                studentNotification.put("timestamp", System.currentTimeMillis());
+                studentNotification.put("read_status", 0);
+
+                db.insert("transactions", null, studentNotification);
+
+                // Record faculty response in faculty's transaction history
+                ContentValues facultyTransaction = new ContentValues();
+                facultyTransaction.put("user_id", facultyId);
+                facultyTransaction.put("action_type", "Faculty Inquiry Response");
+                facultyTransaction.put("description", "Responded '" + response + "' to inquiry from " + studentName + ": " + subject);
+                facultyTransaction.put("timestamp", System.currentTimeMillis());
+
+                db.insert("transactions", null, facultyTransaction);
+
+                db.setTransactionSuccessful();
+
+                Toast.makeText(this, "Response sent to student", Toast.LENGTH_SHORT).show();
+                loadNotifications(); // Refresh notifications
+
+            } else {
+                Toast.makeText(this, "Error sending response", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error responding to inquiry: " + e.getMessage(), e);
+            Toast.makeText(this, "Error sending response", Toast.LENGTH_SHORT).show();
+        } finally {
+            try {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                if (db.inTransaction()) {
+                    db.endTransaction();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -182,7 +277,6 @@ public class FacultyNotificationsActivity extends Activity {
         try {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-            // Get transaction details
             Cursor transCursor = db.rawQuery(
                     "SELECT description FROM transactions WHERE id=?",
                     new String[]{String.valueOf(transactionId)}
@@ -197,10 +291,8 @@ public class FacultyNotificationsActivity extends Activity {
             String description = transCursor.getString(0);
             transCursor.close();
 
-            // Extract document name from description (assumed format: "New document submitted: [Name]")
             String documentName = description.replace("New document submitted: ", "").trim();
 
-            // Find document details
             Cursor docCursor = db.rawQuery(
                     "SELECT id, name, description, status, created_by, timestamp, student_id FROM documents WHERE name=?",
                     new String[]{documentName}
@@ -222,7 +314,6 @@ public class FacultyNotificationsActivity extends Activity {
 
             docCursor.close();
 
-            // Get student name
             String studentName = "Unknown Student";
             Cursor studentCursor = db.rawQuery(
                     "SELECT name FROM users WHERE id=?",
@@ -234,7 +325,6 @@ public class FacultyNotificationsActivity extends Activity {
             }
             studentCursor.close();
 
-            // Show dialog with document details
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Document Details");
 
@@ -246,7 +336,6 @@ public class FacultyNotificationsActivity extends Activity {
 
             builder.setMessage(message);
 
-            // Add action buttons for document approval/rejection
             builder.setPositiveButton("Approve", (dialog, which) -> {
                 updateDocumentStatus(docId, "Approved", studentId, name);
             });
@@ -256,7 +345,6 @@ public class FacultyNotificationsActivity extends Activity {
             });
 
             builder.setNeutralButton("Close", null);
-
             builder.show();
 
         } catch (Exception e) {
@@ -268,59 +356,46 @@ public class FacultyNotificationsActivity extends Activity {
     private void updateDocumentStatus(int docId, String status, int studentId, String docName) {
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-            // Start transaction to ensure both operations succeed
             db.beginTransaction();
 
-            try {
-                // Update document status
-                ContentValues values = new ContentValues();
-                values.put("status", status);
+            ContentValues values = new ContentValues();
+            values.put("status", status);
 
-                int updateResult = db.update("documents", values, "id=?", new String[]{String.valueOf(docId)});
+            int updateResult = db.update("documents", values, "id=?", new String[]{String.valueOf(docId)});
 
-                if (updateResult > 0) {
-                    // Create notification for student about status change
-                    ContentValues transValues = new ContentValues();
-                    transValues.put("user_id", studentId);
-                    transValues.put("action_type", "Document Status Update");
-                    transValues.put("description", "Your document '" + docName + "' has been " + status.toLowerCase());
-                    transValues.put("timestamp", System.currentTimeMillis());
+            if (updateResult > 0) {
+                ContentValues transValues = new ContentValues();
+                transValues.put("user_id", studentId);
+                transValues.put("action_type", "Document Status Update");
+                transValues.put("description", "Your document '" + docName + "' has been " + status.toLowerCase());
+                transValues.put("timestamp", System.currentTimeMillis());
+                transValues.put("read_status", 0);
 
-                    // Add read_status if column exists
-                    try {
-                        transValues.put("read_status", 0);
-                    } catch (Exception e) {
-                        // Column may not exist, continue
-                    }
+                long transResult = db.insert("transactions", null, transValues);
 
-                    long transResult = db.insert("transactions", null, transValues);
-
-                    if (transResult != -1) {
-                        Log.d(TAG, "Student transaction created for document status update: " + docName + " -> " + status);
-
-                        // Commit the transaction
-                        db.setTransactionSuccessful();
-
-                        Toast.makeText(this, "Document " + status.toLowerCase(), Toast.LENGTH_SHORT).show();
-
-                        // Refresh notifications
-                        loadNotifications();
-                    } else {
-                        Log.e(TAG, "Failed to create student transaction for document status update");
-                        Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
-                    }
+                if (transResult != -1) {
+                    db.setTransactionSuccessful();
+                    Toast.makeText(this, "Document " + status.toLowerCase(), Toast.LENGTH_SHORT).show();
+                    loadNotifications();
                 } else {
-                    Log.e(TAG, "Failed to update document status in database");
                     Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
                 }
-            } finally {
-                db.endTransaction(); // This will rollback if setTransactionSuccessful() wasn't called
+            } else {
+                Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
             Log.e(TAG, "Error updating document status: " + e.getMessage(), e);
             Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
+        } finally {
+            try {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                if (db.inTransaction()) {
+                    db.endTransaction();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -328,34 +403,50 @@ public class FacultyNotificationsActivity extends Activity {
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-            // Check if read_status column exists
-            Cursor columnsCursor = db.rawQuery("PRAGMA table_info(transactions)", null);
-            boolean hasReadStatus = false;
+            ContentValues values = new ContentValues();
+            values.put("read_status", 1);
 
-            if (columnsCursor.moveToFirst()) {
-                do {
-                    int nameIndex = columnsCursor.getColumnIndex("name");
-                    if (nameIndex >= 0 && columnsCursor.getString(nameIndex).equals("read_status")) {
-                        hasReadStatus = true;
-                        break;
-                    }
-                } while (columnsCursor.moveToNext());
-            }
-            columnsCursor.close();
-
-            if (hasReadStatus) {
-                ContentValues values = new ContentValues();
-                values.put("read_status", 1);
-
-                db.update("transactions", values, "id=?",
-                        new String[]{String.valueOf(transactionId)});
-
-                // Refresh notifications
-                loadNotifications();
-            }
+            db.update("transactions", values, "id=?", new String[]{String.valueOf(transactionId)});
+            loadNotifications(); // Refresh to update visual state
 
         } catch (Exception e) {
             Log.e(TAG, "Error marking notification as read: " + e.getMessage(), e);
+        }
+    }
+
+    private String formatTimestamp(long timestamp) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
+            return sdf.format(new Date(timestamp));
+        } catch (Exception e) {
+            return "Unknown date";
+        }
+    }
+
+    // Custom adapter to handle visual distinction between read and unread notifications
+    private class NotificationAdapter extends ArrayAdapter<String> {
+        public NotificationAdapter() {
+            super(FacultyNotificationsActivity.this, android.R.layout.simple_list_item_1, notifications);
+        }
+
+        @Override
+        public View getView(int position, View convertView, android.view.ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            TextView textView = view.findViewById(android.R.id.text1);
+
+            // Visual distinction for unread notifications
+            if (position < readStatuses.size() && readStatuses.get(position)) {
+                textView.setTextColor(getResources().getColor(android.R.color.white));
+                textView.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+                textView.setTypeface(null, android.graphics.Typeface.BOLD);
+            } else {
+                textView.setTextColor(getResources().getColor(android.R.color.white));
+                textView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                textView.setTypeface(null, android.graphics.Typeface.NORMAL);
+            }
+
+            textView.setPadding(16, 12, 16, 12);
+            return view;
         }
     }
 
@@ -365,10 +456,5 @@ public class FacultyNotificationsActivity extends Activity {
         if (dbHelper != null) {
             dbHelper.close();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed(); // Ensure system back button works too
     }
 }

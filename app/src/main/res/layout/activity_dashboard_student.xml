@@ -127,7 +127,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Second Row: View Notices -->
+    <!-- Second Row: View Notices and Notifications -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -140,7 +140,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginEnd="115dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -166,6 +167,62 @@
                     android:layout_marginTop="7dp"
                     android:src="@drawable/notice_icon" />
             </LinearLayout>
+        </LinearLayout>
+
+        <!--NOTIFICATIONS BUTTON (using emoji)-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOTIFICATIONS"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp" />
+
+            <FrameLayout
+                android:layout_width="85dp"
+                android:layout_height="80dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutViewNotifications"
+                    android:layout_width="85dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/bg_submit_btn"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="1dp">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:text="🔔"
+                        android:textSize="28sp"
+                        android:gravity="center"
+                        android:layout_marginTop="7dp" />
+                </LinearLayout>
+
+                <!-- Notification badge using simple color -->
+                <TextView
+                    android:id="@+id/tvNotificationBadge"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="#FF4444"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header with logout button only -->
+        <!-- Header with logout button and notification badge -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,6 +28,38 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:layout_alignParentEnd="true" />
+
+            <!-- Notification indicator (using bell emoji) -->
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_toStartOf="@id/btnLogoutStudentOrg"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_white_square"
+                    android:text="🔔"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:contentDescription="Notifications" />
+
+                <TextView
+                    android:id="@+id/tvNotificationBadge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="#FF4444"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </FrameLayout>
         </RelativeLayout>
 
         <!-- Organization and Position Info -->
@@ -194,38 +226,103 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Second row: Post Notice (center) -->
+        <!-- Second row: Post Notice and Notifications -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:gravity="center"
             android:layout_marginBottom="20dp"
-            android:gravity="center">
+            android:padding="8dp">
 
-            <TextView
+            <!--POST NOTICE BUTTON-->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="POST NOTICE"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="5dp" />
-
-            <LinearLayout
-                android:id="@+id/layoutPostNotice"
-                android:layout_width="85dp"
-                android:layout_height="80dp"
-                android:background="@drawable/bg_submit_btn"
-                android:gravity="center"
                 android:orientation="vertical"
-                android:padding="1dp">
+                android:gravity="center"
+                android:layout_marginEnd="32dp">
 
-                <ImageView
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:src="@drawable/notice_icon" />
+                    android:text="POST NOTICE"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="5dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutPostNotice"
+                    android:layout_width="75dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/bg_submit_btn"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:src="@drawable/notice_icon" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--NOTIFICATIONS BUTTON (using emoji)-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NOTIFICATIONS"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="5dp" />
+
+                <FrameLayout
+                    android:layout_width="75dp"
+                    android:layout_height="70dp">
+
+                    <LinearLayout
+                        android:id="@+id/layoutViewNotifications"
+                        android:layout_width="75dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/bg_submit_btn"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="1dp">
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:text="🔔"
+                            android:textSize="24sp"
+                            android:gravity="center"
+                            android:layout_marginTop="5dp" />
+                    </LinearLayout>
+
+                    <!-- Notification badge using simple color -->
+                    <TextView
+                        android:id="@+id/tvNotificationBadge"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="#FF4444"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -314,7 +411,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="💼 Accountability management features are available for Treasurer, Associate Treasurer, and Auditor positions only.&#10;📝 Organization officers do not need to pay organization fees."
+            android:text="💼 Accountability management features are available for Treasurer, Associate Treasurer, and Auditor positions only.&#10;📝 Organization officers do not need to pay organization fees.&#10;💬 Check notifications for faculty responses and important updates."
             android:textColor="#AAAAAA"
             android:textSize="12sp"
             android:gravity="center"

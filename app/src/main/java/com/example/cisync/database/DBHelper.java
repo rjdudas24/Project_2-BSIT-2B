@@ -74,7 +74,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 "action_type TEXT, " +
                 "description TEXT, " +
                 "timestamp LONG, " +
-                "read_status INTEGER DEFAULT 0)");
+                "read_status INTEGER DEFAULT 0, " +
+                "inquiry_id INTEGER DEFAULT NULL, " +
+                "FOREIGN KEY (inquiry_id) REFERENCES faculty_inquiries(id))");
 
         // Applications table - for the approval system
         db.execSQL("CREATE TABLE applications (" +
@@ -89,13 +91,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE faculty_inquiries (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "student_id INTEGER NOT NULL, " +
+                "faculty_id INTEGER NOT NULL, " +
                 "faculty_name TEXT NOT NULL, " +
                 "department TEXT NOT NULL, " +
                 "subject TEXT NOT NULL, " +
                 "description TEXT NOT NULL, " +
-                "status TEXT NOT NULL, " +
-                "created_at TEXT NOT NULL, " +
-                "FOREIGN KEY (student_id) REFERENCES users(id))");
+                "status TEXT NOT NULL DEFAULT 'Pending', " +
+                "created_at INTEGER NOT NULL, " +
+                "response_time INTEGER DEFAULT NULL, " +
+                "FOREIGN KEY (student_id) REFERENCES users(id), " +
+                "FOREIGN KEY (faculty_id) REFERENCES users(id))");
 
         // Login History table
         db.execSQL("CREATE TABLE IF NOT EXISTS login_history (" +
