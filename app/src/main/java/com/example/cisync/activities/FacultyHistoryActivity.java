@@ -77,8 +77,8 @@ public class FacultyHistoryActivity extends Activity {
             filterOptions.add("Document Submission");
 
             ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, filterOptions);
-            filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_spinner_white, filterOptions);
+            filterAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spinnerFilter.setAdapter(filterAdapter);
         } catch (Exception e) {
             Log.e(TAG, "Error setting up filter spinner: " + e.getMessage(), e);
@@ -198,14 +198,14 @@ public class FacultyHistoryActivity extends Activity {
 
             cursor.close();
 
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, historyList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, historyList);
             lvHistory.setAdapter(adapter);
 
         } catch (Exception e) {
             Log.e(TAG, "Error loading history: " + e.getMessage());
             Toast.makeText(this, "Error loading history", Toast.LENGTH_SHORT).show();
             historyList.add("Error loading transaction history");
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, historyList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, historyList);
             lvHistory.setAdapter(adapter);
         }
     }

@@ -171,6 +171,8 @@ public class StudentNotificationsActivity extends Activity {
                 return "📋";
             case "Faculty Inquiry":
                 return "❓";
+            case "Inquiry Sent":
+                return "📤";
             case "Notice Posted":
                 return "📢";
             case "Accountability Posted":
@@ -270,8 +272,8 @@ public class StudentNotificationsActivity extends Activity {
                 case "Accountability Status Update":
                     configureAccountabilityStatusDialog(dialogView, description, timestamp);
                     break;
-                case "Faculty Inquiry":
-                    configureFacultyInquiryDialog(dialogView, description, timestamp);
+                case "Inquiry Sent":
+                    configureInquirySentDialog(dialogView, description, timestamp);
                     break;
                 case "Notice Posted":
                     configureNoticeDialog(dialogView, description, timestamp);
@@ -308,6 +310,49 @@ public class StudentNotificationsActivity extends Activity {
         }
     }
 
+    private void configureInquirySentDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        TextView tvNotificationStatus = dialogView.findViewById(R.id.tvNotificationStatus);
+        LinearLayout llSubjectRow = dialogView.findViewById(R.id.llSubjectRow);
+        TextView tvSubjectLabel = dialogView.findViewById(R.id.tvSubjectLabel);
+        TextView tvSubjectValue = dialogView.findViewById(R.id.tvSubjectValue);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
+
+        // Set status
+        tvNotificationStatus.setText("✅ SENT");
+        tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        tvNotificationStatus.setVisibility(View.VISIBLE);
+
+        // Extract subject and faculty name from description
+        if (description.contains("Inquiry sent to ") && description.contains(": ")) {
+            String[] parts = description.split(": ", 2);
+            if (parts.length == 2) {
+                String facultyPart = parts[0].replace("Inquiry sent to ", "");
+                String subject = parts[1];
+
+                llSubjectRow.setVisibility(View.VISIBLE);
+                tvSubjectLabel.setText("Subject:");
+                tvSubjectValue.setText(subject);
+
+                // Show faculty name in additional info
+                llAdditionalInfo.setVisibility(View.VISIBLE);
+                ivAdditionalIcon.setImageResource(R.drawable.ic_user_w);
+                tvAdditionalInfo.setText("📤 Your inquiry has been sent to " + facultyPart + ". You will be notified when they respond.");
+            }
+        } else {
+            // Fallback additional info
+            llAdditionalInfo.setVisibility(View.VISIBLE);
+            ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+            tvAdditionalInfo.setText("📤 Your inquiry has been sent successfully. You will be notified when the faculty responds.");
+        }
+    }
     private void configureFacultyResponseDialog(View dialogView, String description, long timestamp) {
         ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
         ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
