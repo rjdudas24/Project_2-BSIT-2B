@@ -318,6 +318,38 @@ public class AdminTransactionsActivity extends Activity {
 
     private void showTransactionDetailsDialog(TransactionData transaction) {
         try {
+            // Create custom dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            // Inflate custom layout
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_transaction_details, null);
+            builder.setView(dialogView);
+
+            // Create dialog
+            AlertDialog dialog = builder.create();
+
+            // Make dialog background transparent to show custom background
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            // Find views in custom layout
+            TextView tvTransactionId = dialogView.findViewById(R.id.tvDialogTransactionId);
+            TextView tvActionType = dialogView.findViewById(R.id.tvDialogActionType);
+            TextView tvTransactionTime = dialogView.findViewById(R.id.tvDialogTransactionTime);
+            TextView tvUserName = dialogView.findViewById(R.id.tvDialogUserName);
+            TextView tvUserRole = dialogView.findViewById(R.id.tvDialogUserRole);
+            TextView tvUserId = dialogView.findViewById(R.id.tvDialogUserId);
+            TextView tvDescription = dialogView.findViewById(R.id.tvDialogDescription);
+            TextView tvTransactionIcon = dialogView.findViewById(R.id.tvTransactionIcon);
+            TextView tvTransactionCategory = dialogView.findViewById(R.id.tvTransactionCategory);
+            TextView tvTransactionSubcategory = dialogView.findViewById(R.id.tvTransactionSubcategory);
+            View vStatusIndicator = dialogView.findViewById(R.id.vTransactionStatusIndicator);
+            LinearLayout llAdditionalDetails = dialogView.findViewById(R.id.llAdditionalDetails);
+            LinearLayout llAdditionalDetailsContent = dialogView.findViewById(R.id.llAdditionalDetailsContent);
+            TextView tvAdditionalDetailsTitle = dialogView.findViewById(R.id.tvAdditionalDetailsTitle);
+            Button btnDialogClose = dialogView.findViewById(R.id.btnDialogClose);
+
             // Get user details
             String userInfo = getUserInfo(transaction.getUserId());
             String userName = "Unknown";
@@ -331,11 +363,296 @@ public class AdminTransactionsActivity extends Activity {
                 }
             }
 
-            // Build dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Transaction Details");
+            // Set basic transaction information
+            tvTransactionId.setText(String.valueOf(transaction.getId()));
+            tvActionType.setText(transaction.getActionType());
+            tvTransactionTime.setText(formatTimestamp(transaction.getTimestamp()));
+            tvDescription.setText(transaction.getDescription());
 
-            // Create message with details
+            // Set user information
+            tvUserName.setText(userName);
+            tvUserRole.setText(userRole);
+            tvUserId.setText(String.valueOf(transaction.getUserId()));
+
+            // Set role-specific styling for user role
+            switch (userRole.toLowerCase()) {
+                case "admin":
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.admin_role_color));
+                    break;
+                case "faculty":
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.faculty_role_color));
+                    break;
+                case "student":
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.student_role_color));
+                    break;
+                default:
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.default_role_color));
+                    break;
+            }
+
+            // Set transaction-specific details
+            String actionType = transaction.getActionType();
+            setTransactionTypeDetails(actionType, tvTransactionIcon, tvTransactionCategory,
+                    tvTransactionSubcategory, tvActionType, vStatusIndicator);
+
+            // Add additional details if available
+            String additionalInfo = getAdditionalTransactionDetails(transaction);
+            if (!additionalInfo.isEmpty()) {
+                llAdditionalDetails.setVisibility(View.VISIBLE);
+                populateAdditionalDetails(llAdditionalDetailsContent, additionalInfo, actionType, tvAdditionalDetailsTitle);
+            } else {
+                llAdditionalDetails.setVisibility(View.GONE);
+            }
+
+            // Set click listener for close button
+            btnDialogClose.setOnClickListener(v -> dialog.dismiss());
+
+            // Show dialog
+            dialog.show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error showing custom transaction details dialog: " + e.getMessage(), e);
+
+            // Fallback to simple dialog if custom dialog fails
+            showFallbackTransactionDialog(transaction);
+        }
+    }
+
+    private void setTransactionTypeDetails(String actionType, TextView tvIcon, TextView tvCategory,
+                                           TextView tvSubcategory, TextView tvActionType, View vStatusIndicator) {
+        try {
+            switch (actionType) {
+                case "Document Submission":
+                    tvIcon.setText("📄");
+                    tvCategory.setText("Document Management");
+                    tvSubcategory.setText("Student document submission");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.document_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Document Status Update":
+                    tvIcon.setText("📝");
+                    tvCategory.setText("Document Management");
+                    tvSubcategory.setText("Document status change");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.document_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Accountability Posted":
+                    tvIcon.setText("💰");
+                    tvCategory.setText("Financial Management");
+                    tvSubcategory.setText("New accountability added");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.accountability_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Accountability Status Update":
+                    tvIcon.setText("💳");
+                    tvCategory.setText("Financial Management");
+                    tvSubcategory.setText("Payment status changed");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.accountability_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Accountability Deleted":
+                    tvIcon.setText("🗑️");
+                    tvCategory.setText("Financial Management");
+                    tvSubcategory.setText("Accountability removed");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.delete_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_ended);
+                    break;
+
+                case "Faculty Inquiry":
+                    tvIcon.setText("❓");
+                    tvCategory.setText("Communication");
+                    tvSubcategory.setText("Faculty inquiry submitted");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.inquiry_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Notice Posted":
+                    tvIcon.setText("📢");
+                    tvCategory.setText("Communication");
+                    tvSubcategory.setText("Notice published");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.notice_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Registration":
+                    tvIcon.setText("👤");
+                    tvCategory.setText("User Management");
+                    tvSubcategory.setText("New user registration");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.user_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "User Verification":
+                    tvIcon.setText("✅");
+                    tvCategory.setText("User Management");
+                    tvSubcategory.setText("User account verified");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.user_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Account Status Change":
+                    tvIcon.setText("🔄");
+                    tvCategory.setText("User Management");
+                    tvSubcategory.setText("Account status modified");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.user_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "User Update":
+                    tvIcon.setText("📝");
+                    tvCategory.setText("User Management");
+                    tvSubcategory.setText("User information updated");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.user_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                default:
+                    tvIcon.setText("⚙️");
+                    tvCategory.setText("System");
+                    tvSubcategory.setText("General system action");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.default_role_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting transaction type details: " + e.getMessage(), e);
+        }
+    }
+
+    private String getAdditionalTransactionDetails(TransactionData transaction) {
+        String additionalInfo = "";
+
+        try {
+            String actionType = transaction.getActionType();
+
+            if ("Document Submission".equals(actionType) || "Document Status Update".equals(actionType)) {
+                additionalInfo = getDocumentDetails(transaction);
+            } else if ("Accountability Posted".equals(actionType)) {
+                additionalInfo = getAccountabilityPostedDetails(transaction);
+            } else if ("Accountability Status Update".equals(actionType)) {
+                additionalInfo = getAccountabilityStatusDetails(transaction);
+            } else if ("Accountability Deleted".equals(actionType)) {
+                additionalInfo = getAccountabilityDeletedDetails(transaction);
+            } else if ("Faculty Inquiry".equals(actionType)) {
+                additionalInfo = "Inquiry Type: Faculty Communication\nStatus: Submitted for review";
+            } else if ("Notice Posted".equals(actionType)) {
+                additionalInfo = getNoticePostedDetails(transaction);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting additional transaction details: " + e.getMessage(), e);
+        }
+
+        return additionalInfo;
+    }
+
+    private void populateAdditionalDetails(LinearLayout container, String additionalInfo,
+                                           String actionType, TextView titleView) {
+        try {
+            container.removeAllViews();
+
+            // Set appropriate title based on action type
+            switch (actionType) {
+                case "Document Submission":
+                case "Document Status Update":
+                    titleView.setText("DOCUMENT DETAILS");
+                    break;
+                case "Accountability Posted":
+                case "Accountability Status Update":
+                case "Accountability Deleted":
+                    titleView.setText("FINANCIAL DETAILS");
+                    break;
+                case "Faculty Inquiry":
+                    titleView.setText("INQUIRY DETAILS");
+                    break;
+                case "Notice Posted":
+                    titleView.setText("NOTICE DETAILS");
+                    break;
+                default:
+                    titleView.setText("ADDITIONAL DETAILS");
+                    break;
+            }
+
+            if (!additionalInfo.isEmpty()) {
+                String[] lines = additionalInfo.split("\n");
+
+                for (String line : lines) {
+                    if (!line.trim().isEmpty()) {
+                        if (line.contains(":")) {
+                            // Create key-value pair layout
+                            LinearLayout rowLayout = new LinearLayout(this);
+                            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                            rowLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                            rowLayout.setPadding(0, 0, 0, 8);
+
+                            String[] parts = line.split(":", 2);
+
+                            // Key TextView
+                            TextView keyView = new TextView(this);
+                            LinearLayout.LayoutParams keyParams = new LinearLayout.LayoutParams(
+                                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                            keyView.setLayoutParams(keyParams);
+                            keyView.setText(parts[0].trim() + ":");
+                            keyView.setTextColor(getResources().getColor(android.R.color.white));
+                            keyView.setTextSize(12);
+                            keyView.setTypeface(null, android.graphics.Typeface.BOLD);
+
+                            // Value TextView
+                            TextView valueView = new TextView(this);
+                            LinearLayout.LayoutParams valueParams = new LinearLayout.LayoutParams(
+                                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 2);
+                            valueView.setLayoutParams(valueParams);
+                            valueView.setText(parts.length > 1 ? parts[1].trim() : "");
+                            valueView.setTextColor(getResources().getColor(android.R.color.white));
+                            valueView.setTextSize(12);
+
+                            rowLayout.addView(keyView);
+                            rowLayout.addView(valueView);
+                            container.addView(rowLayout);
+                        } else {
+                            // Create single line TextView
+                            TextView textView = new TextView(this);
+                            textView.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                            textView.setText(line);
+                            textView.setTextColor(getResources().getColor(android.R.color.white));
+                            textView.setTextSize(12);
+                            textView.setPadding(0, 0, 0, 8);
+
+                            container.addView(textView);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error populating additional details: " + e.getMessage(), e);
+        }
+    }
+
+    private void showFallbackTransactionDialog(TransactionData transaction) {
+        try {
+            // Get user details
+            String userInfo = getUserInfo(transaction.getUserId());
+            String userName = "Unknown";
+            String userRole = "Unknown";
+
+            if (!userInfo.isEmpty()) {
+                String[] parts = userInfo.split(", ");
+                if (parts.length >= 2) {
+                    userName = parts[0];
+                    userRole = parts[1];
+                }
+            }
+
+            AlertDialog.Builder fallbackBuilder = new AlertDialog.Builder(this);
+            fallbackBuilder.setTitle("Transaction Details");
+
             String message = "Date: " + formatTimestamp(transaction.getTimestamp()) + "\n\n" +
                     "Action: " + transaction.getActionType() + "\n\n" +
                     "Description: " + transaction.getDescription() + "\n\n" +
@@ -343,37 +660,23 @@ public class AdminTransactionsActivity extends Activity {
                     "Role: " + userRole + "\n" +
                     "User ID: " + transaction.getUserId();
 
-            // Add specific details based on transaction type
-            String additionalInfo = "";
-
-            // Enhanced details for different transaction types
-            if ("Document Submission".equals(transaction.getActionType()) ||
-                    "Document Status Update".equals(transaction.getActionType())) {
-                additionalInfo = getDocumentDetails(transaction);
-            } else if ("Accountability Posted".equals(transaction.getActionType())) {
-                additionalInfo = "Accountability Management:\n" + getAccountabilityPostedDetails(transaction);
-            } else if ("Accountability Status Update".equals(transaction.getActionType())) {
-                additionalInfo = "Payment Status Change:\n" + getAccountabilityStatusDetails(transaction);
-            } else if ("Accountability Deleted".equals(transaction.getActionType())) {
-                additionalInfo = "Accountability Removal:\n" + getAccountabilityDeletedDetails(transaction);
-            } else if ("Faculty Inquiry".equals(transaction.getActionType())) {
-                additionalInfo = "Inquiry Type: Faculty Communication\nStatus: Submitted for review";
-            } else if ("Notice Posted".equals(transaction.getActionType())) {
-                additionalInfo = "Notice Publication:\n" + getNoticePostedDetails(transaction);
-            }
-
+            // Add additional details
+            String additionalInfo = getAdditionalTransactionDetails(transaction);
             if (!additionalInfo.isEmpty()) {
                 message += "\n\n" + additionalInfo;
             }
 
-            builder.setMessage(message);
-            builder.setPositiveButton("Close", null);
-            builder.show();
+            fallbackBuilder.setMessage(message);
+            fallbackBuilder.setPositiveButton("Close", null);
+            fallbackBuilder.show();
+
+            Toast.makeText(this, "Using fallback dialog due to error", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.e(TAG, "Error showing details: " + e.getMessage(), e);
-            Toast.makeText(this, "Error showing transaction details", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error showing fallback dialog: " + e.getMessage(), e);
+            Toast.makeText(this, "Error displaying transaction details", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     // Helper method to get document details for document-related transactions
     private String getDocumentDetails(TransactionData transaction) {

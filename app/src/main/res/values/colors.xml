@@ -20,4 +20,11 @@
     <!-- Status colors (if not already defined) -->
     <color name="status_active">#4CAF50</color>          <!-- Green for active -->
     <color name="status_ended">#F44336</color>           <!-- Red for ended -->
+
+    <color name="document_action_color">#4CAF50</color>
+    <color name="accountability_action_color">#FFEB3B</color>
+    <color name="delete_action_color">#A42550</color>
+    <color name="inquiry_action_color">#FF5722</color>
+    <color name="notice_action_color">#009688</color>
+    <color name="user_action_color">#00BCD4</color>
 </resources>
