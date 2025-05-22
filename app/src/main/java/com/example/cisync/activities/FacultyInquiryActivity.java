@@ -101,10 +101,10 @@ public class FacultyInquiryActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_spinner_item,
+                R.layout.custom_spinner_white,
                 departments
         );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.custom_spinner_white);
         spinnerDepartment.setAdapter(adapter);
         spinnerDepartment.setSelection(0);
     }
@@ -137,10 +137,10 @@ public class FacultyInquiryActivity extends AppCompatActivity {
             // Set up faculty spinner
             ArrayAdapter<String> facultyAdapter = new ArrayAdapter<>(
                     this,
-                    android.R.layout.simple_spinner_item,
+                    R.layout.custom_spinner_white,
                     facultyNames
             );
-            facultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            facultyAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spinnerFacultyList.setAdapter(facultyAdapter);
 
         } catch (Exception e) {
