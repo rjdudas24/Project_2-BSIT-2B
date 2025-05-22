@@ -28,7 +28,8 @@
             android:layout_marginTop="50dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="Organization Documents"
+            android:fontFamily="@font/saira_bold"
+            android:text="ORGANIZATION DOCUMENTS"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="Position: [Not Set]"
+            android:fontFamily="@font/saira_semibold"
             android:textColor="@android:color/white"
             android:textStyle="italic"
             android:layout_marginLeft="15dp"/>
@@ -58,7 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="8dp"
-                android:text="Add New Document"
+                android:text="ADD NEW DOCUMENT"
+                android:fontFamily="@font/saira_bold"
                 android:textColor="@android:color/white"
                 android:textSize="17dp"
                 android:textStyle="bold" />
@@ -71,6 +74,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
                 android:hint="Document Name"
+                android:fontFamily="@font/saira_semibold"
                 android:paddingStart="12dp"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray" />
@@ -83,6 +87,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_white_square_with_border"
                 android:hint="Description"
+                android:fontFamily="@font/saira_semibold"
                 android:paddingStart="12dp"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray" />
@@ -98,6 +103,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/saira_semibold"
                     android:text="Send to Faculty:"
                     android:textColor="@android:color/white"
                     android:layout_marginBottom="4dp" />
@@ -115,6 +121,7 @@
                 android:layout_width="291dp"
                 android:layout_height="34dp"
                 android:layout_marginLeft="15dp"
+                android:fontFamily="@font/saira_bold"
                 android:background="@drawable/bg_submit_btn"
                 android:text="Add Document"
                 android:textColor="#002549" />
@@ -141,7 +148,8 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginBottom="8dp"
                     android:background="@android:color/transparent"
-                    android:text="Document Tracking"
+                    android:text="DOCUMENT TRACKING"
+                    android:fontFamily="@font/saira_bold"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />

@@ -141,8 +141,8 @@ public class TrackDocumentsActivity extends Activity {
 
             // Set up spinner
             ArrayAdapter<String> facultyAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, facultyNames);
-            facultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_spinner_white, facultyNames);
+            facultyAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spFaculty.setAdapter(facultyAdapter);
 
             // Handle faculty selection
@@ -163,8 +163,8 @@ public class TrackDocumentsActivity extends Activity {
 
             // Use default option
             ArrayAdapter<String> facultyAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, facultyNames);
-            facultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_spinner_white, facultyNames);
+            facultyAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spFaculty.setAdapter(facultyAdapter);
         }
     }
@@ -234,13 +234,13 @@ public class TrackDocumentsActivity extends Activity {
 
             cursor.close();
 
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, documentsList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, documentsList);
             lvDocuments.setAdapter(adapter);
 
         } catch (Exception e) {
             Log.e(TAG, "Error loading documents: " + e.getMessage(), e);
             documentsList.add("Error loading documents: " + e.getMessage());
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, documentsList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, documentsList);
             lvDocuments.setAdapter(adapter);
         }
     }
