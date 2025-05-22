@@ -16,40 +16,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Filter by Position:"
+            android:fontFamily="@font/saira_bold"
             android:textSize="14sp"
+            android:textColor="@color/white"
             android:layout_marginEnd="8dp" />
 
         <Spinner
             android:id="@+id/spStudentPositionFilter"
             android:layout_width="0dp"
+            android:fontFamily="@font/saira_bold"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/btnStudentApplyFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="Apply"
+            android:text="APPLY"
             android:textSize="12sp"
+            android:fontFamily="@font/saira_bold"
             android:layout_marginStart="4dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:padding="8dp"
-            app:backgroundTint="#0D47A1"/>
+            app:backgroundTint="@color/dark_blue"/>
 
         <Button
             android:id="@+id/btnStudentClearFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear"
+            android:text="CLEAR"
             android:textColor="@color/white"
             android:textSize="12sp"
+            android:fontFamily="@font/saira_bold"
             android:layout_marginStart="4dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:padding="8dp"
-            app:backgroundTint="#0D47A1"/>
+            app:backgroundTint="@color/dark_blue"/>
     </LinearLayout>
 
     <TextView

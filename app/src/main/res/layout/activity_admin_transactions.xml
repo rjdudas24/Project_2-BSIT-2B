@@ -36,6 +36,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="12dp"
         android:gravity="center"
+        android:fontFamily="@font/saira_bold"
         android:text="TRANSACTION HISTORY"
         android:textColor="@color/white"
         android:textSize="32dp"
@@ -61,14 +62,18 @@
             android:id="@+id/btnApplyFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Filter"
+            android:text="FILTER"
+            android:textColor="@color/white"
+            android:fontFamily="@font/saira_bold"
             android:layout_marginStart="8dp" />
 
         <Button
             android:id="@+id/btnClearFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear"
+            android:text="CLEAR"
+            android:textColor="@color/white"
+            android:fontFamily="@font/saira_bold"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
@@ -86,6 +91,8 @@
             android:padding="10dp"
             android:textColor="@color/white"
             android:textSize="12dp"
+            android:dividerHeight="1dp"
+            android:divider="@color/dark_blue"
             android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
             android:scrollbarTrackVertical="@android:color/transparent" />
 
