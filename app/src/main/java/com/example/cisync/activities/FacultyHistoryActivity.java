@@ -112,12 +112,8 @@ public class FacultyHistoryActivity extends Activity {
                 int inquiryId = inquiryIds.get(position);
                 String documentName = documentNames.get(position);
 
-                // Only show re-response option for specific action types
-                if (RE_RESPONDABLE_ACTIONS.contains(actionType)) {
-                    showReResponseDialog(transactionId, targetUserId, originalMessage, actionType, inquiryId, documentName);
-                } else {
-                    showTransactionDetailsDialog(transactionId, actionType, originalMessage);
-                }
+                // Show transaction details dialog for all transactions
+                showTransactionDetailsDialog(transactionId, actionType, originalMessage);
             }
         });
     }
@@ -323,14 +319,32 @@ public class FacultyHistoryActivity extends Activity {
             configureReResponseButtons(actionType, btnReResponseOption1, btnReResponseOption2,
                     tvReResponseMessage, details);
 
-            // Set button click listeners
-            setupReResponseListeners(dialogView, transactionId, actionType, details);
+            // Create and show dialog first to get reference
+            AlertDialog dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+            // Set button click listeners with dialog reference
+            setupReResponseListeners(dialogView, transactionId, actionType, details, dialog);
+
+            // Set close button listener
+            btnClose.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
 
         } else {
             tvReResponseStatus.setText("Not Available");
             tvReResponseStatus.setTextColor(getResources().getColor(android.R.color.holo_red_light));
             vReResponseIndicator.setBackgroundResource(R.drawable.status_indicator_active);
             llReResponseSection.setVisibility(View.GONE);
+
+            // Create and show dialog
+            AlertDialog dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+            // Set close button listener
+            btnClose.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
         }
 
         // Set additional information if needed
@@ -341,15 +355,6 @@ public class FacultyHistoryActivity extends Activity {
         } else {
             llAdditionalInfo.setVisibility(View.GONE);
         }
-
-        // Create and show dialog
-        AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-        // Set close button listener
-        btnClose.setOnClickListener(v -> dialog.dismiss());
-
-        dialog.show();
     }
 
     // Helper class to store transaction details
@@ -407,9 +412,9 @@ public class FacultyHistoryActivity extends Activity {
         }
     }
 
-    // Setup re-response button listeners
+    // Setup re-response button listeners - Fixed method signature
     private void setupReResponseListeners(View dialogView, int transactionId, String actionType,
-                                          TransactionDetails details) {
+                                          TransactionDetails details, AlertDialog dialog) {
         Button btnOption1 = dialogView.findViewById(R.id.btnReResponseOption1);
         Button btnOption2 = dialogView.findViewById(R.id.btnReResponseOption2);
 
@@ -417,14 +422,14 @@ public class FacultyHistoryActivity extends Activity {
             btnOption1.setOnClickListener(v -> {
                 showReResponseConfirmation("Available", () -> {
                     reRespondToInquiry(details.inquiryId, details.targetUserId, "Available");
-                    ((AlertDialog) dialogView.getTag()).dismiss();
+                    dialog.dismiss();
                 });
             });
 
             btnOption2.setOnClickListener(v -> {
                 showReResponseConfirmation("Unavailable", () -> {
                     reRespondToInquiry(details.inquiryId, details.targetUserId, "Unavailable");
-                    ((AlertDialog) dialogView.getTag()).dismiss();
+                    dialog.dismiss();
                 });
             });
 
@@ -432,21 +437,17 @@ public class FacultyHistoryActivity extends Activity {
             btnOption1.setOnClickListener(v -> {
                 showReResponseConfirmation("Approved", () -> {
                     reRespondToDocument(details.documentName, details.targetUserId, "Approved");
-                    ((AlertDialog) dialogView.getTag()).dismiss();
+                    dialog.dismiss();
                 });
             });
 
             btnOption2.setOnClickListener(v -> {
                 showReResponseConfirmation("Rejected", () -> {
                     reRespondToDocument(details.documentName, details.targetUserId, "Rejected");
-                    ((AlertDialog) dialogView.getTag()).dismiss();
+                    dialog.dismiss();
                 });
             });
         }
-
-        // Store dialog reference for dismissal
-        AlertDialog dialog = (AlertDialog) dialogView.getParent();
-        dialogView.setTag(dialog);
     }
 
     // Show confirmation dialog before re-responding
@@ -609,7 +610,7 @@ public class FacultyHistoryActivity extends Activity {
             if ("Faculty Inquiry Response".equals(actionType)) {
                 // Get inquiry details
                 Cursor cursor = db.rawQuery(
-                        "SELECT fi.subject, fi.message, u.name as student_name, fi.status " +
+                        "SELECT fi.subject, fi.description, u.name as student_name, fi.status " +
                                 "FROM transactions t " +
                                 "JOIN faculty_inquiries fi ON t.inquiry_id = fi.id " +
                                 "JOIN users u ON fi.student_id = u.id " +
