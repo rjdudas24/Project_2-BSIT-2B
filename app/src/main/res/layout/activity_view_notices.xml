@@ -42,6 +42,7 @@
             android:text="NOTICES"
             android:textColor="@android:color/white"
             android:textSize="20sp"
+            android:fontFamily="@font/saira_bold"
             android:textStyle="bold"
             android:gravity="center" />
     </LinearLayout>
@@ -53,6 +54,7 @@
         android:text="📢 Organization Notices &amp; Announcements"
         android:textColor="@android:color/white"
         android:textSize="16sp"
+        android:fontFamily="@font/saira_semibold"
         android:gravity="center"
         android:layout_marginBottom="16dp"
         android:textStyle="italic" />
@@ -99,6 +101,7 @@
         android:textColor="#AAAAAA"
         android:textSize="12sp"
         android:gravity="center"
+        android:fontFamily="@font/saira_semibold"
         android:layout_marginTop="8dp"
         android:lineSpacingExtra="2dp" />
 
