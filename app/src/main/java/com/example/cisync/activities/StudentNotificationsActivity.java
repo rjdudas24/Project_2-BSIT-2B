@@ -321,7 +321,7 @@ public class StudentNotificationsActivity extends Activity {
 
         // Set icons
         ivNotificationIcon.setImageResource(R.drawable.notification);
-        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
 
         // Parse response status
         String responseStatus = "";
@@ -461,12 +461,12 @@ public class StudentNotificationsActivity extends Activity {
 
         // Set icons
         ivNotificationIcon.setImageResource(R.drawable.notification);
-        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
 
         // Show additional information
         llAdditionalInfo.setVisibility(View.VISIBLE);
         ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
-        tvAdditionalInfo.setText("❓ A faculty member has sent you an inquiry. Please respond at your earliest convenience.");
+        tvAdditionalInfo.setText("❓ Inquiry to faculty sent.");
     }
 
     private void configureNoticeDialog(View dialogView, String description, long timestamp) {
@@ -495,7 +495,7 @@ public class StudentNotificationsActivity extends Activity {
 
         // Set icons
         ivNotificationIcon.setImageResource(R.drawable.notification);
-        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
 
         // Show additional information
         llAdditionalInfo.setVisibility(View.VISIBLE);
@@ -512,7 +512,7 @@ public class StudentNotificationsActivity extends Activity {
 
         // Set icons
         ivNotificationIcon.setImageResource(R.drawable.notification);
-        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
 
         // Show additional information
         llAdditionalInfo.setVisibility(View.VISIBLE);

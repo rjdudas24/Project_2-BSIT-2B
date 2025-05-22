@@ -4,7 +4,7 @@
     android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="@drawable/bg_faculty">
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,11 +23,10 @@
                 android:id="@+id/btnLogoutFaculty"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_white_square"
-                android:text="⏻"
                 android:textSize="16sp"
-                android:textColor="@color/black"
-                android:layout_alignParentEnd="true" />
+                android:background="@drawable/logout"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
         </RelativeLayout>
 
         <!-- CISynC Logo -->
@@ -57,6 +56,7 @@
             android:text="Welcome Faculty!"
             android:textColor="@android:color/white"
             android:textSize="28sp"
+            android:fontFamily="@font/saira_bold"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -73,9 +73,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View Notifications"
+                android:text="VIEW NOTIFICATIONS"
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="16sp"
+                android:fontFamily="@font/saira_bold"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -91,9 +92,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Transaction History &amp; Resend"
+                android:text="TRANSACTION HISTORY &amp; RESEND"
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/saira_bold"
                 android:textStyle="bold" />
         </LinearLayout>
 
