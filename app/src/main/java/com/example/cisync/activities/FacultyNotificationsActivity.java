@@ -187,28 +187,47 @@ public class FacultyNotificationsActivity extends Activity {
 
             inquiryCursor.close();
 
-            // Show response dialog
+            // Create custom dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Faculty Inquiry Response");
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_inquiry_response, null);
+            builder.setView(dialogView);
 
-            String message = "From: " + studentName + "\n" +
-                    "Subject: " + subject + "\n\n" +
-                    "Description: " + description + "\n\n" +
-                    "Current Status: " + status + "\n\n" +
-                    "Choose your response:";
+            // Get references to dialog views
+            TextView tvStudentName = dialogView.findViewById(R.id.tvInquiryStudentName);
+            TextView tvStatus = dialogView.findViewById(R.id.tvInquiryStatus);
+            TextView tvSubject = dialogView.findViewById(R.id.tvInquirySubject);
+            TextView tvDescription = dialogView.findViewById(R.id.tvInquiryDescription);
+            Button btnAvailable = dialogView.findViewById(R.id.btnInquiryAvailable);
+            Button btnUnavailable = dialogView.findViewById(R.id.btnInquiryUnavailable);
+            Button btnClose = dialogView.findViewById(R.id.btnInquiryClose);
 
-            builder.setMessage(message);
+            // Set dialog data
+            tvStudentName.setText(studentName);
+            tvStatus.setText(status);
+            tvSubject.setText(subject);
+            tvDescription.setText(description);
 
-            builder.setPositiveButton("Available", (dialog, which) -> {
+            AlertDialog dialog = builder.create();
+
+            // Set button click listeners
+            btnAvailable.setOnClickListener(v -> {
                 respondToInquiry(inquiryId, studentId, "Available", subject, studentName);
+                dialog.dismiss();
             });
 
-            builder.setNegativeButton("Unavailable", (dialog, which) -> {
+            btnUnavailable.setOnClickListener(v -> {
                 respondToInquiry(inquiryId, studentId, "Unavailable", subject, studentName);
+                dialog.dismiss();
             });
 
-            builder.setNeutralButton("Close", null);
-            builder.show();
+            btnClose.setOnClickListener(v -> dialog.dismiss());
+
+            // Make dialog background transparent and show
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            dialog.show();
 
         } catch (Exception e) {
             Log.e(TAG, "Error showing inquiry response dialog: " + e.getMessage(), e);
