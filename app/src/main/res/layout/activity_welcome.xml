@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#0A1F44"
+    android:background="@drawable/bgarrows"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="32dp">
 
-    <TextView
-        android:id="@+id/tvAppTitle"
+    <ImageView
+        android:id="@+id/logoMain"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CISynC"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp" />
+        android:layout_height="300dp"
+        android:background="@drawable/cisync2"/>
 
     <TextView
         android:id="@+id/tvTagline"
@@ -24,9 +19,9 @@
         android:text="CISC Inquiry &amp; Synchronization Center"
         android:textSize="16sp"
         android:textColor="#AAAAAA"
-        android:layout_below="@id/tvAppTitle"
+        android:layout_below="@id/logoMain"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="-90dp" />
 
     <LinearLayout
         android:id="@+id/llButtons"
@@ -43,15 +38,19 @@
             android:layout_height="wrap_content"
             android:text="Login"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#2196F3"
+            android:textSize="20sp"
+            android:fontFamily="@font/saira_bold"
+            android:background="@drawable/bg_submit_btn2"
             android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnRegisterWelcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="@font/saira_bold"
             android:text="Register"
-            android:backgroundTint="#4CAF50"
+            android:background="@drawable/bg_submit_btn"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 </RelativeLayout>
