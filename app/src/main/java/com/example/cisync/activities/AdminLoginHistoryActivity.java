@@ -320,11 +320,100 @@ public class AdminLoginHistoryActivity extends Activity {
 
     private void showLoginDetailsDialog(LoginData login) {
         try {
-            // Build dialog
+            // Create custom dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Login Details");
 
-            // Create message with details
+            // Inflate custom layout
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_login_details, null);
+            builder.setView(dialogView);
+
+            // Create dialog
+            AlertDialog dialog = builder.create();
+
+            // Make dialog background transparent to show custom background
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            // Find views in custom layout
+            TextView tvUserName = dialogView.findViewById(R.id.tvDialogUserName);
+            TextView tvUserRole = dialogView.findViewById(R.id.tvDialogUserRole);
+            TextView tvUserId = dialogView.findViewById(R.id.tvDialogUserId);
+            TextView tvLoginTime = dialogView.findViewById(R.id.tvDialogLoginTime);
+            TextView tvLogoutTime = dialogView.findViewById(R.id.tvDialogLogoutTime);
+            TextView tvDuration = dialogView.findViewById(R.id.tvDialogDuration);
+            TextView tvSessionStatus = dialogView.findViewById(R.id.tvDialogSessionStatus);
+            TextView tvDeviceInfo = dialogView.findViewById(R.id.tvDialogDeviceInfo);
+            View vStatusIndicator = dialogView.findViewById(R.id.vSessionStatusIndicator);
+            ImageView ivDeviceIcon = dialogView.findViewById(R.id.ivDeviceIcon);
+            Button btnDialogClose = dialogView.findViewById(R.id.btnDialogClose);
+
+            // Set user information
+            tvUserName.setText(login.getName());
+            tvUserRole.setText(login.getRole());
+            tvUserId.setText(String.valueOf(login.getUserId()));
+
+            // Set session information
+            tvLoginTime.setText(formatTimestamp(login.getLoginTime()));
+
+            boolean isSessionActive = login.getLogoutTime() <= 0;
+            if (isSessionActive) {
+                tvLogoutTime.setText("Session Active");
+                tvDuration.setText("Active");
+                tvSessionStatus.setText("Active");
+                tvSessionStatus.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+                // Set status indicator to green for active sessions
+                vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+            } else {
+                tvLogoutTime.setText(formatTimestamp(login.getLogoutTime()));
+                tvDuration.setText(calculateSessionDuration(login.getLoginTime(), login.getLogoutTime()));
+                tvSessionStatus.setText("Ended");
+                tvSessionStatus.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                // Set status indicator to red for ended sessions
+                vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_ended);
+            }
+
+            // Set device information
+            tvDeviceInfo.setText(login.getDeviceInfo());
+
+            // Set appropriate device icon based on device info
+            if (login.getDeviceInfo().toLowerCase().contains("desktop")) {
+                ivDeviceIcon.setImageResource(R.drawable.baseline_computer_24);
+            } else if (login.getDeviceInfo().toLowerCase().contains("tablet")) {
+                ivDeviceIcon.setImageResource(R.drawable.baseline_tablet_24);
+            } else {
+                ivDeviceIcon.setImageResource(R.drawable.baseline_phone_android_24);
+            }
+
+            // Set role-specific styling
+            switch (login.getRole().toLowerCase()) {
+                case "admin":
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.admin_role_color));
+                    break;
+                case "faculty":
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.faculty_role_color));
+                    break;
+                case "student":
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.student_role_color));
+                    break;
+                default:
+                    tvUserRole.setBackgroundColor(getResources().getColor(R.color.default_role_color));
+                    break;
+            }
+
+            // Set click listeners for close buttons
+            btnDialogClose.setOnClickListener(v -> dialog.dismiss());
+
+            // Show dialog
+            dialog.show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error showing custom login details dialog: " + e.getMessage(), e);
+
+            // Fallback to simple dialog if custom dialog fails
+            AlertDialog.Builder fallbackBuilder = new AlertDialog.Builder(this);
+            fallbackBuilder.setTitle("Login Details");
+
             String message = "User: " + login.getName() + "\n" +
                     "Role: " + login.getRole() + "\n" +
                     "User ID: " + login.getUserId() + "\n\n" +
@@ -333,12 +422,11 @@ public class AdminLoginHistoryActivity extends Activity {
                     "Session Duration: " + (login.getLogoutTime() > 0 ? calculateSessionDuration(login.getLoginTime(), login.getLogoutTime()) : "Active") + "\n\n" +
                     "Device Info: " + login.getDeviceInfo();
 
-            builder.setMessage(message);
-            builder.setPositiveButton("Close", null);
-            builder.show();
-        } catch (Exception e) {
-            Log.e(TAG, "Error showing details: " + e.getMessage(), e);
-            Toast.makeText(this, "Error showing login details", Toast.LENGTH_SHORT).show();
+            fallbackBuilder.setMessage(message);
+            fallbackBuilder.setPositiveButton("Close", null);
+            fallbackBuilder.show();
+
+            Toast.makeText(this, "Using fallback dialog due to error", Toast.LENGTH_SHORT).show();
         }
     }
 

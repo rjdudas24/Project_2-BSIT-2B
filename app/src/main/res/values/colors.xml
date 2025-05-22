@@ -8,5 +8,16 @@
     <color name="tab_text_default">#808080</color> <!-- Tab default color -->
     <color name="tab_text_selected">#0D47A1</color> <!-- Selected tab color -->
 
+    <!-- Role-specific colors -->
+    <color name="admin_role_color">#FF5722</color>        <!-- Orange-red for Admin -->
+    <color name="faculty_role_color">#3F51B5</color>     <!-- Indigo for Faculty -->
+    <color name="student_role_color">#4CAF50</color>     <!-- Green for Student -->
+    <color name="default_role_color">#607D8B</color>     <!-- Blue-grey for Unknown -->
 
+    <!-- Button colors -->
+    <color name="button_pressed_color">#1976D2</color>   <!-- Darker blue when pressed -->
+
+    <!-- Status colors (if not already defined) -->
+    <color name="status_active">#4CAF50</color>          <!-- Green for active -->
+    <color name="status_ended">#F44336</color>           <!-- Red for ended -->
 </resources>
