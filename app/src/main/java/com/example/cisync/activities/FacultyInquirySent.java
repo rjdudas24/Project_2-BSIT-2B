@@ -1,6 +1,5 @@
 package com.example.cisync.activities;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -41,46 +40,10 @@ public class FacultyInquirySent extends AppCompatActivity {
 
         // Set click listener for OK button
         btnOk.setOnClickListener(v -> {
-            // Record transaction in database
-            recordTransaction();
-
-            // Check if student has organization to determine correct dashboard
+            // No need to record transaction here - already recorded in FacultyInquiryActivity
+            // Just redirect to correct dashboard
             redirectToCorrectDashboard();
         });
-    }
-
-    /**
-     * Records the inquiry submission as a transaction in the database
-     * This provides a record of user activity
-     */
-    private void recordTransaction() {
-        try {
-            if (studentId != -1) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                // Insert transaction record for the student
-                ContentValues transValues = new ContentValues();
-                transValues.put("user_id", studentId);
-                transValues.put("action_type", "Faculty Inquiry");
-                transValues.put("description", "Faculty inquiry submitted successfully");
-                transValues.put("timestamp", System.currentTimeMillis());
-
-                long result = db.insert("transactions", null, transValues);
-
-                if (result != -1) {
-                    Log.d(TAG, "Transaction recorded successfully for student ID: " + studentId);
-                } else {
-                    Log.e(TAG, "Failed to record transaction for student ID: " + studentId);
-                }
-
-                db.close();
-            } else {
-                Log.e(TAG, "Cannot record transaction - invalid student ID: " + studentId);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error recording transaction: " + e.getMessage(), e);
-            // No need to show error to user since this is just logging
-        }
     }
 
     /**

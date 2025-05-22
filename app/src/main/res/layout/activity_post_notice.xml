@@ -35,12 +35,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Post Notice"
+            android:text="POST NOTICE"
+            android:fontFamily="@font/saira_bold"
             android:textSize="24sp"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginTop="20dp" />
 
         <TextView
@@ -49,6 +50,7 @@
             android:layout_height="wrap_content"
             android:text="Posting as: [Name] ([Position])"
             android:textStyle="italic"
+            android:fontFamily="@font/saira_semibold"
             android:textSize="16sp"
             android:textColor="@color/white"
             android:layout_marginBottom="20dp"
@@ -58,9 +60,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notice Title"
+            android:text="NOTICE TITLE"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:fontFamily="@font/saira_bold"
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
@@ -72,6 +75,7 @@
             android:hint="Enter notice title"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
+            android:fontFamily="@font/saira_semibold"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
             android:inputType="text"
@@ -82,7 +86,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Target Audience"
+            android:text="TARGET AUDIENCE"
+            android:fontFamily="@font/saira_bold"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -100,6 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All Students"
+                android:fontFamily="@font/saira_semibold"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:buttonTint="@color/white"
@@ -112,6 +118,7 @@
                 android:text="Specific Student"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:fontFamily="@font/saira_semibold"
                 android:buttonTint="@color/white" />
         </RadioGroup>
 
@@ -144,9 +151,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notice Content"
+            android:text="NOTICE CONTENT"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:fontFamily="@font/saira_bold"
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
@@ -156,6 +164,7 @@
             android:layout_height="150dp"
             android:background="@drawable/bg_white_square_with_border"
             android:gravity="top|start"
+            android:fontFamily="@font/saira_semibold"
             android:hint="Enter notice content"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
@@ -173,6 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:text="Post Notice"
+            android:fontFamily="@font/saira_bold"
             android:textColor="#002549"
             android:textStyle="bold"
             android:background="@drawable/bg_submit_btn"

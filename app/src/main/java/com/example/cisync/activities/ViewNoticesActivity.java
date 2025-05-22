@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.*;
 import com.example.cisync.R;
 import com.example.cisync.database.DBHelper;
@@ -166,7 +168,7 @@ public class ViewNoticesActivity extends Activity {
             }
 
             // Update adapter
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, noticesList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, noticesList);
             lvNotices.setAdapter(adapter);
 
         } catch (Exception e) {
@@ -321,26 +323,89 @@ public class ViewNoticesActivity extends Activity {
 
     private void showNoticeDetails(NoticeData notice) {
         try {
+            // Create custom dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            String title = notice.getTitle();
-            if ("SPECIFIC".equals(notice.getTargetType()) &&
+            // Inflate custom layout
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.dialog_notice_details, null);
+            builder.setView(dialogView);
+
+            // Get views from dialog
+            TextView tvDialogNoticeTitle = dialogView.findViewById(R.id.tvDialogNoticeTitle);
+            TextView tvPersonalIndicator = dialogView.findViewById(R.id.tvPersonalIndicator);
+            TextView tvDialogNoticeContent = dialogView.findViewById(R.id.tvDialogNoticeContent);
+            TextView tvDialogPostedBy = dialogView.findViewById(R.id.tvDialogPostedBy);
+            TextView tvDialogPosition = dialogView.findViewById(R.id.tvDialogPosition);
+            TextView tvDialogDatePosted = dialogView.findViewById(R.id.tvDialogDatePosted);
+            TextView tvDialogTargetIcon = dialogView.findViewById(R.id.tvDialogTargetIcon);
+            TextView tvDialogTarget = dialogView.findViewById(R.id.tvDialogTarget);
+            TextView tvDialogNoticeId = dialogView.findViewById(R.id.tvDialogNoticeId);
+            LinearLayout layoutNoticeStats = dialogView.findViewById(R.id.layoutNoticeStats);
+            Button btnDialogMarkRead = dialogView.findViewById(R.id.btnDialogMarkRead);
+            Button btnDialogClose = dialogView.findViewById(R.id.btnDialogClose);
+
+            // Set notice title
+            tvDialogNoticeTitle.setText(notice.getTitle().toUpperCase());
+
+            // Check if it's a personal notice
+            boolean isPersonalNotice = "SPECIFIC".equals(notice.getTargetType()) &&
                     notice.getTargetStudentId() != null &&
-                    notice.getTargetStudentId().equals(studentId)) {
-                title += " (Personal Notice)";
+                    notice.getTargetStudentId().equals(studentId);
+
+            if (isPersonalNotice) {
+                tvPersonalIndicator.setVisibility(View.VISIBLE);
+            } else {
+                tvPersonalIndicator.setVisibility(View.GONE);
             }
 
-            builder.setTitle(title);
+            // Set notice content
+            String content = notice.getContent();
+            if (content == null || content.trim().isEmpty()) {
+                content = "No additional content provided.";
+            }
+            tvDialogNoticeContent.setText(content);
 
-            String message = notice.getContent() + "\n\n" +
-                    "━━━━━━━━━━━━━━━━━━━━\n" +
-                    "Posted by: " + notice.getPostedByName() + "\n" +
-                    "Position: " + notice.getPostedByPosition() + "\n" +
-                    "Date: " + formatTimestamp(notice.getTimestamp());
+            // Set poster details
+            tvDialogPostedBy.setText(notice.getPostedByName());
+            tvDialogPosition.setText(notice.getPostedByPosition());
 
-            builder.setMessage(message);
-            builder.setPositiveButton("Close", null);
-            builder.show();
+            // Set date posted
+            tvDialogDatePosted.setText(formatTimestamp(notice.getTimestamp()));
+
+            // Set target audience
+            if (isPersonalNotice) {
+                tvDialogTargetIcon.setText("📮");
+                tvDialogTarget.setText("Personal Notice");
+            } else {
+                tvDialogTargetIcon.setText("📢");
+                tvDialogTarget.setText("All Students");
+            }
+
+            // Set notice ID (show statistics section)
+            tvDialogNoticeId.setText("Notice ID: #" + notice.getId());
+            layoutNoticeStats.setVisibility(View.VISIBLE);
+
+            // Create and show dialog
+            AlertDialog dialog = builder.create();
+
+            // Set dialog properties
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            // Set button click listeners
+            btnDialogClose.setOnClickListener(v -> dialog.dismiss());
+
+            // Optional: Mark as read functionality (if you want to implement read tracking)
+            btnDialogMarkRead.setOnClickListener(v -> {
+                // Implement mark as read logic here if needed
+                Toast.makeText(this, "Notice marked as read", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+
+            // Show the dialog
+            dialog.show();
 
         } catch (Exception e) {
             Log.e(TAG, "Error showing notice details: " + e.getMessage(), e);

@@ -94,8 +94,8 @@ public class StudentTransactionHistoryActivity extends Activity {
 
             // Set up spinner adapter
             ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, filterOptions);
-            filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_spinner_white, filterOptions);
+            filterAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spinnerTransactionFilter.setAdapter(filterAdapter);
         } catch (Exception e) {
             Log.e(TAG, "Error setting up filter spinner: " + e.getMessage(), e);
@@ -199,7 +199,7 @@ public class StudentTransactionHistoryActivity extends Activity {
             cursor.close();
 
             // Update adapter
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, transactionList);
             lvTransactionHistory.setAdapter(adapter);
 
         } catch (Exception e) {
@@ -251,29 +251,452 @@ public class StudentTransactionHistoryActivity extends Activity {
 
     private void showTransactionDetailsDialog(TransactionData transaction) {
         try {
-            // Build dialog
+            // Create custom dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Transaction Details");
 
-            // Create message with details
+            // Inflate custom layout
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_student_transaction_details, null);
+            builder.setView(dialogView);
+
+            // Create dialog
+            AlertDialog dialog = builder.create();
+
+            // Make dialog background transparent to show custom background
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            // Find views in custom layout
+            TextView tvTransactionId = dialogView.findViewById(R.id.tvDialogTransactionId);
+            TextView tvActionType = dialogView.findViewById(R.id.tvDialogActionType);
+            TextView tvTransactionTime = dialogView.findViewById(R.id.tvDialogTransactionTime);
+            TextView tvDescription = dialogView.findViewById(R.id.tvDialogDescription);
+            TextView tvTransactionIcon = dialogView.findViewById(R.id.tvTransactionIcon);
+            TextView tvTransactionCategory = dialogView.findViewById(R.id.tvTransactionCategory);
+            TextView tvTransactionSubcategory = dialogView.findViewById(R.id.tvTransactionSubcategory);
+            View vStatusIndicator = dialogView.findViewById(R.id.vTransactionStatusIndicator);
+            LinearLayout llAdditionalDetails = dialogView.findViewById(R.id.llAdditionalDetails);
+            LinearLayout llAdditionalDetailsContent = dialogView.findViewById(R.id.llAdditionalDetailsContent);
+            TextView tvAdditionalDetailsTitle = dialogView.findViewById(R.id.tvAdditionalDetailsTitle);
+            Button btnDialogClose = dialogView.findViewById(R.id.btnDialogClose);
+
+            // Set basic transaction information
+            tvTransactionId.setText(String.valueOf(transaction.getId()));
+            tvActionType.setText(transaction.getActionType());
+            tvTransactionTime.setText(formatTimestamp(transaction.getTimestamp()));
+            tvDescription.setText(transaction.getDescription());
+
+            // Set transaction-specific details
+            String actionType = transaction.getActionType();
+            setStudentTransactionTypeDetails(transaction, actionType, tvTransactionIcon, tvTransactionCategory,
+                    tvTransactionSubcategory, tvActionType, vStatusIndicator);
+
+            // Add additional details if available
+            String additionalInfo = getStudentAdditionalTransactionDetails(transaction);
+            if (!additionalInfo.isEmpty()) {
+                llAdditionalDetails.setVisibility(View.VISIBLE);
+                populateStudentAdditionalDetails(llAdditionalDetailsContent, additionalInfo, actionType, tvAdditionalDetailsTitle);
+            } else {
+                llAdditionalDetails.setVisibility(View.GONE);
+            }
+
+            // Set click listener for close button
+            btnDialogClose.setOnClickListener(v -> dialog.dismiss());
+
+            // Show dialog
+            dialog.show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error showing custom transaction details dialog: " + e.getMessage(), e);
+
+            // Fallback to simple dialog if custom dialog fails
+            showFallbackStudentTransactionDialog(transaction);
+        }
+    }
+
+    private void setStudentTransactionTypeDetails(TransactionData transaction, String actionType, TextView tvIcon, TextView tvCategory,
+                                                  TextView tvSubcategory, TextView tvActionType, View vStatusIndicator) {
+        try {
+            switch (actionType) {
+                case "Faculty Inquiry":
+                    tvIcon.setText("❓");
+                    tvCategory.setText("Communication");
+                    tvSubcategory.setText("Inquiry submitted to faculty");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.inquiry_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Document Submission":
+                    tvIcon.setText("📄");
+                    tvCategory.setText("Document Management");
+                    tvSubcategory.setText("Document submitted for review");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.document_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Document Status Update":
+                    tvIcon.setText("📋");
+                    tvCategory.setText("Document Management");
+                    tvSubcategory.setText("Document status changed");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.document_action_color));
+                    if (transaction.getDescription().toLowerCase().contains("approved")) {
+                        vStatusIndicator.setBackgroundResource(R.drawable.document_icon);
+                    } else if (transaction.getDescription().toLowerCase().contains("rejected")) {
+                        vStatusIndicator.setBackgroundResource(R.drawable.notice_icon);
+                    } else {
+                        vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    }
+                    break;
+
+                case "Notice Posted":
+                    tvIcon.setText("📢");
+                    tvCategory.setText("Communication");
+                    tvSubcategory.setText("Notice published successfully");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.notice_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Accountability Posted":
+                    tvIcon.setText("💰");
+                    tvCategory.setText("Financial Management");
+                    tvSubcategory.setText("Accountability added");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.accountability_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                case "Accountability Status Update":
+                    tvIcon.setText("💳");
+                    tvCategory.setText("Financial Management");
+                    tvSubcategory.setText("Payment status updated");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.accountability_action_color));
+                    if (transaction.getDescription().toLowerCase().contains("paid")) {
+                        vStatusIndicator.setBackgroundResource(R.drawable.wallet);
+                    } else {
+                        vStatusIndicator.setBackgroundResource(R.drawable.notice_icon);
+                    }
+                    break;
+
+                case "Accountability Deleted":
+                    tvIcon.setText("🗑️");
+                    tvCategory.setText("Financial Management");
+                    tvSubcategory.setText("Accountability removed");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.delete_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_ended);
+                    break;
+
+                case "Registration":
+                    tvIcon.setText("👤");
+                    tvCategory.setText("Account Management");
+                    tvSubcategory.setText("Account registered");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.user_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.ic_check);
+                    break;
+
+                case "User Update":
+                    tvIcon.setText("✏️");
+                    tvCategory.setText("Account Management");
+                    tvSubcategory.setText("Profile information updated");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.user_action_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+
+                default:
+                    tvIcon.setText("📝");
+                    tvCategory.setText("System");
+                    tvSubcategory.setText("General activity");
+                    tvActionType.setBackgroundColor(getResources().getColor(R.color.default_role_color));
+                    vStatusIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+                    break;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting student transaction type details: " + e.getMessage(), e);
+        }
+    }
+
+    private String getStudentAdditionalTransactionDetails(TransactionData transaction) {
+        String additionalInfo = "";
+
+        try {
+            String actionType = transaction.getActionType();
+            String description = transaction.getDescription();
+
+            switch (actionType) {
+                case "Faculty Inquiry":
+                    additionalInfo = "Inquiry Type: Faculty Communication\n" +
+                            "Status: Submitted for review\n" +
+                            "Response: Pending faculty response";
+                    break;
+
+                case "Document Submission":
+                    additionalInfo = getStudentDocumentSubmissionDetails(transaction);
+                    break;
+
+                case "Document Status Update":
+                    additionalInfo = getStudentDocumentStatusDetails(transaction);
+                    break;
+
+                case "Notice Posted":
+                    additionalInfo = getStudentNoticeDetails(transaction);
+                    break;
+
+                case "Accountability Posted":
+                    additionalInfo = getStudentAccountabilityPostedDetails(transaction);
+                    break;
+
+                case "Accountability Status Update":
+                    additionalInfo = getStudentAccountabilityStatusDetails(transaction);
+                    break;
+
+                case "Accountability Deleted":
+                    additionalInfo = "Action: Accountability removed\n" +
+                            "Status: Permanently deleted from system\n" +
+                            "Impact: No longer applicable to your account";
+                    break;
+
+                case "Registration":
+                    additionalInfo = "Account Type: Student Account\n" +
+                            "Status: Successfully registered\n" +
+                            "Access Level: Student privileges activated";
+                    break;
+
+                case "User Update":
+                    additionalInfo = "Update Type: Profile information\n" +
+                            "Status: Successfully updated\n" +
+                            "Changes: Profile data modified";
+                    break;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting student additional transaction details: " + e.getMessage(), e);
+        }
+
+        return additionalInfo;
+    }
+
+    private void populateStudentAdditionalDetails(LinearLayout container, String additionalInfo,
+                                                  String actionType, TextView titleView) {
+        try {
+            container.removeAllViews();
+
+            // Set appropriate title based on action type
+            switch (actionType) {
+                case "Faculty Inquiry":
+                    titleView.setText("INQUIRY STATUS");
+                    break;
+                case "Document Submission":
+                case "Document Status Update":
+                    titleView.setText("DOCUMENT STATUS");
+                    break;
+                case "Notice Posted":
+                    titleView.setText("NOTICE STATUS");
+                    break;
+                case "Accountability Posted":
+                case "Accountability Status Update":
+                case "Accountability Deleted":
+                    titleView.setText("FINANCIAL STATUS");
+                    break;
+                case "Registration":
+                case "User Update":
+                    titleView.setText("ACCOUNT STATUS");
+                    break;
+                default:
+                    titleView.setText("ACTIVITY STATUS");
+                    break;
+            }
+
+            if (!additionalInfo.isEmpty()) {
+                String[] lines = additionalInfo.split("\n");
+
+                for (String line : lines) {
+                    if (!line.trim().isEmpty()) {
+                        if (line.contains(":")) {
+                            // Create key-value pair layout
+                            LinearLayout rowLayout = new LinearLayout(this);
+                            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                            rowLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                            rowLayout.setPadding(0, 0, 0, 8);
+
+                            String[] parts = line.split(":", 2);
+
+                            // Key TextView
+                            TextView keyView = new TextView(this);
+                            LinearLayout.LayoutParams keyParams = new LinearLayout.LayoutParams(
+                                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                            keyView.setLayoutParams(keyParams);
+                            keyView.setText(parts[0].trim() + ":");
+                            keyView.setTextColor(getResources().getColor(android.R.color.white));
+                            keyView.setTextSize(12);
+                            keyView.setTypeface(null, android.graphics.Typeface.BOLD);
+
+                            // Value TextView
+                            TextView valueView = new TextView(this);
+                            LinearLayout.LayoutParams valueParams = new LinearLayout.LayoutParams(
+                                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 2);
+                            valueView.setLayoutParams(valueParams);
+                            valueView.setText(parts.length > 1 ? parts[1].trim() : "");
+                            valueView.setTextColor(getResources().getColor(android.R.color.white));
+                            valueView.setTextSize(12);
+
+                            rowLayout.addView(keyView);
+                            rowLayout.addView(valueView);
+                            container.addView(rowLayout);
+                        } else {
+                            // Create single line TextView
+                            TextView textView = new TextView(this);
+                            textView.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                            textView.setText(line);
+                            textView.setTextColor(getResources().getColor(android.R.color.white));
+                            textView.setTextSize(12);
+                            textView.setPadding(0, 0, 0, 8);
+
+                            container.addView(textView);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error populating student additional details: " + e.getMessage(), e);
+        }
+    }
+
+    private void showFallbackStudentTransactionDialog(TransactionData transaction) {
+        try {
+            AlertDialog.Builder fallbackBuilder = new AlertDialog.Builder(this);
+            fallbackBuilder.setTitle("Transaction Details");
+
             String message = "Date: " + formatTimestamp(transaction.getTimestamp()) + "\n\n" +
                     "Action: " + transaction.getActionType() + "\n\n" +
                     "Description: " + transaction.getDescription() + "\n\n" +
                     "Transaction ID: " + transaction.getId();
 
-            // Add specific details based on transaction type
-            String additionalInfo = getAdditionalTransactionInfo(transaction);
+            // Add additional details
+            String additionalInfo = getStudentAdditionalTransactionDetails(transaction);
             if (!additionalInfo.isEmpty()) {
                 message += "\n\n" + additionalInfo;
             }
 
-            builder.setMessage(message);
-            builder.setPositiveButton("Close", null);
-            builder.show();
+            fallbackBuilder.setMessage(message);
+            fallbackBuilder.setPositiveButton("Close", null);
+            fallbackBuilder.show();
+
+            Toast.makeText(this, "Using fallback dialog due to error", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.e(TAG, "Error showing details: " + e.getMessage(), e);
-            Toast.makeText(this, "Error showing transaction details", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error showing fallback dialog: " + e.getMessage(), e);
+            Toast.makeText(this, "Error displaying transaction details", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Helper methods for getting specific transaction details
+    private String getStudentDocumentSubmissionDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            if (description.startsWith("New document submitted: ")) {
+                String docName = description.substring("New document submitted: ".length()).trim();
+                details.append("Document: ").append(docName).append("\n");
+            }
+
+            details.append("Status: Under faculty review\n");
+            details.append("Next Step: Await approval/rejection");
+        } catch (Exception e) {
+            details.append("Document submission completed");
+        }
+
+        return details.toString();
+    }
+
+    private String getStudentDocumentStatusDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            if (description.toLowerCase().contains("approved")) {
+                details.append("Status: ✅ APPROVED\n");
+                details.append("Action: Document accepted\n");
+                details.append("Next Step: No further action required");
+            } else if (description.toLowerCase().contains("rejected")) {
+                details.append("Status: ❌ REJECTED\n");
+                details.append("Action: Document not accepted\n");
+                details.append("Next Step: Contact faculty for feedback");
+            } else {
+                details.append("Status: Document status updated\n");
+                details.append("Action: Status change recorded");
+            }
+        } catch (Exception e) {
+            details.append("Document status has been updated");
+        }
+
+        return details.toString();
+    }
+
+    private String getStudentNoticeDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            details.append("Status: ✅ Successfully posted\n");
+            details.append("Visibility: Posted to target audience\n");
+
+            if (description.contains("targeted to:")) {
+                details.append("Audience: Specific recipients");
+            } else {
+                details.append("Audience: All students");
+            }
+        } catch (Exception e) {
+            details.append("Notice posted successfully");
+        }
+
+        return details.toString();
+    }
+
+    private String getStudentAccountabilityPostedDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            if (description.contains("Posted accountability: ")) {
+                String feeInfo = description.substring("Posted accountability: ".length());
+                if (feeInfo.contains(" for ")) {
+                    feeInfo = feeInfo.substring(0, feeInfo.indexOf(" for "));
+                }
+                details.append("Fee: ").append(feeInfo).append("\n");
+            }
+
+            details.append("Status: ❌ UNPAID (Default)\n");
+            details.append("Action Required: Payment needed");
+        } catch (Exception e) {
+            details.append("Accountability added to your account");
+        }
+
+        return details.toString();
+    }
+
+    private String getStudentAccountabilityStatusDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            if (description.toLowerCase().contains("paid")) {
+                details.append("Status: ✅ PAID\n");
+                details.append("Payment: Confirmed and recorded\n");
+                details.append("Action: No further payment required");
+            } else if (description.toLowerCase().contains("unpaid")) {
+                details.append("Status: ❌ UNPAID\n");
+                details.append("Payment: Still required\n");
+                details.append("Action: Please complete payment");
+            } else {
+                details.append("Status: Payment status updated\n");
+                details.append("Action: Status change recorded");
+            }
+        } catch (Exception e) {
+            details.append("Payment status has been updated");
+        }
+
+        return details.toString();
     }
 
     private String getAdditionalTransactionInfo(TransactionData transaction) {

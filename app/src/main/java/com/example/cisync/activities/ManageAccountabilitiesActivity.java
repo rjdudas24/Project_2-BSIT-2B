@@ -154,8 +154,8 @@ public class ManageAccountabilitiesActivity extends Activity {
             cursor.close();
 
             ArrayAdapter<String> studentAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, studentFilterNames);
-            studentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_spinner_white, studentFilterNames);
+            studentAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spinnerStudentFilter.setAdapter(studentAdapter);
 
             // Setup status filter
@@ -165,8 +165,8 @@ public class ManageAccountabilitiesActivity extends Activity {
             statusOptions.add("Unpaid");
 
             ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, statusOptions);
-            statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_spinner_white, statusOptions);
+            statusAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spinnerStatusFilter.setAdapter(statusAdapter);
 
         } catch (Exception e) {
@@ -290,7 +290,7 @@ public class ManageAccountabilitiesActivity extends Activity {
 
             cursor.close();
 
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, accountabilityList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, accountabilityList);
             lvAccountabilities.setAdapter(adapter);
 
         } catch (Exception e) {

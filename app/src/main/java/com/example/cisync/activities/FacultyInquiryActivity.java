@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -101,10 +102,10 @@ public class FacultyInquiryActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_spinner_item,
+                R.layout.custom_spinner_white,
                 departments
         );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.custom_spinner_white);
         spinnerDepartment.setAdapter(adapter);
         spinnerDepartment.setSelection(0);
     }
@@ -137,10 +138,10 @@ public class FacultyInquiryActivity extends AppCompatActivity {
             // Set up faculty spinner
             ArrayAdapter<String> facultyAdapter = new ArrayAdapter<>(
                     this,
-                    android.R.layout.simple_spinner_item,
+                    R.layout.custom_spinner_white,
                     facultyNames
             );
-            facultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            facultyAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spinnerFacultyList.setAdapter(facultyAdapter);
 
         } catch (Exception e) {
@@ -204,6 +205,8 @@ public class FacultyInquiryActivity extends AppCompatActivity {
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.beginTransaction();
+            Log.d("TRANSACTION_DEBUG", "Transaction started for studentId=" + studentId + ", facultyId=" + selectedFacultyId);
+
 
             // Insert faculty inquiry
             ContentValues inquiryValues = new ContentValues();
@@ -217,6 +220,7 @@ public class FacultyInquiryActivity extends AppCompatActivity {
             inquiryValues.put("created_at", System.currentTimeMillis());
 
             long inquiryId = db.insert("faculty_inquiries", null, inquiryValues);
+            Log.d("TRANSACTION_DEBUG", "Inserted faculty inquiry with ID: " + inquiryId);
 
             if (inquiryId != -1) {
                 // Create notification for the selected faculty
@@ -228,31 +232,38 @@ public class FacultyInquiryActivity extends AppCompatActivity {
                 facultyNotification.put("read_status", 0); // Unread
                 facultyNotification.put("inquiry_id", inquiryId);
 
-                db.insert("transactions", null, facultyNotification);
+                long facultyTxId = db.insert("transactions", null, facultyNotification);
+                Log.d("TRANSACTION_DEBUG", "Faculty transaction inserted. ID=" + facultyTxId +
+                        ", user_id=" + selectedFacultyId + ", inquiry_id=" + inquiryId);
 
-                // Create transaction record for the student
+                // Create transaction record for the student (CHANGED action_type)
                 ContentValues studentTransaction = new ContentValues();
                 studentTransaction.put("user_id", studentId);
-                studentTransaction.put("action_type", "Faculty Inquiry");
+                studentTransaction.put("action_type", "Inquiry Sent"); // Changed from "Faculty Inquiry"
                 studentTransaction.put("description", "Inquiry sent to " + facultyName + ": " + subject);
                 studentTransaction.put("timestamp", System.currentTimeMillis());
 
-                db.insert("transactions", null, studentTransaction);
+                long studentTxId = db.insert("transactions", null, studentTransaction);
+                Log.d("TRANSACTION_DEBUG", "Student transaction inserted. ID=" + studentTxId +
+                        ", user_id=" + studentId + ", action_type=Inquiry Sent");
 
                 db.setTransactionSuccessful();
+                Log.d("TRANSACTION_DEBUG", "Transaction marked successful.");
                 return true;
             }
-
+            Log.w("TRANSACTION_DEBUG", "Failed to insert inquiry.");
             return false;
 
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("TRANSACTION_DEBUG", "Exception during transaction", e);
             return false;
         } finally {
             try {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 if (db.inTransaction()) {
                     db.endTransaction();
+                    Log.d("TRANSACTION_DEBUG", "Transaction ended.");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

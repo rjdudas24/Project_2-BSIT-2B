@@ -32,6 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fee Name"
+                    android:fontFamily="@font/saira_bold"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -43,6 +44,7 @@
                     android:text="₱ 500"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
+                    android:fontFamily="@font/saira_semibold"
                     android:layout_marginTop="4dp" />
             </LinearLayout>
 
@@ -65,6 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PAID"
+                    android:fontFamily="@font/saira_bold"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -87,6 +90,7 @@
             android:textColor="#CCCCCC"
             android:textSize="12sp"
             android:textStyle="italic"
+            android:fontFamily="@font/saira_semibold"
             android:layout_marginBottom="4dp" />
 
         <!-- Date information -->
@@ -95,6 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Date: Jan 15, 2024"
+            android:fontFamily="@font/saira_semibold"
             android:textColor="#CCCCCC"
             android:textSize="12sp"
             android:textStyle="italic" />

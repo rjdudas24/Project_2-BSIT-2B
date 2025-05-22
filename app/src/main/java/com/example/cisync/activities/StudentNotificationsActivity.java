@@ -158,7 +158,7 @@ public class StudentNotificationsActivity extends Activity {
         String icon = getNotificationIcon(actionType);
         String status = isUnread ? " 🔴 NEW" : "";
 
-        return icon + " " + description + "\n" + time + status;
+        return "\n" + icon + " " + description + "\n" + time + status + "\n";
     }
 
     private String getNotificationIcon(String actionType) {
@@ -171,6 +171,8 @@ public class StudentNotificationsActivity extends Activity {
                 return "📋";
             case "Faculty Inquiry":
                 return "❓";
+            case "Inquiry Sent":
+                return "📤";
             case "Notice Posted":
                 return "📢";
             case "Accountability Posted":
@@ -206,27 +208,405 @@ public class StudentNotificationsActivity extends Activity {
             long timestamp = cursor.getLong(1);
             cursor.close();
 
-            // Show details based on notification type
+            // Create custom dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            if ("Faculty Response".equals(actionType)) {
-                showFacultyResponseDetails(builder, description, timestamp);
-            } else if ("Document Status Update".equals(actionType)) {
-                showDocumentStatusDetails(builder, description, timestamp);
-            } else if ("Accountability Posted".equals(actionType)) {
-                showAccountabilityDetails(builder, description, timestamp);
-            } else if ("Accountability Status Update".equals(actionType)) {
-                showAccountabilityStatusDetails(builder, description, timestamp);
-            } else {
-                showGenericNotificationDetails(builder, actionType, description, timestamp);
+            // Inflate custom layout
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_notification_details, null);
+            builder.setView(dialogView);
+
+            // Create dialog
+            AlertDialog dialog = builder.create();
+
+            // Make dialog background transparent to show custom background
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             }
 
-            builder.setPositiveButton("Close", null);
-            builder.show();
+            // Find views in custom layout
+            ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+            TextView tvDialogTitle = dialogView.findViewById(R.id.tvDialogTitle);
+            View vUnreadIndicator = dialogView.findViewById(R.id.vUnreadIndicator);
+            ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+            TextView tvNotificationType = dialogView.findViewById(R.id.tvNotificationType);
+            TextView tvNotificationStatus = dialogView.findViewById(R.id.tvNotificationStatus);
+            LinearLayout llSubjectRow = dialogView.findViewById(R.id.llSubjectRow);
+            TextView tvSubjectLabel = dialogView.findViewById(R.id.tvSubjectLabel);
+            TextView tvSubjectValue = dialogView.findViewById(R.id.tvSubjectValue);
+            TextView tvNotificationDescription = dialogView.findViewById(R.id.tvNotificationDescription);
+            TextView tvNotificationTime = dialogView.findViewById(R.id.tvNotificationTime);
+            LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+            ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+            TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+            Button btnMarkAsRead = dialogView.findViewById(R.id.btnMarkAsRead);
+            Button btnDialogClose = dialogView.findViewById(R.id.btnDialogClose);
+
+            // Set basic information
+            tvNotificationType.setText(actionType);
+            tvNotificationDescription.setText(description);
+            tvNotificationTime.setText(formatTimestamp(timestamp));
+
+            // Check if this notification is unread
+            int position = transactionIds.indexOf(transactionId);
+            boolean isUnread = position >= 0 && position < readStatuses.size() && readStatuses.get(position);
+
+            if (isUnread) {
+                vUnreadIndicator.setVisibility(View.VISIBLE);
+                btnMarkAsRead.setVisibility(View.VISIBLE);
+            } else {
+                vUnreadIndicator.setVisibility(View.GONE);
+                btnMarkAsRead.setVisibility(View.GONE);
+            }
+
+            // Configure dialog based on notification type
+            switch (actionType) {
+                case "Faculty Response":
+                    configureFacultyResponseDialog(dialogView, description, timestamp);
+                    break;
+                case "Document Status Update":
+                    configureDocumentStatusDialog(dialogView, description, timestamp);
+                    break;
+                case "Accountability Posted":
+                    configureAccountabilityDialog(dialogView, description, timestamp);
+                    break;
+                case "Accountability Status Update":
+                    configureAccountabilityStatusDialog(dialogView, description, timestamp);
+                    break;
+                case "Inquiry Sent":
+                    configureInquirySentDialog(dialogView, description, timestamp);
+                    break;
+                case "Notice Posted":
+                    configureNoticeDialog(dialogView, description, timestamp);
+                    break;
+                case "User Update":
+                    configureUserUpdateDialog(dialogView, description, timestamp);
+                    break;
+                case "Registration":
+                    configureRegistrationDialog(dialogView, description, timestamp);
+                    break;
+                default:
+                    configureGenericDialog(dialogView, actionType, description, timestamp);
+                    break;
+            }
+
+            // Set click listeners
+            btnMarkAsRead.setOnClickListener(v -> {
+                markAsRead(transactionId, position);
+                vUnreadIndicator.setVisibility(View.GONE);
+                btnMarkAsRead.setVisibility(View.GONE);
+                Toast.makeText(this, "Marked as read", Toast.LENGTH_SHORT).show();
+            });
+
+            btnDialogClose.setOnClickListener(v -> dialog.dismiss());
+
+            // Show dialog
+            dialog.show();
 
         } catch (Exception e) {
-            Log.e(TAG, "Error showing notification details: " + e.getMessage(), e);
-            Toast.makeText(this, "Error showing notification details", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error showing custom notification details dialog: " + e.getMessage(), e);
+
+            // Fallback to simple dialog
+            showFallbackNotificationDialog(transactionId, actionType);
+        }
+    }
+
+    private void configureInquirySentDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        TextView tvNotificationStatus = dialogView.findViewById(R.id.tvNotificationStatus);
+        LinearLayout llSubjectRow = dialogView.findViewById(R.id.llSubjectRow);
+        TextView tvSubjectLabel = dialogView.findViewById(R.id.tvSubjectLabel);
+        TextView tvSubjectValue = dialogView.findViewById(R.id.tvSubjectValue);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
+
+        // Set status
+        tvNotificationStatus.setText("✅ SENT");
+        tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        tvNotificationStatus.setVisibility(View.VISIBLE);
+
+        // Extract subject and faculty name from description
+        if (description.contains("Inquiry sent to ") && description.contains(": ")) {
+            String[] parts = description.split(": ", 2);
+            if (parts.length == 2) {
+                String facultyPart = parts[0].replace("Inquiry sent to ", "");
+                String subject = parts[1];
+
+                llSubjectRow.setVisibility(View.VISIBLE);
+                tvSubjectLabel.setText("Subject:");
+                tvSubjectValue.setText(subject);
+
+                // Show faculty name in additional info
+                llAdditionalInfo.setVisibility(View.VISIBLE);
+                ivAdditionalIcon.setImageResource(R.drawable.ic_user_w);
+                tvAdditionalInfo.setText("📤 Your inquiry has been sent to " + facultyPart + ". You will be notified when they respond.");
+            }
+        } else {
+            // Fallback additional info
+            llAdditionalInfo.setVisibility(View.VISIBLE);
+            ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+            tvAdditionalInfo.setText("📤 Your inquiry has been sent successfully. You will be notified when the faculty responds.");
+        }
+    }
+    private void configureFacultyResponseDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        TextView tvNotificationStatus = dialogView.findViewById(R.id.tvNotificationStatus);
+        LinearLayout llSubjectRow = dialogView.findViewById(R.id.llSubjectRow);
+        TextView tvSubjectLabel = dialogView.findViewById(R.id.tvSubjectLabel);
+        TextView tvSubjectValue = dialogView.findViewById(R.id.tvSubjectValue);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
+
+        // Parse response status
+        String responseStatus = "";
+        if (description.contains("'Available'")) {
+            responseStatus = "✅ AVAILABLE";
+            tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        } else if (description.contains("'Unavailable'")) {
+            responseStatus = "❌ UNAVAILABLE";
+            tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+        }
+
+        if (!responseStatus.isEmpty()) {
+            tvNotificationStatus.setText(responseStatus);
+            tvNotificationStatus.setVisibility(View.VISIBLE);
+        }
+
+        // Extract subject from description
+        if (description.contains("to your inquiry: ")) {
+            String subject = description.substring(description.indexOf("to your inquiry: ") + 17);
+            llSubjectRow.setVisibility(View.VISIBLE);
+            tvSubjectLabel.setText("Inquiry Subject:");
+            tvSubjectValue.setText(subject);
+        }
+
+        // Show additional information
+        llAdditionalInfo.setVisibility(View.VISIBLE);
+        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+
+        if (description.contains("'Available'")) {
+            tvAdditionalInfo.setText("💡 The faculty member is available for your inquiry. You may proceed to contact them.");
+        } else {
+            tvAdditionalInfo.setText("ℹ️ The faculty member is currently unavailable. Please try contacting them at a later time.");
+        }
+    }
+
+    private void configureDocumentStatusDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        TextView tvNotificationStatus = dialogView.findViewById(R.id.tvNotificationStatus);
+        LinearLayout llSubjectRow = dialogView.findViewById(R.id.llSubjectRow);
+        TextView tvSubjectLabel = dialogView.findViewById(R.id.tvSubjectLabel);
+        TextView tvSubjectValue = dialogView.findViewById(R.id.tvSubjectValue);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.document_icon);
+
+        // Parse status
+        String status = "";
+        if (description.contains("has been approved")) {
+            status = "✅ APPROVED";
+            tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        } else if (description.contains("has been rejected")) {
+            status = "❌ REJECTED";
+            tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+        }
+
+        if (!status.isEmpty()) {
+            tvNotificationStatus.setText(status);
+            tvNotificationStatus.setVisibility(View.VISIBLE);
+        }
+
+        // Extract document name
+        if (description.contains("Your document '") && description.contains("' has been")) {
+            int start = description.indexOf("Your document '") + 15;
+            int end = description.indexOf("' has been");
+            if (start > 14 && end > start) {
+                String documentName = description.substring(start, end);
+                llSubjectRow.setVisibility(View.VISIBLE);
+                tvSubjectLabel.setText("Document:");
+                tvSubjectValue.setText(documentName);
+            }
+        }
+
+        // Show additional information
+        llAdditionalInfo.setVisibility(View.VISIBLE);
+        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+
+        if (description.contains("approved")) {
+            tvAdditionalInfo.setText("🎉 Congratulations! Your document has been approved by the faculty.");
+        } else {
+            tvAdditionalInfo.setText("📝 Your document was not approved. Please contact the faculty for more details.");
+        }
+    }
+
+    private void configureAccountabilityDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.wallet);
+
+        // Show additional information
+        llAdditionalInfo.setVisibility(View.VISIBLE);
+        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+        tvAdditionalInfo.setText("💰 Please check your Accountabilities section for payment details.");
+    }
+
+    private void configureAccountabilityStatusDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        TextView tvNotificationStatus = dialogView.findViewById(R.id.tvNotificationStatus);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.wallet);
+
+        // Parse status
+        String status = "";
+        if (description.toLowerCase().contains("paid")) {
+            status = "✅ PAID";
+            tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        } else if (description.toLowerCase().contains("unpaid")) {
+            status = "❌ UNPAID";
+            tvNotificationStatus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+        }
+
+        if (!status.isEmpty()) {
+            tvNotificationStatus.setText(status);
+            tvNotificationStatus.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void configureFacultyInquiryDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
+
+        // Show additional information
+        llAdditionalInfo.setVisibility(View.VISIBLE);
+        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+        tvAdditionalInfo.setText("❓ Inquiry to faculty sent.");
+    }
+
+    private void configureNoticeDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.notice_icon);
+
+        // Show additional information
+        llAdditionalInfo.setVisibility(View.VISIBLE);
+        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+        tvAdditionalInfo.setText("📢 A new notice has been posted. Please read it carefully for important information.");
+    }
+
+    private void configureUserUpdateDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
+
+        // Show additional information
+        llAdditionalInfo.setVisibility(View.VISIBLE);
+        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+        tvAdditionalInfo.setText("✏️ Your user information has been updated. Please review the changes.");
+    }
+
+    private void configureRegistrationDialog(View dialogView, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+
+        // Set icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
+
+        // Show additional information
+        llAdditionalInfo.setVisibility(View.VISIBLE);
+        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
+        tvAdditionalInfo.setText("👤 Welcome! Your registration has been processed successfully.");
+    }
+
+    private void configureGenericDialog(View dialogView, String actionType, String description, long timestamp) {
+        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
+        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
+
+        // Set default icons
+        ivNotificationIcon.setImageResource(R.drawable.notification);
+        ivNotificationTypeIcon.setImageResource(R.drawable.notification);
+    }
+
+    private void showFallbackNotificationDialog(int transactionId, String actionType) {
+        try {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery(
+                    "SELECT description, timestamp FROM transactions WHERE id=?",
+                    new String[]{String.valueOf(transactionId)}
+            );
+
+            if (!cursor.moveToFirst()) {
+                cursor.close();
+                return;
+            }
+
+            String description = cursor.getString(0);
+            long timestamp = cursor.getLong(1);
+            cursor.close();
+
+            AlertDialog.Builder fallbackBuilder = new AlertDialog.Builder(this);
+            fallbackBuilder.setTitle("Notification Details");
+
+            String message = "Type: " + actionType + "\n\n" +
+                    "Description: " + description + "\n\n" +
+                    "Time: " + formatTimestamp(timestamp);
+
+            fallbackBuilder.setMessage(message);
+            fallbackBuilder.setPositiveButton("Close", null);
+            fallbackBuilder.show();
+
+            Toast.makeText(this, "Using fallback dialog due to error", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error showing fallback notification dialog: " + e.getMessage(), e);
         }
     }
 
@@ -382,7 +762,7 @@ public class StudentNotificationsActivity extends Activity {
     // Custom adapter to handle visual distinction between read and unread notifications
     private class NotificationAdapter extends ArrayAdapter<String> {
         public NotificationAdapter() {
-            super(StudentNotificationsActivity.this, android.R.layout.simple_list_item_1, notifications);
+            super(StudentNotificationsActivity.this, R.layout.notif_list, notifications);
         }
 
         @Override
