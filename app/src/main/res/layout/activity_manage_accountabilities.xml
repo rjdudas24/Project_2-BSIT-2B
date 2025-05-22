@@ -39,6 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/saira_bold"
             android:text="MANAGE ACCOUNTABILITIES"
             android:textColor="@android:color/white"
             android:textSize="18sp"
@@ -64,9 +65,10 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="Student: "
+                android:text="STUDENT: "
+                android:fontFamily="@font/saira_bold"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:layout_marginEnd="8dp"
@@ -89,9 +91,10 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="Status: "
+                android:text="STATUS: "
+                android:fontFamily="@font/saira_bold"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:layout_marginEnd="8dp"
@@ -116,7 +119,8 @@
                 android:id="@+id/btnApplyFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Apply Filter"
+                android:text="APPLY FILTER"
+                android:fontFamily="@font/saira_bold"
                 android:textSize="12sp"
                 android:layout_marginEnd="8dp"
                 android:background="@color/dark_blue"
@@ -126,7 +130,8 @@
                 android:id="@+id/btnClearFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear Filter"
+                android:text="CLEAR FILTER"
+                android:fontFamily="@font/saira_bold"
                 android:textSize="12sp"
                 android:background="@color/dark_blue"
                 android:textColor="@android:color/white" />
@@ -139,6 +144,7 @@
         android:layout_height="wrap_content"
         android:text="💼 Manage student accountabilities - tap to change status or view details"
         android:textColor="@android:color/white"
+        android:fontFamily="@font/saira_semibold"
         android:textSize="14sp"
         android:gravity="center"
         android:layout_marginBottom="12dp"
@@ -184,6 +190,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/saira_semibold"
         android:text="✅ Paid | ❌ Unpaid | 🗑️ Delete | 📝 Edit Status"
         android:textColor="#AAAAAA"
         android:textSize="12sp"
