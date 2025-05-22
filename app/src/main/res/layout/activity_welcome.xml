@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:text="CISC Inquiry &amp; Synchronization Center"
         android:textSize="16sp"
-        android:textColor="#AAAAAA"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/saira_semibold_italic"
         android:layout_below="@id/logoMain"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-90dp" />
