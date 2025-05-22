@@ -14,7 +14,7 @@ import com.example.cisync.database.DBHelper;
 public class DashboardStudentwOrgActivity extends Activity {
 
     private static final String TAG = "DashboardStudentOrg";
-    LinearLayout layoutInquire, layoutAccountabilities, layoutTrackDocuments, layoutPostNotice, layoutViewNotices;
+    LinearLayout layoutInquire, layoutAccountabilities, layoutTrackDocuments, layoutPostNotice, layoutTransactionHistory;
     TextView tvWelcome, tvOrganizationValue, tvPositionValue;
     boolean hasOrg;
     String orgPosition = "";
@@ -51,8 +51,8 @@ public class DashboardStudentwOrgActivity extends Activity {
             layoutTrackDocuments = findViewById(R.id.layoutTrackDocuments);
             layoutPostNotice = findViewById(R.id.layoutPostNotice);
 
-            // Try to find View Notices layout (may not exist in older layouts)
-            layoutViewNotices = findViewById(R.id.layoutViewNotices);
+            // Replace View Notices with Transaction History
+            layoutTransactionHistory = findViewById(R.id.layoutTransactionHistory);
 
             // Get org position if available
             if (hasOrg && studentId != -1) {
@@ -150,21 +150,21 @@ public class DashboardStudentwOrgActivity extends Activity {
             });
         }
 
-        // View Notices (Available to all students if layout exists)
-        if (layoutViewNotices != null) {
-            layoutViewNotices.setOnClickListener(v -> {
+        // Transaction History (Replaces View Notices)
+        if (layoutTransactionHistory != null) {
+            layoutTransactionHistory.setOnClickListener(v -> {
                 try {
-                    Intent intent = new Intent(this, ViewNoticesActivity.class);
+                    Intent intent = new Intent(this, StudentTransactionHistoryActivity.class);
                     intent.putExtra("studentId", studentId);
                     startActivity(intent);
-                    Log.d(TAG, "Launched View Notices with studentId: " + studentId);
+                    Log.d(TAG, "Launched Transaction History with studentId: " + studentId);
                 } catch (Exception e) {
-                    Log.e(TAG, "Error launching View Notices: " + e.getMessage(), e);
-                    Toast.makeText(this, "Error opening Notices", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error launching Transaction History: " + e.getMessage(), e);
+                    Toast.makeText(this, "Error opening Transaction History", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            Log.w(TAG, "View Notices layout not found - notices feature not available in this layout");
+            Log.w(TAG, "Transaction History layout not found - feature not available in this layout");
         }
     }
 

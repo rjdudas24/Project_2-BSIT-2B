@@ -262,27 +262,55 @@ public class TrackDocumentsActivity extends Activity {
             }
 
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            cv.put("name", name);
-            cv.put("description", desc);
-            cv.put("status", "Pending");
-            cv.put("created_by", userPosition);
-            cv.put("student_id", studentId); // Add the student ID
-            cv.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
 
-            long result = db.insert("documents", null, cv);
+            // Start a transaction to ensure both operations succeed
+            db.beginTransaction();
 
-            if (result != -1) {
-                // Document added, now create notification for faculty
-                createFacultyNotification(db, name);
+            try {
+                // Insert the document
+                ContentValues cv = new ContentValues();
+                cv.put("name", name);
+                cv.put("description", desc);
+                cv.put("status", "Pending");
+                cv.put("created_by", userPosition);
+                cv.put("student_id", studentId);
+                cv.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
 
-                Toast.makeText(this, "Document added successfully", Toast.LENGTH_SHORT).show();
-                etDocumentName.setText("");
-                etDocumentDesc.setText("");
-                loadDocuments(); // Refresh list
-            } else {
-                Toast.makeText(this, "Failed to add document", Toast.LENGTH_SHORT).show();
+                long documentResult = db.insert("documents", null, cv);
+
+                if (documentResult != -1) {
+                    // Create transaction record for the STUDENT who submitted the document
+                    ContentValues studentTransValues = new ContentValues();
+                    studentTransValues.put("user_id", studentId);
+                    studentTransValues.put("action_type", "Document Submission");
+                    studentTransValues.put("description", "Submitted document: " + name);
+                    studentTransValues.put("timestamp", System.currentTimeMillis());
+
+                    long studentTransResult = db.insert("transactions", null, studentTransValues);
+
+                    if (studentTransResult != -1) {
+                        Log.d(TAG, "Student transaction recorded for document submission: " + name);
+                    } else {
+                        Log.w(TAG, "Failed to record student transaction for document submission");
+                    }
+
+                    // Create notification for faculty (existing functionality)
+                    createFacultyNotification(db, name);
+
+                    // Commit the transaction
+                    db.setTransactionSuccessful();
+
+                    Toast.makeText(this, "Document added successfully", Toast.LENGTH_SHORT).show();
+                    etDocumentName.setText("");
+                    etDocumentDesc.setText("");
+                    loadDocuments(); // Refresh list
+                } else {
+                    Toast.makeText(this, "Failed to add document", Toast.LENGTH_SHORT).show();
+                }
+            } finally {
+                db.endTransaction(); // This will rollback if setTransactionSuccessful() wasn't called
             }
+
         } catch (Exception e) {
             Log.e(TAG, "Error adding document: " + e.getMessage(), e);
             Toast.makeText(this, "Error adding document: " + e.getMessage(), Toast.LENGTH_SHORT).show();

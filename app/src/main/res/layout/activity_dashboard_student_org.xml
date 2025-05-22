@@ -148,7 +148,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Three-button row: Accountabilities, Track Documents, View Notices -->
+    <!-- Three-button row: Accountabilities, Track Documents, Transaction History -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -225,7 +225,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!--VIEW NOTICES BUTTON (NEW)-->
+        <!--TRANSACTION HISTORY BUTTON (REPLACES VIEW NOTICES)-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -235,14 +235,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VIEW NOTICES"
+                android:text="TRANSACTION HISTORY"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="5dp" />
 
             <LinearLayout
-                android:id="@+id/layoutViewNotices"
+                android:id="@+id/layoutTransactionHistory"
                 android:layout_width="75dp"
                 android:layout_height="70dp"
                 android:background="@drawable/bg_submit_btn"
@@ -254,7 +254,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/notice_icon" />
+                    android:src="@drawable/ic_history" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

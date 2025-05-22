@@ -1,7 +1,10 @@
 package com.example.cisync.activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import com.example.cisync.database.DBHelper;
  */
 public class FacultyInquirySent extends AppCompatActivity {
 
+    private static final String TAG = "FacultyInquirySent";
     private Button btnOk;
     private DBHelper dbHelper;
     private int studentId = -1;
@@ -29,6 +33,7 @@ public class FacultyInquirySent extends AppCompatActivity {
 
         // Get student ID from intent - this is the key fix
         studentId = getIntent().getIntExtra("studentId", -1);
+        Log.d(TAG, "Received student ID: " + studentId);
 
         // Initialize UI components
         btnOk = findViewById(R.id.btnOk);
@@ -55,16 +60,38 @@ public class FacultyInquirySent extends AppCompatActivity {
     private void recordTransaction() {
         try {
             if (studentId != -1) {
-                // Insert directly into transactions table
-                long timestamp = System.currentTimeMillis();
-                dbHelper.getWritableDatabase().execSQL(
-                        "INSERT INTO transactions (user_id, action_type, description, timestamp) VALUES (?, ?, ?, ?)",
-                        new Object[]{studentId, "Faculty Inquiry", "Faculty inquiry submitted successfully", timestamp}
-                );
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                // Insert transaction record for the student
+                ContentValues transValues = new ContentValues();
+                transValues.put("user_id", studentId);
+                transValues.put("action_type", "Faculty Inquiry");
+                transValues.put("description", "Faculty inquiry submitted successfully");
+                transValues.put("timestamp", System.currentTimeMillis());
+
+                long result = db.insert("transactions", null, transValues);
+
+                if (result != -1) {
+                    Log.d(TAG, "Transaction recorded successfully for student ID: " + studentId);
+                } else {
+                    Log.e(TAG, "Failed to record transaction for student ID: " + studentId);
+                }
+
+                db.close();
+            } else {
+                Log.e(TAG, "Cannot record transaction - invalid student ID: " + studentId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error recording transaction: " + e.getMessage(), e);
             // No need to show error to user since this is just logging
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dbHelper != null) {
+            dbHelper.close();
         }
     }
 }

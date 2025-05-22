@@ -180,88 +180,96 @@ public class PostNoticeActivity extends Activity {
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            // Start transaction to ensure all operations succeed
+            db.beginTransaction();
 
-            // Determine target type and target student
-            String targetType = "ALL";
-            Integer targetStudentId = null;
-
-            if (rbSpecificStudent.isChecked()) {
-                targetType = "SPECIFIC";
-                int selectedIndex = spTargetStudent.getSelectedItemPosition();
-                if (selectedIndex > 0 && selectedIndex < studentIds.size()) {
-                    targetStudentId = studentIds.get(selectedIndex);
-                } else {
-                    Toast.makeText(this, "Please select a target student", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            }
-
-            // Create content with targeting info for backward compatibility
-            String formattedContent;
-            if ("SPECIFIC".equals(targetType)) {
-                String targetName = studentNames.get(spTargetStudent.getSelectedItemPosition());
-                formattedContent = "[" + userPosition + " - TO: " + targetName + "] " + title + "\n\n" + content;
-            } else {
-                formattedContent = "[" + userPosition + " - TO: ALL STUDENTS] " + title + "\n\n" + content;
-            }
-
-            ContentValues values = new ContentValues();
-            values.put("student_id", studentId);
-            values.put("content", formattedContent); // Use existing content field
-            values.put("timestamp", timestamp);
-
-            // Add new fields only if they exist (safe insertion)
             try {
-                values.put("title", title);
-                values.put("target_type", targetType);
-                values.put("target_student_id", targetStudentId);
-                values.put("posted_by_name", userName);
-                values.put("posted_by_position", userPosition);
-            } catch (Exception e) {
-                // If new columns don't exist, continue with basic insertion
-                Log.w(TAG, "Using basic notice insertion: " + e.getMessage());
-            }
+                String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
 
-            long result = db.insert("notices", null, values);
+                // Determine target type and target student
+                String targetType = "ALL";
+                Integer targetStudentId = null;
 
-            if (result != -1) {
-                // Log this action in transactions
-                String description = "Posted notice: " + title;
+                if (rbSpecificStudent.isChecked()) {
+                    targetType = "SPECIFIC";
+                    int selectedIndex = spTargetStudent.getSelectedItemPosition();
+                    if (selectedIndex > 0 && selectedIndex < studentIds.size()) {
+                        targetStudentId = studentIds.get(selectedIndex);
+                    } else {
+                        Toast.makeText(this, "Please select a target student", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+
+                // Create content with targeting info for backward compatibility
+                String formattedContent;
                 if ("SPECIFIC".equals(targetType)) {
                     String targetName = studentNames.get(spTargetStudent.getSelectedItemPosition());
-                    description += " (targeted to: " + targetName + ")";
+                    formattedContent = "[" + userPosition + " - TO: " + targetName + "] " + title + "\n\n" + content;
+                } else {
+                    formattedContent = "[" + userPosition + " - TO: ALL STUDENTS] " + title + "\n\n" + content;
                 }
-                recordTransaction(db, "Notice Posted", description);
 
-                Log.d(TAG, "Notice posted successfully with ID: " + result);
+                ContentValues values = new ContentValues();
+                values.put("student_id", studentId);
+                values.put("content", formattedContent); // Use existing content field
+                values.put("timestamp", timestamp);
+
+                // Add new fields only if they exist (safe insertion)
+                try {
+                    values.put("title", title);
+                    values.put("target_type", targetType);
+                    values.put("target_student_id", targetStudentId);
+                    values.put("posted_by_name", userName);
+                    values.put("posted_by_position", userPosition);
+                } catch (Exception e) {
+                    // If new columns don't exist, continue with basic insertion
+                    Log.w(TAG, "Using basic notice insertion: " + e.getMessage());
+                }
+
+                long noticeResult = db.insert("notices", null, values);
+
+                if (noticeResult != -1) {
+                    // Create transaction record for the student who posted the notice
+                    String description = "Posted notice: " + title;
+                    if ("SPECIFIC".equals(targetType)) {
+                        String targetName = studentNames.get(spTargetStudent.getSelectedItemPosition());
+                        description += " (targeted to: " + targetName + ")";
+                    }
+
+                    ContentValues transValues = new ContentValues();
+                    transValues.put("user_id", studentId);
+                    transValues.put("action_type", "Notice Posted");
+                    transValues.put("description", description);
+                    transValues.put("timestamp", System.currentTimeMillis());
+
+                    long transResult = db.insert("transactions", null, transValues);
+
+                    if (transResult != -1) {
+                        Log.d(TAG, "Student transaction recorded for notice posting: " + title);
+
+                        // Commit the transaction
+                        db.setTransactionSuccessful();
+
+                        Log.d(TAG, "Notice posted successfully with ID: " + noticeResult);
+                        return true;
+                    } else {
+                        Log.e(TAG, "Failed to record student transaction for notice posting");
+                        return false;
+                    }
+                } else {
+                    Log.e(TAG, "Failed to insert notice into database");
+                    return false;
+                }
+            } finally {
+                db.endTransaction(); // This will rollback if setTransactionSuccessful() wasn't called
                 db.close();
-                return true;
-            } else {
-                Log.e(TAG, "Failed to insert notice into database");
-                db.close();
-                return false;
             }
 
         } catch (Exception e) {
             Log.e(TAG, "Database error while posting notice: " + e.getMessage(), e);
             Toast.makeText(this, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             return false;
-        }
-    }
-
-    private void recordTransaction(SQLiteDatabase db, String actionType, String description) {
-        try {
-            ContentValues transValues = new ContentValues();
-            transValues.put("user_id", studentId);
-            transValues.put("action_type", actionType);
-            transValues.put("description", description);
-            transValues.put("timestamp", System.currentTimeMillis());
-
-            db.insert("transactions", null, transValues);
-            Log.d(TAG, "Transaction recorded: " + actionType);
-        } catch (Exception e) {
-            Log.e(TAG, "Error recording transaction: " + e.getMessage(), e);
         }
     }
 
