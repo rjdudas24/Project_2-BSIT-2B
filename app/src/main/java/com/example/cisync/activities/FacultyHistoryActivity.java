@@ -273,52 +273,203 @@ public class FacultyHistoryActivity extends Activity {
     }
 
     private void showTransactionDetailsDialog(int transactionId, String actionType, String message) {
+        // Create custom dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Transaction Details");
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_faculty_transaction, null);
+        builder.setView(dialogView);
 
-        String details = "Action Type: " + actionType + "\n\n" +
-                "Description: " + message + "\n\n" +
-                "Transaction ID: " + transactionId;
+        // Get references to views
+        TextView tvTransactionId = dialogView.findViewById(R.id.tvTransactionId);
+        TextView tvTransactionActionType = dialogView.findViewById(R.id.tvTransactionActionType);
+        TextView tvTransactionTimestamp = dialogView.findViewById(R.id.tvTransactionTimestamp);
+        TextView tvReResponseStatus = dialogView.findViewById(R.id.tvReResponseStatus);
+        TextView tvTransactionDescription = dialogView.findViewById(R.id.tvTransactionDescription);
+        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
+        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
+        LinearLayout llReResponseSection = dialogView.findViewById(R.id.llReResponseSection);
+        TextView tvReResponseMessage = dialogView.findViewById(R.id.tvReResponseMessage);
+        Button btnReResponseOption1 = dialogView.findViewById(R.id.btnReResponseOption1);
+        Button btnReResponseOption2 = dialogView.findViewById(R.id.btnReResponseOption2);
+        View vReResponseIndicator = dialogView.findViewById(R.id.vReResponseIndicator);
+        Button btnClose = dialogView.findViewById(R.id.btnTransactionClose);
 
-        if (!RE_RESPONDABLE_ACTIONS.contains(actionType)) {
-            details += "\n\nNote: This transaction type cannot be re-responded to.";
+        // Set transaction data
+        tvTransactionId.setText(String.valueOf(transactionId));
+        tvTransactionActionType.setText(actionType != null ? actionType : "Unknown");
+        tvTransactionDescription.setText(message != null ? message : "No description available");
+
+        // Get transaction details from database
+        TransactionDetails details = getTransactionDetails(transactionId);
+
+        // Set timestamp
+        if (details.timestamp != -1) {
+            String formattedTime = formatTime(details.timestamp);
+            tvTransactionTimestamp.setText(formattedTime);
+        } else {
+            tvTransactionTimestamp.setText("Unknown");
         }
 
-        builder.setMessage(details);
-        builder.setPositiveButton("Close", null);
-        builder.show();
+        // Set re-response status and show/hide re-response section
+        boolean isReRespondable = RE_RESPONDABLE_ACTIONS.contains(actionType);
+        if (isReRespondable) {
+            tvReResponseStatus.setText("Available");
+            tvReResponseStatus.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+            vReResponseIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+
+            // Show re-response section
+            llReResponseSection.setVisibility(View.VISIBLE);
+
+            // Configure re-response buttons based on action type
+            configureReResponseButtons(actionType, btnReResponseOption1, btnReResponseOption2,
+                    tvReResponseMessage, details);
+
+            // Set button click listeners
+            setupReResponseListeners(dialogView, transactionId, actionType, details);
+
+        } else {
+            tvReResponseStatus.setText("Not Available");
+            tvReResponseStatus.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+            vReResponseIndicator.setBackgroundResource(R.drawable.status_indicator_active);
+            llReResponseSection.setVisibility(View.GONE);
+        }
+
+        // Set additional information if needed
+        String additionalInfo = getAdditionalTransactionInfo(transactionId, actionType);
+        if (additionalInfo != null && !additionalInfo.isEmpty()) {
+            llAdditionalInfo.setVisibility(View.VISIBLE);
+            tvAdditionalInfo.setText(additionalInfo);
+        } else {
+            llAdditionalInfo.setVisibility(View.GONE);
+        }
+
+        // Create and show dialog
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        // Set close button listener
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
-    private void showReResponseDialog(int transactionId, int targetUserId, String originalMessage,
-                                      String actionType, int inquiryId, String documentName) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    // Helper class to store transaction details
+    private static class TransactionDetails {
+        int targetUserId = -1;
+        int inquiryId = -1;
+        String documentName = "";
+        long timestamp = -1;
+        String originalMessage = "";
+    }
 
+    // Get comprehensive transaction details
+    private TransactionDetails getTransactionDetails(int transactionId) {
+        TransactionDetails details = new TransactionDetails();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        try {
+            Cursor cursor = db.rawQuery(
+                    "SELECT t.timestamp, t.description, t.action_type, COALESCE(t.inquiry_id, -1) as inquiry_id " +
+                            "FROM transactions t WHERE t.id = ?",
+                    new String[]{String.valueOf(transactionId)}
+            );
+
+            if (cursor.moveToFirst()) {
+                details.timestamp = cursor.getLong(0);
+                details.originalMessage = cursor.getString(1);
+                String actionType = cursor.getString(2);
+                details.inquiryId = cursor.getInt(3);
+
+                // Extract target user ID and document name based on action type
+                details.targetUserId = extractTargetUserId(details.originalMessage, actionType, details.inquiryId);
+                details.documentName = extractDocumentName(details.originalMessage, actionType);
+            }
+            cursor.close();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting transaction details: " + e.getMessage());
+        }
+
+        return details;
+    }
+
+    // Configure re-response buttons based on action type
+    private void configureReResponseButtons(String actionType, Button btn1, Button btn2,
+                                            TextView messageView, TransactionDetails details) {
         if ("Faculty Inquiry Response".equals(actionType)) {
-            builder.setTitle("Re-Respond to Inquiry");
-            builder.setMessage("Change your response to this inquiry:");
-
-            builder.setPositiveButton("Available", (dialog, which) ->
-                    reRespondToInquiry(inquiryId, targetUserId, "Available"));
-
-            builder.setNegativeButton("Unavailable", (dialog, which) ->
-                    reRespondToInquiry(inquiryId, targetUserId, "Unavailable"));
+            messageView.setText("Change your response to this inquiry:");
+            btn1.setText("AVAILABLE");
+            btn2.setText("UNAVAILABLE");
 
         } else if ("Document Status Update".equals(actionType)) {
-            builder.setTitle("Re-Respond to Document");
-            builder.setMessage("Change the document status for: " + documentName);
-
-            builder.setPositiveButton("Approved", (dialog, which) ->
-                    reRespondToDocument(documentName, targetUserId, "Approved"));
-
-            builder.setNegativeButton("Rejected", (dialog, which) ->
-                    reRespondToDocument(documentName, targetUserId, "Rejected"));
+            messageView.setText("Change the document status for: " + details.documentName);
+            btn1.setText("APPROVED");
+            btn2.setText("REJECTED");
         }
-
-        builder.setNeutralButton("Cancel", null);
-        builder.show();
     }
 
+    // Setup re-response button listeners
+    private void setupReResponseListeners(View dialogView, int transactionId, String actionType,
+                                          TransactionDetails details) {
+        Button btnOption1 = dialogView.findViewById(R.id.btnReResponseOption1);
+        Button btnOption2 = dialogView.findViewById(R.id.btnReResponseOption2);
+
+        if ("Faculty Inquiry Response".equals(actionType)) {
+            btnOption1.setOnClickListener(v -> {
+                showReResponseConfirmation("Available", () -> {
+                    reRespondToInquiry(details.inquiryId, details.targetUserId, "Available");
+                    ((AlertDialog) dialogView.getTag()).dismiss();
+                });
+            });
+
+            btnOption2.setOnClickListener(v -> {
+                showReResponseConfirmation("Unavailable", () -> {
+                    reRespondToInquiry(details.inquiryId, details.targetUserId, "Unavailable");
+                    ((AlertDialog) dialogView.getTag()).dismiss();
+                });
+            });
+
+        } else if ("Document Status Update".equals(actionType)) {
+            btnOption1.setOnClickListener(v -> {
+                showReResponseConfirmation("Approved", () -> {
+                    reRespondToDocument(details.documentName, details.targetUserId, "Approved");
+                    ((AlertDialog) dialogView.getTag()).dismiss();
+                });
+            });
+
+            btnOption2.setOnClickListener(v -> {
+                showReResponseConfirmation("Rejected", () -> {
+                    reRespondToDocument(details.documentName, details.targetUserId, "Rejected");
+                    ((AlertDialog) dialogView.getTag()).dismiss();
+                });
+            });
+        }
+
+        // Store dialog reference for dismissal
+        AlertDialog dialog = (AlertDialog) dialogView.getParent();
+        dialogView.setTag(dialog);
+    }
+
+    // Show confirmation dialog before re-responding
+    private void showReResponseConfirmation(String newResponse, Runnable onConfirm) {
+        AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(this);
+        confirmBuilder.setTitle("Confirm Re-Response");
+        confirmBuilder.setMessage("Are you sure you want to change your response to: " + newResponse + "?");
+
+        confirmBuilder.setPositiveButton("Confirm", (dialog, which) -> {
+            onConfirm.run();
+        });
+
+        confirmBuilder.setNegativeButton("Cancel", null);
+        confirmBuilder.show();
+    }
+
+    // Updated reRespondToInquiry method with better error handling
     private void reRespondToInquiry(int inquiryId, int studentId, String newResponse) {
+        if (inquiryId == -1 || studentId == -1) {
+            Toast.makeText(this, "Error: Invalid inquiry or student ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.beginTransaction();
@@ -359,6 +510,7 @@ public class FacultyHistoryActivity extends Activity {
                 facultyTransaction.put("description", "Updated response to '" + newResponse +
                         "' for inquiry: " + subject);
                 facultyTransaction.put("timestamp", System.currentTimeMillis());
+                facultyTransaction.put("inquiry_id", inquiryId);
 
                 db.insert("transactions", null, facultyTransaction);
 
@@ -385,7 +537,13 @@ public class FacultyHistoryActivity extends Activity {
         }
     }
 
+    // Updated reRespondToDocument method with better error handling
     private void reRespondToDocument(String documentName, int studentId, String newStatus) {
+        if (documentName == null || documentName.isEmpty() || studentId == -1) {
+            Toast.makeText(this, "Error: Invalid document or student ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.beginTransaction();
@@ -394,8 +552,8 @@ public class FacultyHistoryActivity extends Activity {
             ContentValues docUpdate = new ContentValues();
             docUpdate.put("status", newStatus);
 
-            int updateResult = db.update("documents", docUpdate, "name=?",
-                    new String[]{documentName});
+            int updateResult = db.update("documents", docUpdate, "name=? AND student_id=?",
+                    new String[]{documentName, String.valueOf(studentId)});
 
             if (updateResult > 0) {
                 // Create new notification for student
@@ -440,6 +598,69 @@ public class FacultyHistoryActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    // Helper method to get additional transaction information
+    private String getAdditionalTransactionInfo(int transactionId, String actionType) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        StringBuilder additionalInfo = new StringBuilder();
+
+        try {
+            if ("Faculty Inquiry Response".equals(actionType)) {
+                // Get inquiry details
+                Cursor cursor = db.rawQuery(
+                        "SELECT fi.subject, fi.message, u.name as student_name, fi.status " +
+                                "FROM transactions t " +
+                                "JOIN faculty_inquiries fi ON t.inquiry_id = fi.id " +
+                                "JOIN users u ON fi.student_id = u.id " +
+                                "WHERE t.id = ?",
+                        new String[]{String.valueOf(transactionId)}
+                );
+
+                if (cursor.moveToFirst()) {
+                    String subject = cursor.getString(0);
+                    String inquiryMessage = cursor.getString(1);
+                    String studentName = cursor.getString(2);
+                    String currentStatus = cursor.getString(3);
+
+                    additionalInfo.append("Inquiry Subject: ").append(subject).append("\n");
+                    additionalInfo.append("Student: ").append(studentName).append("\n");
+                    additionalInfo.append("Current Status: ").append(currentStatus).append("\n");
+                    additionalInfo.append("Original Inquiry: ").append(inquiryMessage);
+                }
+                cursor.close();
+
+            } else if ("Document Status Update".equals(actionType)) {
+                // Get document details
+                Cursor cursor = db.rawQuery(
+                        "SELECT d.name, d.type, d.status, u.name as student_name " +
+                                "FROM transactions t " +
+                                "JOIN documents d ON t.description LIKE '%' || d.name || '%' " +
+                                "JOIN users u ON d.student_id = u.id " +
+                                "WHERE t.id = ? LIMIT 1",
+                        new String[]{String.valueOf(transactionId)}
+                );
+
+                if (cursor.moveToFirst()) {
+                    String docName = cursor.getString(0);
+                    String docType = cursor.getString(1);
+                    String currentStatus = cursor.getString(2);
+                    String studentName = cursor.getString(3);
+
+                    additionalInfo.append("Document: ").append(docName).append("\n");
+                    additionalInfo.append("Type: ").append(docType).append("\n");
+                    additionalInfo.append("Current Status: ").append(currentStatus).append("\n");
+                    additionalInfo.append("Student: ").append(studentName);
+                }
+                cursor.close();
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting additional info: " + e.getMessage());
+            return null;
+        }
+
+        return additionalInfo.length() > 0 ? additionalInfo.toString() : null;
     }
 
     @Override
