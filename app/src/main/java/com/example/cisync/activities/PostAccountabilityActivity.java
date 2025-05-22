@@ -49,6 +49,18 @@ public class PostAccountabilityActivity extends Activity {
             "Auditor"
     );
 
+    // Organization officer positions that should be excluded from accountability payments
+    private static final List<String> EXCLUDED_OFFICER_POSITIONS = Arrays.asList(
+            "Chairperson",
+            "Vice-Chairperson (Internal)",
+            "Vice-Chairperson (External)",
+            "Secretary",
+            "Associate Secretary",
+            "Treasurer",
+            "Associate Treasurer",
+            "Auditor"
+    );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,20 +174,32 @@ public class PostAccountabilityActivity extends Activity {
 
         try {
             db = dbHelper.getReadableDatabase();
-            cursor = db.rawQuery(
-                    "SELECT id, name FROM users WHERE role='Student' AND verified=1 AND id != ? ORDER BY name",
-                    new String[]{String.valueOf(studentId)}
-            );
+
+            // Simple query to get all students first, then filter in code
+            String query = "SELECT id, name, org_role FROM users WHERE role='Student' AND verified=1 AND id != ? ORDER BY name";
+            cursor = db.rawQuery(query, new String[]{String.valueOf(studentId)});
 
             if (cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(0);
                     String name = cursor.getString(1);
+                    String orgRole = cursor.getString(2);
+
+                    // Debug logging
+                    Log.d(TAG, "Checking student: " + name + " with org_role: " + orgRole);
+
+                    // Skip if this user has an excluded officer position
+                    if (orgRole != null && EXCLUDED_OFFICER_POSITIONS.contains(orgRole)) {
+                        Log.d(TAG, "Excluding officer: " + name + " (" + orgRole + ")");
+                        continue;
+                    }
 
                     studentNames.add(name);
                     studentIds.add(id);
                 } while (cursor.moveToNext());
             }
+
+            Log.d(TAG, "Loaded " + (studentNames.size() - 1) + " eligible students for targeting");
 
             // Set up spinner
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -219,17 +243,31 @@ public class PostAccountabilityActivity extends Activity {
                         return false;
                     }
                 } else {
-                    // Get all student IDs
-                    Cursor cursor = db.rawQuery(
-                            "SELECT id FROM users WHERE role='Student' AND verified=1",
-                            null
-                    );
+                    // Get all student IDs excluding organization officers
+                    String query = "SELECT id, name, org_role FROM users WHERE role='Student' AND verified=1";
+
+                    Cursor cursor = db.rawQuery(query, null);
                     if (cursor.moveToFirst()) {
                         do {
-                            targetStudentIds.add(cursor.getInt(0));
+                            int id = cursor.getInt(0);
+                            String name = cursor.getString(1);
+                            String orgRole = cursor.getString(2);
+
+                            // Debug logging
+                            Log.d(TAG, "Checking student for accountability: " + name + " with org_role: " + orgRole);
+
+                            // Skip if this user has an excluded officer position
+                            if (orgRole != null && EXCLUDED_OFFICER_POSITIONS.contains(orgRole)) {
+                                Log.d(TAG, "Excluding officer from accountability: " + name + " (" + orgRole + ")");
+                                continue;
+                            }
+
+                            targetStudentIds.add(id);
                         } while (cursor.moveToNext());
                     }
                     cursor.close();
+
+                    Log.d(TAG, "Will post accountability to " + targetStudentIds.size() + " eligible students");
                 }
 
                 // Insert accountability for each target student
@@ -259,7 +297,7 @@ public class PostAccountabilityActivity extends Activity {
                         String targetName = studentNames.get(spTargetStudent.getSelectedItemPosition());
                         description += " for " + targetName;
                     } else {
-                        description += " for all students (" + successCount + " students)";
+                        description += " for all eligible students (" + successCount + " students)";
                     }
 
                     ContentValues transValues = new ContentValues();
@@ -276,7 +314,7 @@ public class PostAccountabilityActivity extends Activity {
                         // Commit the transaction
                         db.setTransactionSuccessful();
 
-                        Log.d(TAG, "Accountability posted successfully for " + successCount + " students");
+                        Log.d(TAG, "Accountability posted successfully for " + successCount + " eligible students");
                         return true;
                     } else {
                         Log.e(TAG, "Failed to record transaction for accountability posting");
