@@ -11,56 +11,31 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <!-- Header with logout button only -->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp">
 
-            <!-- BACK BUTTON -->
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/bg_white_square" />
-
-                <ImageView
-                    android:id="@+id/imageView6"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="8dp"
-                    android:layout_marginRight="300dp"
-                    android:src="@drawable/baseline_arrow_back_24" />
-            </FrameLayout>
-
-            <FrameLayout
+            <!-- Logout Button positioned at the end -->
+            <Button
+                android:id="@+id/btnLogoutStudentOrg"
                 android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/bg_white_square" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/buttonicon" />
-            </FrameLayout>
-        </LinearLayout>
+                android:layout_height="48dp"
+                android:background="@drawable/bg_white_square"
+                android:text="⏻"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
 
         <!-- Organization and Position Info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:layout_marginStart="35dp">
 
             <TextView
@@ -142,7 +117,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- First row: Track Documents and Transaction History (Accountabilities removed) -->
+        <!-- First row: Track Documents and Transaction History -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -254,7 +229,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Third row: Accountability Management (For Treasurer, Associate Treasurer, Auditor only) -->
+        <!-- Third row: Accountability Management (For authorized officers only) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -335,7 +310,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Info text for accountability officers and removed accountabilities -->
+        <!-- Info text for accountability officers -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

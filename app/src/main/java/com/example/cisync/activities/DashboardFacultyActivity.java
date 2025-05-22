@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.example.cisync.database.DBHelper;
 public class DashboardFacultyActivity extends Activity {
     private static final String TAG = "DashboardFaculty";
     LinearLayout layoutNotifications, layoutHistory;
+    Button btnLogoutFaculty;
     int facultyId; // Store the faculty ID
 
     @Override
@@ -35,6 +37,14 @@ public class DashboardFacultyActivity extends Activity {
         // Initialize views
         layoutNotifications = findViewById(R.id.layoutFacultyNotifications);
         layoutHistory = findViewById(R.id.layoutFacultyHistory);
+        btnLogoutFaculty = findViewById(R.id.btnLogoutFaculty);
+
+        // Set up logout button
+        if (btnLogoutFaculty != null) {
+            btnLogoutFaculty.setOnClickListener(v -> {
+                LogoutUtil.showLogoutDialog(this, facultyId);
+            });
+        }
 
         // Set click listeners for dashboard options
         layoutNotifications.setOnClickListener(v -> {
@@ -50,6 +60,18 @@ public class DashboardFacultyActivity extends Activity {
             Log.d(TAG, "Starting FacultyHistoryActivity with facultyId: " + facultyId);
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Record logout when activity is destroyed (user exits app)
+        if (isFinishing() && facultyId != -1) {
+            try {
+                LoginActivity.recordLogoutSession(this, facultyId);
+            } catch (Exception e) {
+                Log.e(TAG, "Error recording logout: " + e.getMessage(), e);
+            }
+        }
+    }
 }
-
-

@@ -19,6 +19,7 @@ public class DashboardStudentwOrgActivity extends Activity {
     LinearLayout layoutInquire, layoutTrackDocuments, layoutPostNotice, layoutTransactionHistory;
     LinearLayout layoutPostAccountability, layoutManageAccountabilities; // New accountability management
     TextView tvWelcome, tvOrganizationValue, tvPositionValue;
+    Button btnLogoutStudentOrg;
     boolean hasOrg;
     String orgPosition = "";
     int studentId = -1;
@@ -86,6 +87,9 @@ public class DashboardStudentwOrgActivity extends Activity {
         // New accountability management layouts
         layoutPostAccountability = findViewById(R.id.layoutPostAccountability);
         layoutManageAccountabilities = findViewById(R.id.layoutManageAccountabilities);
+
+        // Logout button
+        btnLogoutStudentOrg = findViewById(R.id.btnLogoutStudentOrg);
     }
 
     private void setupVisibility() {
@@ -116,6 +120,13 @@ public class DashboardStudentwOrgActivity extends Activity {
     }
 
     private void setupClickListeners() {
+        // Logout button
+        if (btnLogoutStudentOrg != null) {
+            btnLogoutStudentOrg.setOnClickListener(v -> {
+                LogoutUtil.showLogoutDialog(this, studentId);
+            });
+        }
+
         // Faculty Inquiry
         if (layoutInquire != null) {
             layoutInquire.setOnClickListener(new View.OnClickListener() {
@@ -289,6 +300,15 @@ public class DashboardStudentwOrgActivity extends Activity {
         super.onDestroy();
         if (dbHelper != null) {
             dbHelper.close();
+        }
+
+        // Record logout when activity is destroyed (user exits app)
+        if (isFinishing() && studentId != -1) {
+            try {
+                LoginActivity.recordLogoutSession(this, studentId);
+            } catch (Exception e) {
+                Log.e(TAG, "Error recording logout: " + e.getMessage(), e);
+            }
         }
     }
 }
