@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Button;
+import com.example.cisync.R;
 
 /**
  * Utility class to handle logout functionality across all dashboard activities.
@@ -14,18 +16,37 @@ public class LogoutUtil {
     private static final String TAG = "LogoutUtil";
 
     /**
-     * Shows logout confirmation dialog and handles the logout process
+     * Shows logout confirmation dialog with custom styling
      * @param activity The current activity (Dashboard activity)
      * @param userId The ID of the logged-in user
      */
     public static void showLogoutDialog(Activity activity, int userId) {
-        new AlertDialog.Builder(activity)
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Logout", (dialog, which) -> performLogout(activity, userId))
+        AlertDialog dialog = new AlertDialog.Builder(activity, R.style.CustomLogoutDialogTheme)
+                .setTitle("Confirm Logout")
+                .setMessage("Are you sure you want to logout from your admin session?")
+                .setPositiveButton("Logout", (dialogInterface, which) -> performLogout(activity, userId))
                 .setNegativeButton("Cancel", null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                .setIcon(android.R.drawable.ic_lock_power_off) // Using built-in icon
+                .setCancelable(true)
+                .create();
+
+        // Additional customization after dialog is created
+        dialog.setOnShowListener(dialogInterface -> {
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+            // Customize button colors
+            if (positiveButton != null) {
+                positiveButton.setTextColor(activity.getResources().getColor(android.R.color.holo_red_dark, null));
+                positiveButton.setAllCaps(false);
+            }
+            if (negativeButton != null) {
+                negativeButton.setTextColor(activity.getResources().getColor(R.color.darker_blue, null));
+                negativeButton.setAllCaps(false);
+            }
+        });
+
+        dialog.show();
     }
 
     /**
