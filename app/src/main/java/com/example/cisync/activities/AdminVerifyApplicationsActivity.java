@@ -68,10 +68,10 @@ public class AdminVerifyApplicationsActivity extends Activity {
             dbHelper = new DBHelper(this);
 
             // Initialize adapters
-            studentAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, studentAppList);
+            studentAdapter = new ArrayAdapter<>(this, R.layout.custom_list_item, studentAppList);
             lvStudentApplications.setAdapter(studentAdapter);
 
-            facultyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, facultyAppList);
+            facultyAdapter = new ArrayAdapter<>(this, R.layout.custom_list_item, facultyAppList);
             lvFacultyApplications.setAdapter(facultyAdapter);
         } catch (Exception e) {
             Log.e(TAG, "Error initializing UI components: " + e.getMessage(), e);

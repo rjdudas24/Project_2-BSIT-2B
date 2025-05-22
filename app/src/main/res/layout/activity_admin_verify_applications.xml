@@ -62,7 +62,9 @@
         android:layout_weight="1"
         android:background="@drawable/list_view_border"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/saira_semibold"/>
 
     <!-- Faculty Applications Section -->
     <TextView
@@ -83,6 +85,8 @@
         android:layout_weight="1"
         android:background="@drawable/list_view_border"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/saira_semibold"/>
 
 </LinearLayout>
