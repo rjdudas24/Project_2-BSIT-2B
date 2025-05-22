@@ -61,7 +61,7 @@
         android:textSize="32sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="12dp" />
 
     <TextView
@@ -72,14 +72,14 @@
         android:textColor="@color/white"
         android:textSize="26sp"
         android:gravity="center"
-        android:layout_marginBottom="120dp" />
+        android:layout_marginBottom="80dp" />
 
+    <!-- First Row: Faculty Inquiry and Accountabilities -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         android:padding="16dp">
 
@@ -98,8 +98,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_marginBottom="5dp"
-                />
+                android:layout_marginBottom="5dp" />
 
             <LinearLayout
                 android:id="@+id/layoutFacultyInquiry"
@@ -149,6 +148,48 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:src="@drawable/accountabilities_icon" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Second Row: View Notices (NEW) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!--VIEW NOTICES BUTTON-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIEW NOTICES"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutViewNotices"
+                android:layout_width="85dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_submit_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:src="@drawable/notice_icon" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

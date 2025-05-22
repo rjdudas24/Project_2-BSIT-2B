@@ -269,33 +269,54 @@ public class FacultyNotificationsActivity extends Activity {
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-            // Update document status
-            ContentValues values = new ContentValues();
-            values.put("status", status);
+            // Start transaction to ensure both operations succeed
+            db.beginTransaction();
 
-            db.update("documents", values, "id=?",
-                    new String[]{String.valueOf(docId)});
-
-            // Create notification for student
-            ContentValues transValues = new ContentValues();
-            transValues.put("user_id", studentId);
-            transValues.put("action_type", "Document Status Update");
-            transValues.put("description", "Your document '" + docName + "' has been " + status.toLowerCase());
-            transValues.put("timestamp", System.currentTimeMillis());
-
-            // Add read_status if column exists
             try {
-                transValues.put("read_status", 0);
-            } catch (Exception e) {
-                // Column may not exist, continue
+                // Update document status
+                ContentValues values = new ContentValues();
+                values.put("status", status);
+
+                int updateResult = db.update("documents", values, "id=?", new String[]{String.valueOf(docId)});
+
+                if (updateResult > 0) {
+                    // Create notification for student about status change
+                    ContentValues transValues = new ContentValues();
+                    transValues.put("user_id", studentId);
+                    transValues.put("action_type", "Document Status Update");
+                    transValues.put("description", "Your document '" + docName + "' has been " + status.toLowerCase());
+                    transValues.put("timestamp", System.currentTimeMillis());
+
+                    // Add read_status if column exists
+                    try {
+                        transValues.put("read_status", 0);
+                    } catch (Exception e) {
+                        // Column may not exist, continue
+                    }
+
+                    long transResult = db.insert("transactions", null, transValues);
+
+                    if (transResult != -1) {
+                        Log.d(TAG, "Student transaction created for document status update: " + docName + " -> " + status);
+
+                        // Commit the transaction
+                        db.setTransactionSuccessful();
+
+                        Toast.makeText(this, "Document " + status.toLowerCase(), Toast.LENGTH_SHORT).show();
+
+                        // Refresh notifications
+                        loadNotifications();
+                    } else {
+                        Log.e(TAG, "Failed to create student transaction for document status update");
+                        Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e(TAG, "Failed to update document status in database");
+                    Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
+                }
+            } finally {
+                db.endTransaction(); // This will rollback if setTransactionSuccessful() wasn't called
             }
-
-            db.insert("transactions", null, transValues);
-
-            Toast.makeText(this, "Document " + status.toLowerCase(), Toast.LENGTH_SHORT).show();
-
-            // Refresh notifications
-            loadNotifications();
 
         } catch (Exception e) {
             Log.e(TAG, "Error updating document status: " + e.getMessage(), e);
