@@ -20,7 +20,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- CISynC Logo -->
-
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="414dp"
@@ -49,10 +48,9 @@
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="@+id/imgLogo" />
 
-
-    <!-- Faculty Name Field -->
+    <!-- Faculty Selection Spinner -->
     <LinearLayout
-        android:id="@+id/layoutFaculty"
+        android:id="@+id/layoutFacultySelection"
         android:layout_width="260dp"
         android:layout_height="43dp"
         android:layout_marginTop="36dp"
@@ -64,18 +62,57 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <Spinner
+            android:id="@+id/spinnerFacultyList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvFacultySelectionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:background="@drawable/label_bg"
+        android:paddingRight="8dp"
+        android:text="  SELECT FACULTY"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:translationY="-10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/layoutFacultySelection" />
+
+    <!-- Faculty Name Field (Auto-filled from selection) -->
+    <LinearLayout
+        android:id="@+id/layoutFaculty"
+        android:layout_width="260dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/bg_white_square_with_border"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/layoutFacultySelection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <EditText
             android:id="@+id/etFacultyName"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:hint="Enter faculty name"
+            android:hint="Faculty name will auto-fill"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
             android:padding="12dp"
             android:textSize="16sp"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:enabled="false"/>
 
         <ImageButton
             android:id="@+id/btnClearFaculty"
@@ -101,7 +138,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/layoutFaculty" />
 
-<!--    Department Name Field-->
+    <!-- Department Name Field -->
     <LinearLayout
         android:id="@+id/layoutDepartment"
         android:layout_width="260dp"
@@ -127,7 +164,6 @@
             android:paddingEnd="8dp"
             android:textAlignment="center" />
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/tvDepartmentLabel"
@@ -160,23 +196,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
+        <TextView
             android:id="@+id/etPurposeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Subject"
+            android:text="Enter Subject"
             android:textColorHint="@android:color/darker_gray"
             android:padding="8dp"
             android:background="@android:color/transparent"
             android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
 
-        <EditText
+        <TextView
             android:id="@+id/etPurposeDescription"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:hint="Write purpose..."
+            android:text="Write purpose..."
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="8dp"
@@ -184,8 +222,8 @@
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
             android:gravity="top"
-            android:inputType="textMultiLine"
-            android:lines="5" />
+            android:clickable="true"
+            android:focusable="true" />
     </LinearLayout>
 
     <!-- Purpose Label -->
@@ -204,8 +242,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/layoutPurpose" />
 
-
-
     <!-- Submit Button -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSubmit"
@@ -222,8 +258,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-

@@ -17,8 +17,8 @@ public class DashboardStudentwOrgActivity extends Activity {
 
     private static final String TAG = "DashboardStudentOrg";
     LinearLayout layoutInquire, layoutTrackDocuments, layoutPostNotice, layoutTransactionHistory;
-    LinearLayout layoutPostAccountability, layoutManageAccountabilities; // New accountability management
-    TextView tvWelcome, tvOrganizationValue, tvPositionValue;
+    LinearLayout layoutPostAccountability, layoutManageAccountabilities, layoutViewNotifications;
+    TextView tvWelcome, tvOrganizationValue, tvPositionValue, tvNotificationBadge;
     Button btnLogoutStudentOrg;
     boolean hasOrg;
     String orgPosition = "";
@@ -65,6 +65,9 @@ public class DashboardStudentwOrgActivity extends Activity {
             // Show organization-specific UI elements
             setupVisibility();
 
+            // Update notification badge
+            updateNotificationBadge();
+
             // Set click listeners
             setupClickListeners();
 
@@ -79,7 +82,6 @@ public class DashboardStudentwOrgActivity extends Activity {
         tvOrganizationValue = findViewById(R.id.tvOrganizationValue);
         tvPositionValue = findViewById(R.id.tvPositionValue);
         layoutInquire = findViewById(R.id.layoutFacultyInquiry);
-        // layoutAccountabilities removed - org officers don't pay fees
         layoutTrackDocuments = findViewById(R.id.layoutTrackDocuments);
         layoutPostNotice = findViewById(R.id.layoutPostNotice);
         layoutTransactionHistory = findViewById(R.id.layoutTransactionHistory);
@@ -87,6 +89,12 @@ public class DashboardStudentwOrgActivity extends Activity {
         // New accountability management layouts
         layoutPostAccountability = findViewById(R.id.layoutPostAccountability);
         layoutManageAccountabilities = findViewById(R.id.layoutManageAccountabilities);
+
+        // Notifications layout
+        layoutViewNotifications = findViewById(R.id.layoutViewNotifications);
+
+        // Notification badge
+        tvNotificationBadge = findViewById(R.id.tvNotificationBadge);
 
         // Logout button
         btnLogoutStudentOrg = findViewById(R.id.btnLogoutStudentOrg);
@@ -144,9 +152,6 @@ public class DashboardStudentwOrgActivity extends Activity {
                 }
             });
         }
-
-        // Accountabilities - Removed for org students as they don't pay org fees
-        // Organization officers manage fees but don't pay them
 
         // Track Documents (Organization-specific feature)
         if (hasOrg && layoutTrackDocuments != null) {
@@ -226,6 +231,56 @@ public class DashboardStudentwOrgActivity extends Activity {
                 }
             });
         }
+
+        // View Notifications (new feature)
+        if (layoutViewNotifications != null) {
+            layoutViewNotifications.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(this, StudentNotificationsActivity.class);
+                    intent.putExtra("studentId", studentId);
+                    startActivity(intent);
+                    Log.d(TAG, "Launched Student Notifications with studentId: " + studentId);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error launching Student Notifications: " + e.getMessage(), e);
+                    Toast.makeText(this, "Error opening Notifications", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Log.w(TAG, "View Notifications layout not found - notifications feature not available in this layout");
+        }
+    }
+
+    private void updateNotificationBadge() {
+        try {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            // Count unread notifications for this student
+            Cursor cursor = db.rawQuery(
+                    "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND COALESCE(read_status, 0) = 0",
+                    new String[]{String.valueOf(studentId)}
+            );
+
+            int unreadCount = 0;
+            if (cursor.moveToFirst()) {
+                unreadCount = cursor.getInt(0);
+            }
+            cursor.close();
+
+            // Update notification badge
+            if (tvNotificationBadge != null) {
+                if (unreadCount > 0) {
+                    tvNotificationBadge.setText(String.valueOf(unreadCount));
+                    tvNotificationBadge.setVisibility(View.VISIBLE);
+                } else {
+                    tvNotificationBadge.setVisibility(View.GONE);
+                }
+            }
+
+            Log.d(TAG, "Updated notification badge: " + unreadCount + " unread notifications");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating notification badge: " + e.getMessage(), e);
+        }
     }
 
     private void loadOrgPosition() {
@@ -293,6 +348,8 @@ public class DashboardStudentwOrgActivity extends Activity {
         if (hasOrg && studentId != -1) {
             loadOrgPosition();
         }
+        // Update notification badge
+        updateNotificationBadge();
     }
 
     @Override

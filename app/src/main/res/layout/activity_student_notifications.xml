@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Back button -->
+        <ImageView
+            android:id="@+id/btnBackNotifications"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/baseline_arrow_back_24"
+            android:clickable="true"
+            android:background="@android:color/white"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            app:tint="@color/black" />
+    </RelativeLayout>
+
+    <!-- CISynC Logo -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="363dp"
+        android:layout_height="200dp"
+        android:contentDescription="CISynC Logo"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/cisync2"
+        android:translationY="-40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Unread count badge -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/tvUnreadCount"
+        android:layout_width="104dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="258dp"
+        android:background="@drawable/pillshape"
+        android:elevation="2dp"
+        android:text="0 UNREAD"
+        android:textColor="@android:color/black"
+        android:textSize="13sp"
+        android:translationY="-80dp" />
+
+    <LinearLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/bg_border_box"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:translationY="-90dp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="NOTIFICATIONS"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Info text -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💬 Faculty responses, document updates, and important notices"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginBottom="12dp"
+            android:textStyle="italic" />
+
+        <!-- Frame layout to hold both ListView and empty state TextView -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/lvStudentNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
+                android:scrollbarTrackVertical="@android:color/transparent"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp" />
+
+            <!-- Empty state message -->
+            <TextView
+                android:id="@+id/tvNoNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="No notifications found"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                android:padding="32dp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- Footer info -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 Tap on any notification to view details and mark as read"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -14,8 +14,8 @@ import com.example.cisync.database.DBHelper;
 public class DashboardStudentActivity extends Activity {
 
     private static final String TAG = "DashboardStudent";
-    LinearLayout layoutInquire, layoutAccountabilities, layoutViewNotices;
-    TextView tvWelcome, tvUsername;
+    LinearLayout layoutInquire, layoutAccountabilities, layoutViewNotices, layoutViewNotifications;
+    TextView tvWelcome, tvUsername, tvNotificationBadge;
     Button btnLogoutStudent;
     int studentId;
     DBHelper dbHelper;
@@ -42,17 +42,13 @@ public class DashboardStudentActivity extends Activity {
             dbHelper = new DBHelper(this);
 
             // Initialize views
-            tvWelcome = findViewById(R.id.tvWelcome);
-            tvUsername = findViewById(R.id.tvUsername);
-            layoutInquire = findViewById(R.id.layoutFacultyInquiry);
-            layoutAccountabilities = findViewById(R.id.layoutAccountabilities);
-            btnLogoutStudent = findViewById(R.id.btnLogoutStudent);
-
-            // Try to find View Notices layout (may not exist in older layouts)
-            layoutViewNotices = findViewById(R.id.layoutViewNotices);
+            initializeViews();
 
             // Load username from database
             loadUsername();
+
+            // Update notification badge
+            updateNotificationBadge();
 
             // Set up click listeners
             setupClickListeners();
@@ -62,6 +58,23 @@ public class DashboardStudentActivity extends Activity {
             Toast.makeText(this, "Error initializing dashboard: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    private void initializeViews() {
+        tvWelcome = findViewById(R.id.tvWelcome);
+        tvUsername = findViewById(R.id.tvUsername);
+        layoutInquire = findViewById(R.id.layoutFacultyInquiry);
+        layoutAccountabilities = findViewById(R.id.layoutAccountabilities);
+        btnLogoutStudent = findViewById(R.id.btnLogoutStudent);
+
+        // Try to find View Notices layout (may not exist in older layouts)
+        layoutViewNotices = findViewById(R.id.layoutViewNotices);
+
+        // Try to find View Notifications layout
+        layoutViewNotifications = findViewById(R.id.layoutViewNotifications);
+
+        // Try to find notification badge
+        tvNotificationBadge = findViewById(R.id.tvNotificationBadge);
     }
 
     private void setupClickListeners() {
@@ -117,13 +130,64 @@ public class DashboardStudentActivity extends Activity {
         } else {
             Log.w(TAG, "View Notices layout not found - notices feature not available in this layout");
         }
+
+        // View Notifications (new feature)
+        if (layoutViewNotifications != null) {
+            layoutViewNotifications.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(this, StudentNotificationsActivity.class);
+                    intent.putExtra("studentId", studentId);
+                    startActivity(intent);
+                    Log.d(TAG, "Launched Student Notifications with studentId: " + studentId);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error launching Student Notifications: " + e.getMessage(), e);
+                    Toast.makeText(this, "Error opening Notifications", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Log.w(TAG, "View Notifications layout not found - notifications feature not available in this layout");
+        }
+    }
+
+    private void updateNotificationBadge() {
+        try {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            // Count unread notifications for this student
+            Cursor cursor = db.rawQuery(
+                    "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND COALESCE(read_status, 0) = 0",
+                    new String[]{String.valueOf(studentId)}
+            );
+
+            int unreadCount = 0;
+            if (cursor.moveToFirst()) {
+                unreadCount = cursor.getInt(0);
+            }
+            cursor.close();
+
+            // Update notification badge
+            if (tvNotificationBadge != null) {
+                if (unreadCount > 0) {
+                    tvNotificationBadge.setText(String.valueOf(unreadCount));
+                    tvNotificationBadge.setVisibility(View.VISIBLE);
+                } else {
+                    tvNotificationBadge.setVisibility(View.GONE);
+                }
+            }
+
+            Log.d(TAG, "Updated notification badge: " + unreadCount + " unread notifications");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating notification badge: " + e.getMessage(), e);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload username when returning to this activity
+        // Reload username and update notification badge when returning to this activity
         loadUsername();
+        updateNotificationBadge();
     }
 
     private void loadUsername() {
