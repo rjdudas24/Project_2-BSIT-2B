@@ -153,6 +153,7 @@ public class RegisterActivity extends Activity {
                 vals.put("has_org", hasOrg);
                 vals.put("org_role", orgPos);
                 vals.put("verified", 0);
+                vals.put("id_number", idNumber);
 
                 long userId = db.insert("users", null, vals);
                 if (userId != -1) {
