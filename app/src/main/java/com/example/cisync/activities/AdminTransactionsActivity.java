@@ -75,6 +75,11 @@ public class AdminTransactionsActivity extends Activity {
             filterOptions.add("User Update");
             filterOptions.add("Document Submission"); // Added for Track Documents
             filterOptions.add("Document Status Update"); // Added for Track Documents
+            filterOptions.add("Accountability Posted"); // Added for Accountability Management
+            filterOptions.add("Accountability Status Update"); // Added for Accountability Management
+            filterOptions.add("Accountability Deleted"); // Added for Accountability Management
+            filterOptions.add("Faculty Inquiry"); // Added for Faculty Inquiries
+            filterOptions.add("Notice Posted"); // Added for Notices
             filterOptions.add("RESEND");
 
             // Set up spinner adapter
@@ -165,7 +170,7 @@ public class AdminTransactionsActivity extends Activity {
                     String formattedDate = formatTimestamp(timestamp);
                     String userInfo = getUserInfo(userId);
 
-                    // Create display text with special formatting for Document actions
+                    // Create display text with special formatting for different action types
                     String displayText;
 
                     if ("Document Submission".equals(actionType)) {
@@ -180,6 +185,56 @@ public class AdminTransactionsActivity extends Activity {
                     }
                     else if ("Document Status Update".equals(actionType)) {
                         displayText = "📝 " + formattedDate + "\n" +
+                                actionType;
+
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
+                    }
+                    else if ("Accountability Posted".equals(actionType)) {
+                        displayText = "💰 " + formattedDate + "\n" +
+                                actionType;
+
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
+                    }
+                    else if ("Accountability Status Update".equals(actionType)) {
+                        displayText = "💳 " + formattedDate + "\n" +
+                                actionType;
+
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
+                    }
+                    else if ("Accountability Deleted".equals(actionType)) {
+                        displayText = "🗑️ " + formattedDate + "\n" +
+                                actionType;
+
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
+                    }
+                    else if ("Faculty Inquiry".equals(actionType)) {
+                        displayText = "❓ " + formattedDate + "\n" +
+                                actionType;
+
+                        if (!userInfo.isEmpty()) {
+                            displayText += " (" + userInfo + ")";
+                        }
+
+                        displayText += ":\n" + description;
+                    }
+                    else if ("Notice Posted".equals(actionType)) {
+                        displayText = "📢 " + formattedDate + "\n" +
                                 actionType;
 
                         if (!userInfo.isEmpty()) {
@@ -288,14 +343,27 @@ public class AdminTransactionsActivity extends Activity {
                     "Role: " + userRole + "\n" +
                     "User ID: " + transaction.getUserId();
 
-            // If it's a document-related transaction, try to find more details
+            // Add specific details based on transaction type
+            String additionalInfo = "";
+
+            // Enhanced details for different transaction types
             if ("Document Submission".equals(transaction.getActionType()) ||
                     "Document Status Update".equals(transaction.getActionType())) {
+                additionalInfo = getDocumentDetails(transaction);
+            } else if ("Accountability Posted".equals(transaction.getActionType())) {
+                additionalInfo = "Accountability Management:\n" + getAccountabilityPostedDetails(transaction);
+            } else if ("Accountability Status Update".equals(transaction.getActionType())) {
+                additionalInfo = "Payment Status Change:\n" + getAccountabilityStatusDetails(transaction);
+            } else if ("Accountability Deleted".equals(transaction.getActionType())) {
+                additionalInfo = "Accountability Removal:\n" + getAccountabilityDeletedDetails(transaction);
+            } else if ("Faculty Inquiry".equals(transaction.getActionType())) {
+                additionalInfo = "Inquiry Type: Faculty Communication\nStatus: Submitted for review";
+            } else if ("Notice Posted".equals(transaction.getActionType())) {
+                additionalInfo = "Notice Publication:\n" + getNoticePostedDetails(transaction);
+            }
 
-                String additionalInfo = getDocumentDetails(transaction);
-                if (!additionalInfo.isEmpty()) {
-                    message += "\n\nDocument Details:\n" + additionalInfo;
-                }
+            if (!additionalInfo.isEmpty()) {
+                message += "\n\n" + additionalInfo;
             }
 
             builder.setMessage(message);
@@ -354,6 +422,98 @@ public class AdminTransactionsActivity extends Activity {
         }
 
         return details;
+    }
+
+    // Helper method to get accountability posted details
+    private String getAccountabilityPostedDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            if (description.contains("Posted accountability: ")) {
+                String feeInfo = description.substring("Posted accountability: ".length());
+                details.append("Fee: ").append(feeInfo).append("\n");
+
+                if (description.contains("for all students")) {
+                    details.append("Target: All Students");
+                    if (description.contains("(") && description.contains(" students)")) {
+                        String countPart = description.substring(description.lastIndexOf("(") + 1, description.lastIndexOf(" students)"));
+                        details.append(" (").append(countPart).append(" affected)");
+                    }
+                } else if (description.contains(" for ")) {
+                    String target = description.substring(description.lastIndexOf(" for ") + 5);
+                    details.append("Target: ").append(target);
+                }
+            }
+        } catch (Exception e) {
+            details.append("Details unavailable");
+        }
+
+        return details.toString();
+    }
+
+    // Helper method to get accountability status details
+    private String getAccountabilityStatusDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            if (description.toLowerCase().contains("paid")) {
+                details.append("Status: Marked as PAID ✅\n");
+            } else if (description.toLowerCase().contains("unpaid")) {
+                details.append("Status: Marked as UNPAID ❌\n");
+            }
+
+            if (description.contains(" for ")) {
+                String studentPart = description.substring(description.lastIndexOf(" for ") + 5);
+                details.append("Student: ").append(studentPart);
+            }
+        } catch (Exception e) {
+            details.append("Details unavailable");
+        }
+
+        return details.toString();
+    }
+
+    // Helper method to get accountability deleted details
+    private String getAccountabilityDeletedDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            details.append("Action: Permanent removal\n");
+            if (description.contains("Deleted accountability: ")) {
+                String feeInfo = description.substring("Deleted accountability: ".length());
+                details.append("Removed: ").append(feeInfo);
+            }
+        } catch (Exception e) {
+            details.append("Details unavailable");
+        }
+
+        return details.toString();
+    }
+
+    // Helper method to get notice posted details
+    private String getNoticePostedDetails(TransactionData transaction) {
+        String description = transaction.getDescription();
+        StringBuilder details = new StringBuilder();
+
+        try {
+            if (description.contains("Posted notice: ")) {
+                String noticeInfo = description.substring("Posted notice: ".length());
+                details.append("Notice: ").append(noticeInfo).append("\n");
+            }
+
+            if (description.contains("targeted to:")) {
+                details.append("Target: Specific Student");
+            } else {
+                details.append("Target: All Students");
+            }
+        } catch (Exception e) {
+            details.append("Details unavailable");
+        }
+
+        return details.toString();
     }
 
     @Override

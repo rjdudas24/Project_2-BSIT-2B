@@ -86,6 +86,9 @@ public class StudentTransactionHistoryActivity extends Activity {
             filterOptions.add("Document Submission");
             filterOptions.add("Document Status Update");
             filterOptions.add("Notice Posted");
+            filterOptions.add("Accountability Posted"); // Added for Accountability Management
+            filterOptions.add("Accountability Status Update"); // Added for Accountability Management
+            filterOptions.add("Accountability Deleted"); // Added for Accountability Management
             filterOptions.add("User Update");
             filterOptions.add("Registration");
 
@@ -222,6 +225,12 @@ public class StudentTransactionHistoryActivity extends Activity {
                 return "📋";
             case "Notice Posted":
                 return "📢";
+            case "Accountability Posted":
+                return "💰";
+            case "Accountability Status Update":
+                return "💳";
+            case "Accountability Deleted":
+                return "🗑️";
             case "Registration":
                 return "👤";
             case "User Update":
@@ -283,6 +292,17 @@ public class StudentTransactionHistoryActivity extends Activity {
             }
         } else if ("Notice Posted".equals(actionType)) {
             return "Status: Your notice has been posted and is visible to the target audience.";
+        } else if ("Accountability Posted".equals(actionType)) {
+            return "Status: ✅ Accountability has been successfully posted to target students.";
+        } else if ("Accountability Status Update".equals(actionType)) {
+            if (description.toLowerCase().contains("paid")) {
+                return "Status: ✅ Accountability status updated to paid.";
+            } else if (description.toLowerCase().contains("unpaid")) {
+                return "Status: ❌ Accountability status updated to unpaid.";
+            }
+            return "Status: Accountability payment status has been updated.";
+        } else if ("Accountability Deleted".equals(actionType)) {
+            return "Status: ⚠️ Accountability has been permanently removed from the system.";
         }
 
         return "";

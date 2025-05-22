@@ -499,40 +499,14 @@ public class ManageAccountabilitiesActivity extends Activity {
             this.studentName = studentName;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public int getStudentId() {
-            return studentId;
-        }
-
-        public String getFeeName() {
-            return feeName;
-        }
-
-        public String getAmount() {
-            return amount;
-        }
-
-        public boolean isPaid() {
-            return isPaid;
-        }
-
-        public String getPostedByName() {
-            return postedByName;
-        }
-
-        public String getPostedByPosition() {
-            return postedByPosition;
-        }
-
-        public long getCreatedAt() {
-            return createdAt;
-        }
-
-        public String getStudentName() {
-            return studentName;
-        }
+        public int getId() { return id; }
+        public int getStudentId() { return studentId; }
+        public String getFeeName() { return feeName; }
+        public String getAmount() { return amount; }
+        public boolean isPaid() { return isPaid; }
+        public String getPostedByName() { return postedByName; }
+        public String getPostedByPosition() { return postedByPosition; }
+        public long getCreatedAt() { return createdAt; }
+        public String getStudentName() { return studentName; }
     }
-    }
+}
