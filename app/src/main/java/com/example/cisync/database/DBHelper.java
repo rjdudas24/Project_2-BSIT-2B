@@ -1,5 +1,6 @@
 package com.example.cisync.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,7 +27,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "role TEXT, " +
                 "has_org INTEGER DEFAULT 0, " +
                 "org_role TEXT, " +
-                "verified INTEGER DEFAULT 0)");
+                "verified INTEGER DEFAULT 0, " +
+                "id_number TEXT)");
 
         // Accountabilities table
         db.execSQL("CREATE TABLE accountabilities (" +
@@ -34,7 +36,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "student_id INTEGER, " +
                 "fee_name TEXT, " +
                 "amount TEXT, " +
-                "status INTEGER)");
+                "status INTEGER DEFAULT 0, " +
+                "posted_by INTEGER, " +
+                "posted_by_name TEXT, " +
+                "posted_by_position TEXT, " +
+                "target_type TEXT DEFAULT 'ALL', " +
+                "created_at INTEGER DEFAULT (strftime('%s','now') * 1000), " +
+                "FOREIGN KEY (student_id) REFERENCES users(id), " +
+                "FOREIGN KEY (posted_by) REFERENCES users(id))");
 
         // Documents table
         db.execSQL("CREATE TABLE documents (" +
@@ -88,6 +97,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 "created_at TEXT NOT NULL, " +
                 "FOREIGN KEY (student_id) REFERENCES users(id))");
 
+        // Login History table
+        db.execSQL("CREATE TABLE IF NOT EXISTS login_history (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER, " +
+                "login_time INTEGER, " +
+                "logout_time INTEGER, " +
+                "device_info TEXT, " +
+                "FOREIGN KEY (user_id) REFERENCES users(id))");
+
         // Default admin account
         db.execSQL("INSERT INTO users (name, email, password, role, has_org, org_role, verified) VALUES " +
                 "('Admin', 'admin@cisync.com', 'admin', 'Admin', 0, NULL, 1)");
@@ -101,6 +119,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS notices");
         db.execSQL("DROP TABLE IF EXISTS transactions");
         db.execSQL("DROP TABLE IF EXISTS applications");
+        db.execSQL("DROP TABLE IF EXISTS faculty_inquiries");
+        db.execSQL("DROP TABLE IF EXISTS login_history");
         onCreate(db);
     }
 
@@ -180,16 +200,24 @@ public class DBHelper extends SQLiteOpenHelper {
             // Clear any existing accountabilities for this student
             db.delete("accountabilities", "student_id = ?", new String[]{String.valueOf(studentId)});
 
-            // Add sample data
+            // Add sample data with org officer information
             String[] feeNames = {"College Fee", "Fines"};
             String[] amounts = {"500", "210"};
             int[] statuses = {1, 0};  // 1 = paid, 0 = unpaid
 
             for (int i = 0; i < feeNames.length; i++) {
-                db.execSQL(
-                        "INSERT INTO accountabilities (student_id, fee_name, amount, status) VALUES (?, ?, ?, ?)",
-                        new Object[]{studentId, feeNames[i], amounts[i], statuses[i]}
-                );
+                ContentValues values = new ContentValues();
+                values.put("student_id", studentId);
+                values.put("fee_name", feeNames[i]);
+                values.put("amount", amounts[i]);
+                values.put("status", statuses[i]);
+                values.put("posted_by", 1); // Admin posted (sample)
+                values.put("posted_by_name", "Sample Treasurer");
+                values.put("posted_by_position", "Treasurer");
+                values.put("target_type", "ALL");
+                values.put("created_at", System.currentTimeMillis());
+
+                db.insert("accountabilities", null, values);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error adding sample accountabilities: " + e.getMessage(), e);
