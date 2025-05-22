@@ -28,6 +28,7 @@
         android:layout_height="51dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/bg_white_square_with_border"
+        android:fontFamily="@font/saira_semibold"
         android:hint="Enter Password"
         android:paddingStart="12dp"
         android:textColor="@android:color/black"
@@ -58,6 +59,7 @@
         android:layout_height="49dp"
         android:layout_marginTop="336dp"
         android:background="@drawable/bg_white_square_with_border"
+        android:fontFamily="@font/saira_semibold"
         android:hint="Enter Email"
         android:paddingStart="12dp"
         android:textColor="@android:color/black"
@@ -100,13 +102,15 @@
         android:layout_height="41dp"
         android:layout_marginTop="56dp"
         android:background="@drawable/bg_submit_btn"
+        android:fontFamily="@font/saira_bold"
+        android:textSize="20sp"
         android:text="Login"
         app:cornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etLoginPassword"
-        app:strokeColor="#FDFDFD"
+        app:strokeColor="@color/darker_blue"
         app:strokeWidth="2dp" />
 
 

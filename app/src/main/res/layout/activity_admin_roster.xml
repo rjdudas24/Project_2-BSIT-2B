@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="USERS"
             android:textSize="20sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/saira_bold"
             android:textColor="@android:color/white"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
@@ -52,12 +52,14 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/saira_semibold"
             android:text="Student Roster"
             />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/saira_semibold"
             android:text="Faculty Roster" />
     </com.google.android.material.tabs.TabLayout>
 

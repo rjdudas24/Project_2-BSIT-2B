@@ -15,13 +15,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/tvDashboardTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin Dashboard"
+                android:fontFamily="@font/saira_bold"
+                android:text="ADMIN DASHBOARD"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -31,10 +33,9 @@
                 android:id="@+id/btnLogoutAdmin"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:text="⏻"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:background="@drawable/bg_white_square"
+                android:background="@drawable/logout"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true" />
         </RelativeLayout>
@@ -43,6 +44,7 @@
             android:id="@+id/tvWelcomeMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/saira_semibold_italic"
             android:text="Welcome, Admin!"
             android:textSize="18sp"
             android:textColor="@color/white"
@@ -76,6 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/saira_bold"
                     android:text="Users"
                     android:textSize="16sp"
                     android:textColor="@color/darker_blue"/>
@@ -108,7 +111,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Verify User Applications"
+                    android:text="Verify User Registrations"
+                    android:fontFamily="@font/saira_bold"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"
                     android:textColor="@color/darker_blue"/>
@@ -143,6 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Log-in History"
+                    android:fontFamily="@font/saira_bold"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"
                     android:textColor="@color/darker_blue"/>
@@ -176,6 +181,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/saira_bold"
                     android:text="Transaction History"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"
