@@ -180,10 +180,10 @@ public class AdminRosterActivity extends AppCompatActivity {
             // Setup role spinner
             ArrayAdapter<String> roleAdapter = new ArrayAdapter<>(
                     requireContext(),
-                    android.R.layout.simple_spinner_item,
+                    R.layout.custom_role_spinner,
                     new String[]{"Student", "Faculty", "Admin"}
             );
-            roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            roleAdapter.setDropDownViewResource(R.layout.custom_role_spinner);
             spRole.setAdapter(roleAdapter);
 
             // Set current role
@@ -351,10 +351,10 @@ public class AdminRosterActivity extends AppCompatActivity {
         private void setupOrgPositionFilter() {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
                     requireContext(),
-                    android.R.layout.simple_spinner_item,
+                    R.layout.custom_role_spinner,
                     ORG_POSITIONS
             );
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.custom_role_spinner);
             spStudentPositionFilter.setAdapter(adapter);
         }
 

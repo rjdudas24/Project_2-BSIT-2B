@@ -84,8 +84,8 @@ public class AdminTransactionsActivity extends Activity {
 
             // Set up spinner adapter
             ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, filterOptions);
-            filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_role_spinner, filterOptions);
+            filterAdapter.setDropDownViewResource(R.layout.custom_role_spinner);
             spinnerTransactionFilter.setAdapter(filterAdapter);
         } catch (Exception e) {
             Log.e(TAG, "Error setting up filter spinner: " + e.getMessage(), e);
@@ -269,7 +269,7 @@ public class AdminTransactionsActivity extends Activity {
             cursor.close();
 
             // Update adapter
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, txList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_login_history_item, txList);
             lvAllTransactions.setAdapter(adapter);
 
         } catch (Exception e) {
