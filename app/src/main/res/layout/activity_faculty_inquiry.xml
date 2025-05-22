@@ -248,11 +248,11 @@
     <!-- Submit Button -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSubmit"
-        android:layout_width="255dp"
+        android:layout_width="260dp"
         android:layout_height="50dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="136dp"
+        android:layout_marginStart="61dp"
+        android:layout_marginEnd="61dp"
+        android:layout_marginBottom="120dp"
         android:background="@drawable/bg_submit_btn"
         android:text="Submit"
         android:textStyle="bold"
