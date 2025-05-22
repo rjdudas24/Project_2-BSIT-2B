@@ -94,8 +94,8 @@ public class StudentTransactionHistoryActivity extends Activity {
 
             // Set up spinner adapter
             ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, filterOptions);
-            filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    this, R.layout.custom_spinner_white, filterOptions);
+            filterAdapter.setDropDownViewResource(R.layout.custom_spinner_white);
             spinnerTransactionFilter.setAdapter(filterAdapter);
         } catch (Exception e) {
             Log.e(TAG, "Error setting up filter spinner: " + e.getMessage(), e);
@@ -199,7 +199,7 @@ public class StudentTransactionHistoryActivity extends Activity {
             cursor.close();
 
             // Update adapter
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
+            adapter = new ArrayAdapter<>(this, R.layout.custom_list_item, transactionList);
             lvTransactionHistory.setAdapter(adapter);
 
         } catch (Exception e) {
