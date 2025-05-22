@@ -11,16 +11,33 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvDashboardTitle"
+        <!-- Header with logout button -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Admin Dashboard"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvDashboardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Admin Dashboard"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:id="@+id/btnLogoutAdmin"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="⏻"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_white_square"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvWelcomeMessage"
@@ -98,7 +115,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card for Transaction History -->
+        <!-- Card for Login History -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLoginHistory"
             android:layout_width="match_parent"
@@ -119,7 +136,7 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_history"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Transaction Icon"
+                    android:contentDescription="Login History Icon"
                     app:tint="#002549"/>
 
                 <TextView
@@ -130,7 +147,7 @@
                     android:layout_marginStart="16dp"
                     android:textColor="@color/darker_blue"/>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>\
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Card for Transaction History -->
         <com.google.android.material.card.MaterialCardView

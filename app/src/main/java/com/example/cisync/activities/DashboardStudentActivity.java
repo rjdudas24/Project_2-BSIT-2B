@@ -16,6 +16,7 @@ public class DashboardStudentActivity extends Activity {
     private static final String TAG = "DashboardStudent";
     LinearLayout layoutInquire, layoutAccountabilities, layoutViewNotices;
     TextView tvWelcome, tvUsername;
+    Button btnLogoutStudent;
     int studentId;
     DBHelper dbHelper;
 
@@ -45,6 +46,7 @@ public class DashboardStudentActivity extends Activity {
             tvUsername = findViewById(R.id.tvUsername);
             layoutInquire = findViewById(R.id.layoutFacultyInquiry);
             layoutAccountabilities = findViewById(R.id.layoutAccountabilities);
+            btnLogoutStudent = findViewById(R.id.btnLogoutStudent);
 
             // Try to find View Notices layout (may not exist in older layouts)
             layoutViewNotices = findViewById(R.id.layoutViewNotices);
@@ -63,6 +65,13 @@ public class DashboardStudentActivity extends Activity {
     }
 
     private void setupClickListeners() {
+        // Logout button
+        if (btnLogoutStudent != null) {
+            btnLogoutStudent.setOnClickListener(v -> {
+                LogoutUtil.showLogoutDialog(this, studentId);
+            });
+        }
+
         // Faculty Inquiry
         layoutInquire.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +167,15 @@ public class DashboardStudentActivity extends Activity {
         super.onDestroy();
         if (dbHelper != null) {
             dbHelper.close();
+        }
+
+        // Record logout when activity is destroyed (user exits app)
+        if (isFinishing() && studentId != -1) {
+            try {
+                LoginActivity.recordLogoutSession(this, studentId);
+            } catch (Exception e) {
+                Log.e(TAG, "Error recording logout: " + e.getMessage(), e);
+            }
         }
     }
 }

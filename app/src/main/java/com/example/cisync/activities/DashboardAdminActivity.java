@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.cisync.R;
@@ -14,6 +15,7 @@ public class DashboardAdminActivity extends Activity {
     private static final String TAG = "DashboardAdmin";
     MaterialCardView cardUsers, cardTransactions, cardVerifyApplications, cardLoginHistory;
     TextView tvWelcomeMessage;
+    Button btnLogoutAdmin;
     int adminId; // Store the admin user ID
 
     @Override
@@ -46,6 +48,9 @@ public class DashboardAdminActivity extends Activity {
             // Welcome message
             tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
 
+            // Logout button
+            btnLogoutAdmin = findViewById(R.id.btnLogoutAdmin);
+
         } catch (Exception e) {
             Log.e(TAG, "Error initializing views: " + e.getMessage(), e);
             Toast.makeText(this, "Error initializing dashboard", Toast.LENGTH_SHORT).show();
@@ -65,6 +70,13 @@ public class DashboardAdminActivity extends Activity {
     }
 
     private void setupClickListeners() {
+        // Logout button
+        if (btnLogoutAdmin != null) {
+            btnLogoutAdmin.setOnClickListener(v -> {
+                LogoutUtil.showLogoutDialog(this, adminId);
+            });
+        }
+
         // Users card - Navigate to AdminRosterActivity
         if (cardUsers != null) {
             cardUsers.setOnClickListener(v -> {
