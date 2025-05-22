@@ -111,7 +111,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Verify User Applications"
+                    android:text="Verify User Registrations"
                     android:fontFamily="@font/saira_bold"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"

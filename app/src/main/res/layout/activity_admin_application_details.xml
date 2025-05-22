@@ -3,15 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/bg_submit_btn2">
 
     <TextView
         android:id="@+id/tvApplicationTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student Application Details"
+        android:text="STUDENT REGISTRATION DETAILS"
+        android:textColor="@color/white"
+        android:fontFamily="@font/saira_bold"
         android:textSize="18sp"
-        android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="16dp" />
 
@@ -25,10 +27,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_bold"
                 android:padding="4dp"
                 android:text="ID Number:" />
             <TextView
                 android:id="@+id/tvStudentID"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
@@ -39,11 +45,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_bold"
                 android:padding="4dp"
                 android:text="Name:" />
             <TextView
                 android:id="@+id/tvStudentName"
                 android:layout_width="wrap_content"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_semibold"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
         </TableRow>
@@ -53,10 +63,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_bold"
                 android:padding="4dp"
                 android:text="Email:" />
             <TextView
                 android:id="@+id/tvStudentEmail"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
@@ -67,11 +81,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_bold"
                 android:padding="4dp"
                 android:text="Organization:" />
             <TextView
                 android:id="@+id/tvOrgName"
                 android:layout_width="wrap_content"
+                android:textColor="@color/white"
+                android:fontFamily="@font/saira_semibold"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
         </TableRow>
@@ -82,6 +100,8 @@
         android:layout_height="wrap_content"
         android:text="Verify student organization affiliation if applicable."
         android:textStyle="italic"
+        android:textColor="@color/white"
+        android:fontFamily="@font/saira_semibold"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp" />
 
@@ -93,17 +113,21 @@
 
         <Button
             android:id="@+id/btnApprove"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Approve"
+            android:text="APPROVE"
+            android:textColor="@color/white"
+            android:fontFamily="@font/saira_bold"
             android:layout_marginEnd="8dp"
             android:backgroundTint="#4CAF50" />
 
         <Button
             android:id="@+id/btnReject"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Reject"
+            android:text="REJECT"
+            android:textColor="@color/white"
+            android:fontFamily="@font/saira_bold"
             android:backgroundTint="#F44336" />
     </LinearLayout>
 </LinearLayout>
