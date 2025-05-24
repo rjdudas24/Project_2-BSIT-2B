@@ -224,14 +224,42 @@ public class FacultyHistoryActivity extends Activity {
             } catch (Exception e) {
                 Log.e(TAG, "Error extracting student ID: " + e.getMessage());
             }
+        } else if ("Document Status Update".equals(actionType)) {
+            // Try to extract document name and find student ID
+            String docName = extractDocumentName(message, actionType);
+            if (!docName.isEmpty()) {
+                try {
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+                    Cursor cursor = db.rawQuery(
+                            "SELECT student_id FROM documents WHERE name = ?",
+                            new String[]{docName}
+                    );
+                    if (cursor.moveToFirst()) {
+                        int studentId = cursor.getInt(0);
+                        cursor.close();
+                        return studentId;
+                    }
+                    cursor.close();
+                } catch (Exception e) {
+                    Log.e(TAG, "Error extracting student ID from document: " + e.getMessage());
+                }
+            }
         }
         return -1; // Default if unable to extract
     }
 
     private String extractDocumentName(String message, String actionType) {
         if ("Document Status Update".equals(actionType)) {
-            // Extract document name from message like "Your document 'DocName' has been approved"
-            if (message.contains("document '") && message.contains("' has been")) {
+            // Extract document name from messages like "Updated document 'DocName' status to Approved"
+            if (message.contains("document '") && message.contains("' status to")) {
+                int start = message.indexOf("document '") + 10;
+                int end = message.indexOf("' status to");
+                if (start > 9 && end > start) {
+                    return message.substring(start, end);
+                }
+            }
+            // Extract document name from messages like "Your document 'DocName' has been approved"
+            else if (message.contains("document '") && message.contains("' has been")) {
                 int start = message.indexOf("document '") + 10;
                 int end = message.indexOf("' has been");
                 if (start > 9 && end > start) {
@@ -372,6 +400,7 @@ public class FacultyHistoryActivity extends Activity {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         try {
+            // First get basic transaction information
             Cursor cursor = db.rawQuery(
                     "SELECT t.timestamp, t.description, t.action_type, COALESCE(t.inquiry_id, -1) as inquiry_id " +
                             "FROM transactions t WHERE t.id = ?",
@@ -384,12 +413,49 @@ public class FacultyHistoryActivity extends Activity {
                 String actionType = cursor.getString(2);
                 details.inquiryId = cursor.getInt(3);
 
-                // Extract target user ID and document name based on action type
-                details.targetUserId = extractTargetUserId(details.originalMessage, actionType, details.inquiryId);
-                details.documentName = extractDocumentName(details.originalMessage, actionType);
-            }
-            cursor.close();
+                // Extract document name if it's a document status update
+                if ("Document Status Update".equals(actionType)) {
+                    if (details.originalMessage.contains("document '") && details.originalMessage.contains("' status to")) {
+                        int start = details.originalMessage.indexOf("document '") + 10;
+                        int end = details.originalMessage.indexOf("' status to");
+                        if (start > 9 && end > start) {
+                            details.documentName = details.originalMessage.substring(start, end);
+                        }
+                    } else if (details.originalMessage.contains("document '") && details.originalMessage.contains("' has been")) {
+                        int start = details.originalMessage.indexOf("document '") + 10;
+                        int end = details.originalMessage.indexOf("' has been");
+                        if (start > 9 && end > start) {
+                            details.documentName = details.originalMessage.substring(start, end);
+                        }
+                    }
 
+                    // If we have a document name, try to get student ID
+                    if (!details.documentName.isEmpty()) {
+                        cursor.close();
+                        cursor = db.rawQuery(
+                                "SELECT student_id FROM documents WHERE name = ?",
+                                new String[]{details.documentName}
+                        );
+                        if (cursor.moveToFirst()) {
+                            details.targetUserId = cursor.getInt(0);
+                        }
+                    }
+                }
+                // For faculty inquiry responses, get the student ID from the inquiry
+                else if (("Faculty Inquiry Response".equals(actionType) || "Faculty Response".equals(actionType))
+                        && details.inquiryId != -1) {
+                    cursor.close();
+                    cursor = db.rawQuery(
+                            "SELECT student_id FROM faculty_inquiries WHERE id = ?",
+                            new String[]{String.valueOf(details.inquiryId)}
+                    );
+                    if (cursor.moveToFirst()) {
+                        details.targetUserId = cursor.getInt(0);
+                    }
+                }
+            }
+
+            cursor.close();
         } catch (Exception e) {
             Log.e(TAG, "Error getting transaction details: " + e.getMessage());
         }
@@ -412,7 +478,7 @@ public class FacultyHistoryActivity extends Activity {
         }
     }
 
-    // Setup re-response button listeners - Fixed method signature
+    // Setup re-response button listeners
     private void setupReResponseListeners(View dialogView, int transactionId, String actionType,
                                           TransactionDetails details, AlertDialog dialog) {
         Button btnOption1 = dialogView.findViewById(R.id.btnReResponseOption1);
@@ -471,8 +537,10 @@ public class FacultyHistoryActivity extends Activity {
             return;
         }
 
+        SQLiteDatabase db = null;
+
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db = dbHelper.getWritableDatabase();
             db.beginTransaction();
 
             // Update inquiry status
@@ -500,9 +568,10 @@ public class FacultyHistoryActivity extends Activity {
                 studentNotification.put("description", "Faculty updated response to '" + newResponse +
                         "' for your inquiry: " + subject);
                 studentNotification.put("timestamp", System.currentTimeMillis());
-                studentNotification.put("read_status", 0);
+                studentNotification.put("read_status", 0); // Mark as unread
+                studentNotification.put("inquiry_id", inquiryId); // Link to original inquiry
 
-                db.insert("transactions", null, studentNotification);
+                long studentNotifyResult = db.insert("transactions", null, studentNotification);
 
                 // Record faculty re-response in faculty's history
                 ContentValues facultyTransaction = new ContentValues();
@@ -513,27 +582,26 @@ public class FacultyHistoryActivity extends Activity {
                 facultyTransaction.put("timestamp", System.currentTimeMillis());
                 facultyTransaction.put("inquiry_id", inquiryId);
 
-                db.insert("transactions", null, facultyTransaction);
+                long facultyTransResult = db.insert("transactions", null, facultyTransaction);
 
-                db.setTransactionSuccessful();
-                Toast.makeText(this, "Response updated to " + newResponse, Toast.LENGTH_SHORT).show();
-                loadHistory(currentFilter.equals("All") ? null : currentFilter);
-
+                if (studentNotifyResult != -1 && facultyTransResult != -1) {
+                    db.setTransactionSuccessful();
+                    Toast.makeText(this, "Response updated to " + newResponse, Toast.LENGTH_SHORT).show();
+                    loadHistory(currentFilter.equals("All") ? null : currentFilter);
+                } else {
+                    Toast.makeText(this, "Error recording transaction", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Error updating response", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error updating response: Inquiry not found", Toast.LENGTH_SHORT).show();
             }
-
         } catch (Exception e) {
             Log.e(TAG, "Error re-responding to inquiry: " + e.getMessage(), e);
-            Toast.makeText(this, "Error updating response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error updating response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         } finally {
-            try {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
+            if (db != null) {
                 if (db.inTransaction()) {
                     db.endTransaction();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -545,8 +613,10 @@ public class FacultyHistoryActivity extends Activity {
             return;
         }
 
+        SQLiteDatabase db = null;
+
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db = dbHelper.getWritableDatabase();
             db.beginTransaction();
 
             // Update document status
@@ -561,12 +631,12 @@ public class FacultyHistoryActivity extends Activity {
                 ContentValues studentNotification = new ContentValues();
                 studentNotification.put("user_id", studentId);
                 studentNotification.put("action_type", "Document Status Update");
-                studentNotification.put("description", "Document status updated to '" + newStatus +
-                        "' for: " + documentName);
+                studentNotification.put("description", "Your document '" + documentName +
+                        "' has been " + newStatus.toLowerCase());
                 studentNotification.put("timestamp", System.currentTimeMillis());
-                studentNotification.put("read_status", 0);
+                studentNotification.put("read_status", 0); // Mark as unread
 
-                db.insert("transactions", null, studentNotification);
+                long studentNotifyResult = db.insert("transactions", null, studentNotification);
 
                 // Record faculty re-response in faculty's history
                 ContentValues facultyTransaction = new ContentValues();
@@ -576,27 +646,26 @@ public class FacultyHistoryActivity extends Activity {
                         "' status to " + newStatus);
                 facultyTransaction.put("timestamp", System.currentTimeMillis());
 
-                db.insert("transactions", null, facultyTransaction);
+                long facultyTransResult = db.insert("transactions", null, facultyTransaction);
 
-                db.setTransactionSuccessful();
-                Toast.makeText(this, "Document status updated to " + newStatus, Toast.LENGTH_SHORT).show();
-                loadHistory(currentFilter.equals("All") ? null : currentFilter);
-
+                if (studentNotifyResult != -1 && facultyTransResult != -1) {
+                    db.setTransactionSuccessful();
+                    Toast.makeText(this, "Document status updated to " + newStatus, Toast.LENGTH_SHORT).show();
+                    loadHistory(currentFilter.equals("All") ? null : currentFilter);
+                } else {
+                    Toast.makeText(this, "Error recording transaction", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error updating document status: Document not found", Toast.LENGTH_SHORT).show();
             }
-
         } catch (Exception e) {
             Log.e(TAG, "Error re-responding to document: " + e.getMessage(), e);
-            Toast.makeText(this, "Error updating document status", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error updating document status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         } finally {
-            try {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
+            if (db != null) {
                 if (db.inTransaction()) {
                     db.endTransaction();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -649,7 +718,7 @@ public class FacultyHistoryActivity extends Activity {
                     String studentName = cursor.getString(3);
 
                     additionalInfo.append("Document: ").append(docName).append("\n");
-                    additionalInfo.append("Type: ").append(docType).append("\n");
+                    additionalInfo.append("Type: ").append(docType != null ? docType : "Unknown").append("\n");
                     additionalInfo.append("Current Status: ").append(currentStatus).append("\n");
                     additionalInfo.append("Student: ").append(studentName);
                 }

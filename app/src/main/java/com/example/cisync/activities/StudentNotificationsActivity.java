@@ -72,10 +72,7 @@ public class StudentNotificationsActivity extends Activity {
                 int transactionId = transactionIds.get(position);
                 String actionType = actionTypes.get(position);
 
-                // Mark as read
-                markAsRead(transactionId, position);
-
-                // Show notification details
+                // Show notification details (markAsRead is now called inside this method)
                 showNotificationDetails(transactionId, actionType);
             }
         });
@@ -189,6 +186,35 @@ public class StudentNotificationsActivity extends Activity {
     }
 
     private void showNotificationDetails(int transactionId, String actionType) {
+        // First, mark as read immediately before showing details
+        boolean wasUnread = markAsRead(transactionId);
+
+        // Update UI if it was previously unread
+        if (wasUnread) {
+            // Find the position of this transaction in our list
+            int position = transactionIds.indexOf(transactionId);
+            if (position >= 0 && position < readStatuses.size()) {
+                // Update the status in our local list
+                readStatuses.set(position, false);
+
+                // Update the display text to remove the NEW indicator
+                if (position < notifications.size()) {
+                    String currentText = notifications.get(position);
+                    // Remove the 🔴 NEW indicator from the text
+                    if (currentText.contains(" 🔴 NEW")) {
+                        String updatedText = currentText.replace(" 🔴 NEW", "");
+                        notifications.set(position, updatedText);
+                    }
+                }
+
+                // Notify the adapter to refresh this item
+                adapter.notifyDataSetChanged();
+
+                // Update the unread count in the UI
+                updateUnreadCount();
+            }
+        }
+
         try {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -246,17 +272,9 @@ public class StudentNotificationsActivity extends Activity {
             tvNotificationDescription.setText(description);
             tvNotificationTime.setText(formatTimestamp(timestamp));
 
-            // Check if this notification is unread
-            int position = transactionIds.indexOf(transactionId);
-            boolean isUnread = position >= 0 && position < readStatuses.size() && readStatuses.get(position);
-
-            if (isUnread) {
-                vUnreadIndicator.setVisibility(View.VISIBLE);
-                btnMarkAsRead.setVisibility(View.VISIBLE);
-            } else {
-                vUnreadIndicator.setVisibility(View.GONE);
-                btnMarkAsRead.setVisibility(View.GONE);
-            }
+            // Hide unread indicator and mark as read button since we already marked it as read
+            vUnreadIndicator.setVisibility(View.GONE);
+            btnMarkAsRead.setVisibility(View.GONE);
 
             // Configure dialog based on notification type
             switch (actionType) {
@@ -289,14 +307,7 @@ public class StudentNotificationsActivity extends Activity {
                     break;
             }
 
-            // Set click listeners
-            btnMarkAsRead.setOnClickListener(v -> {
-                markAsRead(transactionId, position);
-                vUnreadIndicator.setVisibility(View.GONE);
-                btnMarkAsRead.setVisibility(View.GONE);
-                Toast.makeText(this, "Marked as read", Toast.LENGTH_SHORT).show();
-            });
-
+            // Set close button listener
             btnDialogClose.setOnClickListener(v -> dialog.dismiss());
 
             // Show dialog
@@ -353,6 +364,7 @@ public class StudentNotificationsActivity extends Activity {
             tvAdditionalInfo.setText("📤 Your inquiry has been sent successfully. You will be notified when the faculty responds.");
         }
     }
+
     private void configureFacultyResponseDialog(View dialogView, String description, long timestamp) {
         ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
         ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
@@ -497,23 +509,6 @@ public class StudentNotificationsActivity extends Activity {
         }
     }
 
-    private void configureFacultyInquiryDialog(View dialogView, String description, long timestamp) {
-        ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
-        ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
-        LinearLayout llAdditionalInfo = dialogView.findViewById(R.id.llAdditionalInfo);
-        ImageView ivAdditionalIcon = dialogView.findViewById(R.id.ivAdditionalIcon);
-        TextView tvAdditionalInfo = dialogView.findViewById(R.id.tvAdditionalInfo);
-
-        // Set icons
-        ivNotificationIcon.setImageResource(R.drawable.notification);
-        ivNotificationTypeIcon.setImageResource(R.drawable.ic_user_w);
-
-        // Show additional information
-        llAdditionalInfo.setVisibility(View.VISIBLE);
-        ivAdditionalIcon.setImageResource(R.drawable.notice_icon);
-        tvAdditionalInfo.setText("❓ Inquiry to faculty sent.");
-    }
-
     private void configureNoticeDialog(View dialogView, String description, long timestamp) {
         ImageView ivNotificationIcon = dialogView.findViewById(R.id.ivNotificationIcon);
         ImageView ivNotificationTypeIcon = dialogView.findViewById(R.id.ivNotificationTypeIcon);
@@ -610,138 +605,50 @@ public class StudentNotificationsActivity extends Activity {
         }
     }
 
-    private void showFacultyResponseDetails(AlertDialog.Builder builder, String description, long timestamp) {
-        builder.setTitle("Faculty Response");
+    /**
+     * Updated markAsRead method to return whether the notification was previously unread
+     * and to properly handle the database transaction
+     */
+    private boolean markAsRead(int transactionId) {
+        boolean wasUnread = false;
+        SQLiteDatabase db = null;
 
-        String responseStatus = "";
-        String subject = "";
-
-        // Parse the description to extract response and subject
-        if (description.contains("'Available'")) {
-            responseStatus = "✅ AVAILABLE";
-        } else if (description.contains("'Unavailable'")) {
-            responseStatus = "❌ UNAVAILABLE";
-        }
-
-        // Extract subject from description
-        if (description.contains("to your inquiry: ")) {
-            subject = description.substring(description.indexOf("to your inquiry: ") + 17);
-        }
-
-        String message = "Response Status: " + responseStatus + "\n\n" +
-                "Inquiry Subject: " + subject + "\n\n" +
-                "Time: " + formatTimestamp(timestamp) + "\n\n";
-
-        if (description.contains("'Available'")) {
-            message += "💡 The faculty member is available for your inquiry. You may proceed to contact them.";
-        } else {
-            message += "ℹ️ The faculty member is currently unavailable. Please try contacting them at a later time.";
-        }
-
-        builder.setMessage(message);
-    }
-
-    private void showDocumentStatusDetails(AlertDialog.Builder builder, String description, long timestamp) {
-        builder.setTitle("Document Status Update");
-
-        String status = "";
-        String documentName = "";
-
-        if (description.contains("has been approved")) {
-            status = "✅ APPROVED";
-        } else if (description.contains("has been rejected")) {
-            status = "❌ REJECTED";
-        }
-
-        // Extract document name
-        if (description.contains("Your document '") && description.contains("' has been")) {
-            int start = description.indexOf("Your document '") + 15;
-            int end = description.indexOf("' has been");
-            if (start > 14 && end > start) {
-                documentName = description.substring(start, end);
-            }
-        }
-
-        String message = "Document: " + documentName + "\n\n" +
-                "Status: " + status + "\n\n" +
-                "Time: " + formatTimestamp(timestamp) + "\n\n";
-
-        if (description.contains("approved")) {
-            message += "🎉 Congratulations! Your document has been approved by the faculty.";
-        } else {
-            message += "📝 Your document was not approved. Please contact the faculty for more details.";
-        }
-
-        builder.setMessage(message);
-    }
-
-    private void showAccountabilityDetails(AlertDialog.Builder builder, String description, long timestamp) {
-        builder.setTitle("New Accountability");
-
-        String message = "A new accountability has been posted:\n\n" +
-                description + "\n\n" +
-                "Time: " + formatTimestamp(timestamp) + "\n\n" +
-                "💰 Please check your Accountabilities section for payment details.";
-
-        builder.setMessage(message);
-    }
-
-    private void showAccountabilityStatusDetails(AlertDialog.Builder builder, String description, long timestamp) {
-        builder.setTitle("Accountability Status Update");
-
-        String status = "";
-        if (description.toLowerCase().contains("paid")) {
-            status = "✅ PAID";
-        } else if (description.toLowerCase().contains("unpaid")) {
-            status = "❌ UNPAID";
-        }
-
-        String message = "Status Update: " + status + "\n\n" +
-                description + "\n\n" +
-                "Time: " + formatTimestamp(timestamp);
-
-        builder.setMessage(message);
-    }
-
-    private void showGenericNotificationDetails(AlertDialog.Builder builder, String actionType, String description, long timestamp) {
-        builder.setTitle("Notification Details");
-
-        String message = "Type: " + actionType + "\n\n" +
-                "Description: " + description + "\n\n" +
-                "Time: " + formatTimestamp(timestamp);
-
-        builder.setMessage(message);
-    }
-
-    private void markAsRead(int transactionId, int position) {
         try {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db = dbHelper.getWritableDatabase();
 
-            ContentValues values = new ContentValues();
-            values.put("read_status", 1);
+            // First check if it's currently unread
+            Cursor cursor = db.rawQuery(
+                    "SELECT read_status FROM transactions WHERE id = ?",
+                    new String[]{String.valueOf(transactionId)}
+            );
 
-            int result = db.update("transactions", values, "id=?",
-                    new String[]{String.valueOf(transactionId)});
-
-            if (result > 0) {
-                // Update local data
-                readStatuses.set(position, false);
-
-                // Refresh the list to update visual appearance
-                adapter.notifyDataSetChanged();
-
-                // Update unread count
-                updateUnreadCount();
+            if (cursor.moveToFirst()) {
+                wasUnread = cursor.getInt(0) == 0;
             }
+            cursor.close();
 
+            // Only update if it was unread
+            if (wasUnread) {
+                ContentValues values = new ContentValues();
+                values.put("read_status", 1);
+
+                db.update("transactions", values, "id=?", new String[]{String.valueOf(transactionId)});
+
+                // No need to reload all notifications, we'll update the UI directly in the calling method
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error marking notification as read: " + e.getMessage(), e);
         }
+
+        return wasUnread;
     }
 
+    /**
+     * Method to update the unread count in the UI
+     */
     private void updateUnreadCount() {
         int unreadCount = 0;
-        for (Boolean isUnread : readStatuses) {
+        for (boolean isUnread : readStatuses) {
             if (isUnread) unreadCount++;
         }
 
