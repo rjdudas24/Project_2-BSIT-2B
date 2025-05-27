@@ -206,6 +206,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_marginBottom="20dp"
+
             android:padding="8dp">
 
             <!--POST NOTICE BUTTON-->
@@ -214,7 +215,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginEnd="32dp">
+                android:layout_marginEnd="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -247,7 +248,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginStart="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -312,7 +314,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginEnd="32dp">
+                android:layout_marginEnd="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -347,7 +349,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginEnd="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -372,7 +375,7 @@
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:src="@drawable/ic_history"
+                        android:src="@drawable/accountabilities"
                         android:alpha="0.8" />
                 </LinearLayout>
             </LinearLayout>
