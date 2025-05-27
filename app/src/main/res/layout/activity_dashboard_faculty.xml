@@ -4,59 +4,32 @@
     android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="@drawable/bg_faculty">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <!-- Header with logout button only -->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp">
 
-            <!-- Back arrow button at the top -->
-            <FrameLayout
-                android:layout_width="322dp"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/bg_white_square" />
-
-                <ImageView
-                    android:id="@+id/imageView6"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="300dp"
-                    android:padding="8dp"
-                    android:src="@drawable/baseline_arrow_back_24" />
-            </FrameLayout>
-
-            <FrameLayout
+            <!-- Logout Button positioned at the end -->
+            <Button
+                android:id="@+id/btnLogoutFaculty"
                 android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/bg_white_square" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/buttonicon" />
-            </FrameLayout>
-        </LinearLayout>
+                android:layout_height="48dp"
+                android:textSize="16sp"
+                android:background="@drawable/logout"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
 
         <!-- CISynC Logo -->
-
         <ImageView
             android:id="@+id/imgLogo"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +56,7 @@
             android:text="Welcome Faculty!"
             android:textColor="@android:color/white"
             android:textSize="28sp"
+            android:fontFamily="@font/saira_bold"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -99,9 +73,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View Notifications"
+                android:text="VIEW NOTIFICATIONS"
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="16sp"
+                android:fontFamily="@font/saira_bold"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -117,9 +92,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Transaction History &amp; Resend"
+                android:text="TRANSACTION HISTORY &amp; RESEND"
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:fontFamily="@font/saira_bold"
                 android:textStyle="bold" />
         </LinearLayout>
 

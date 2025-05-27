@@ -6,80 +6,56 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@drawable/background">
-    <LinearLayout
-        android:layout_width="wrap_content"
+
+    <!-- Header with logout button only -->
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="40dp">
 
-        <!-- BACK BUTTON -->
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/bg_white_square" />
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
-                android:layout_marginRight="300dp"
-                android:src="@drawable/baseline_arrow_back_24" />
-        </FrameLayout>
-
-        <FrameLayout
+        <!-- Logout Button positioned at the end -->
+        <Button
+            android:id="@+id/btnLogoutStudent"
             android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/bg_white_square" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/buttonicon" />
-        </FrameLayout>
-
-    </LinearLayout>
+            android:layout_height="48dp"
+            android:textSize="16sp"
+            android:background="@drawable/logout"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
 
     <!-- Welcome message with username from database -->
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="WELCOME"
+        android:text="WELCOME,"
+        android:fontFamily="@font/saira_bold"
         android:textColor="@color/white"
-        android:textSize="32sp"
+        android:textSize="35sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="-18dp" />
 
+    <!-- First Row: Faculty Inquiry and Accountabilities -->
     <TextView
         android:id="@+id/tvUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:fontFamily="@font/saira_semibold_italic"
+        android:gravity="center"
         android:text="[Username]"
         android:textColor="@color/white"
-        android:textSize="26sp"
-        android:gravity="center"
-        android:layout_marginBottom="120dp" />
+        android:textSize="26sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         android:padding="16dp">
 
@@ -98,8 +74,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_marginBottom="5dp"
-                />
+                android:layout_marginBottom="5dp" />
 
             <LinearLayout
                 android:id="@+id/layoutFacultyInquiry"
@@ -112,7 +87,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="70dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="7dp"
                     android:src="@drawable/inquiry_icon" />
@@ -150,6 +125,103 @@
                     android:layout_marginTop="7dp"
                     android:src="@drawable/accountabilities_icon" />
             </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Second Row: View Notices and Notifications -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!--VIEW NOTICES BUTTON-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginEnd="125dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIEW NOTICES"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutViewNotices"
+                android:layout_width="85dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_submit_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:src="@drawable/notice_icon" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--NOTIFICATIONS BUTTON (using emoji)-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOTIFICATIONS"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="5dp" />
+
+            <FrameLayout
+                android:layout_width="85dp"
+                android:layout_height="80dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutViewNotifications"
+                    android:layout_width="85dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/bg_submit_btn"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/notification"
+                        android:layout_marginTop="7dp"/>
+                </LinearLayout>
+
+                <!-- Notification badge using simple color -->
+                <TextView
+                    android:id="@+id/tvNotificationBadge"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="#FF4444"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

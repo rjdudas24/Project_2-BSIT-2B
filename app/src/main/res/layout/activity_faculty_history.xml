@@ -33,9 +33,77 @@
         android:text="TRANSACTION HISTORY"
         android:translationY="5dp"
         android:textSize="20sp"
+        android:fontFamily="@font/saira_bold"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:layout_gravity="center_horizontal"/>
+
+    <!-- Filter controls container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/list_view_border"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter: "
+            android:fontFamily="@font/saira_bold"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerFilter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnApplyFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="APPLY"
+            android:textSize="12sp"
+            android:fontFamily="@font/saira_bold"
+            android:layout_marginStart="8dp"
+            android:background="@color/dark_blue"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnClearFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CLEAR"
+            android:fontFamily="@font/saira_bold"
+            android:textSize="12sp"
+            android:layout_marginStart="4dp"
+            android:background="@color/dark_blue"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <!-- Info text -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📤 Resendable items are marked with an arrow. Tap to view details or resend."
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:fontFamily="@font/saira_semibold"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="8dp"
+        android:textStyle="italic" />
+
     <!-- Content area -->
     <LinearLayout
         android:layout_width="wrap_content"
@@ -45,7 +113,7 @@
         android:background="@drawable/bg_border_box"
         android:orientation="vertical"
         android:padding="24dp"
-        android:translationY="34dp">
+        android:translationY="10dp">
 
         <ListView
             android:id="@+id/lvHistory"
@@ -53,107 +121,8 @@
             android:layout_height="match_parent"
             android:scrollbarThumbVertical="@drawable/scrollbar_white_thumb"
             android:scrollbarTrackVertical="@android:color/transparent"
-            android:scrollbarSize="5dp" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/tvApplicationTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Application Details"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="16dp" />
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="1">
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:padding="4dp"
-                android:text="Name:" />
-            <TextView
-                android:id="@+id/tvStudentName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:padding="4dp"
-                android:text="Email:" />
-            <TextView
-                android:id="@+id/tvStudentEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:padding="4dp"
-                android:text="Department:" />
-            <TextView
-                android:id="@+id/tvDepartment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:padding="4dp"
-                android:text="Organization:" />
-            <TextView
-                android:id="@+id/tvOrgName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp" />
-        </TableRow>
-    </TableLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Verify that the user belongs to the department before approving."
-        android:textStyle="italic"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/btnApprove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Approve"
-            android:layout_marginEnd="8dp"
-            android:backgroundTint="#4CAF50" />
-
-        <Button
-            android:id="@+id/btnReject"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reject"
-            android:backgroundTint="#F44336" />
+            android:scrollbarSize="5dp"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp" />
     </LinearLayout>
 </LinearLayout>

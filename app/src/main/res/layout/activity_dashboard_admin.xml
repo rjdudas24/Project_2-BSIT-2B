@@ -2,7 +2,8 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/admin_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,22 +11,43 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvDashboardTitle"
+        <!-- Header with logout button -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Admin Dashboard"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tvDashboardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/saira_bold"
+                android:text="ADMIN DASHBOARD"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:id="@+id/btnLogoutAdmin"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:background="@drawable/logout"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvWelcomeMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/saira_semibold_italic"
             android:text="Welcome, Admin!"
             android:textSize="18sp"
+            android:textColor="@color/white"
             android:layout_marginBottom="24dp" />
 
         <!-- Card for Users (Combined Student and Faculty Rosters) -->
@@ -41,21 +63,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_user"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Users Icon" />
+                    android:contentDescription="Users Icon"
+                    android:src="@drawable/ic_user"
+                    app:tint="#002549" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/saira_bold"
                     android:text="Users"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -71,25 +97,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_verify"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Verify Icon" />
+                    android:contentDescription="Verify Icon"
+                    app:tint="#002549"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Verify User Applications"
+                    android:text="Verify User Registrations"
+                    android:fontFamily="@font/saira_bold"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card for Transaction History -->
+        <!-- Card for Login History -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLoginHistory"
             android:layout_width="match_parent"
@@ -102,23 +132,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_history"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Transaction Icon" />
+                    android:contentDescription="Login History Icon"
+                    app:tint="#002549"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Log-in History"
+                    android:fontFamily="@font/saira_bold"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>\
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Card for Transaction History -->
         <com.google.android.material.card.MaterialCardView
@@ -133,21 +167,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_submit_btn">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_history"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="Transaction Icon" />
+                    android:contentDescription="Transaction Icon"
+                    app:tint="#002549"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/saira_bold"
                     android:text="Transaction History"
                     android:textSize="16sp"
-                    android:layout_marginStart="16dp" />
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/darker_blue"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

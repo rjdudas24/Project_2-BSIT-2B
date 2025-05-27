@@ -37,17 +37,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pending Applications"
+            android:fontFamily="@font/saira_bold"
+            android:text="PENDING REGISTRATIONS"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
             android:layout_marginStart="16dp"/>
     </LinearLayout>
 
     <!-- Student Applications Section -->
     <TextView
         android:id="@+id/tvStudentHeader"
-        android:text="Student Applications (0)"
+        android:text="Student Registrations (0)"
+        android:fontFamily="@font/saira_bold"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:layout_marginBottom="8dp"
@@ -61,12 +62,15 @@
         android:layout_weight="1"
         android:background="@drawable/list_view_border"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/saira_semibold"/>
 
     <!-- Faculty Applications Section -->
     <TextView
         android:id="@+id/tvFacultyHeader"
-        android:text="Faculty Applications (0)"
+        android:text="Faculty Registrations (0)"
+        android:fontFamily="@font/saira_bold"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:layout_marginTop="16dp"
@@ -81,6 +85,8 @@
         android:layout_weight="1"
         android:background="@drawable/list_view_border"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/saira_semibold"/>
 
 </LinearLayout>

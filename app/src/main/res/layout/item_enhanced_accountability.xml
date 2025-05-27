@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#102447">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Main fee information row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvFeeName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fee Name"
+                    android:fontFamily="@font/saira_bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₱ 500"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/saira_semibold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Status section -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/ivStatus"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Payment Status" />
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAID"
+                    android:fontFamily="@font/saira_bold"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF"
+            android:alpha="0.3"
+            android:layout_marginVertical="8dp" />
+
+        <!-- Posted by information -->
+        <TextView
+            android:id="@+id/tvPostedBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Posted by: Treasurer Name (Treasurer)"
+            android:textColor="#CCCCCC"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:fontFamily="@font/saira_semibold"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Date information -->
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date: Jan 15, 2024"
+            android:fontFamily="@font/saira_semibold"
+            android:textColor="#CCCCCC"
+            android:textSize="12sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

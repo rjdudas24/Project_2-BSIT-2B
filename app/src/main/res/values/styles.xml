@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomLogoutDialogTheme" parent="Theme.Material3.DayNight.Dialog.Alert">
+        <!-- Title styling -->
+        <item name="android:textColorPrimary">@color/darker_blue</item>
+
+        <!-- Message text color -->
+        <item name="android:textColorSecondary">@color/black</item>
+
+        <!-- Button styling -->
+        <item name="colorPrimary">@color/darker_blue</item>
+
+        <!-- Dialog padding -->
+        <item name="dialogPreferredPadding">24dp</item>
+
+        <!-- Corner radius -->
+        <item name="dialogCornerRadius">12dp</item>
+    </style>
+</resources>

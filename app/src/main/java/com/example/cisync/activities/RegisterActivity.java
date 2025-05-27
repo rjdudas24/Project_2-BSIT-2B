@@ -51,7 +51,11 @@ public class RegisterActivity extends Activity {
 
         setupOrgPositionSpinner();
 
-        findViewById(R.id.imageView6).setOnClickListener(v -> finish());
+        findViewById(R.id.imageView6).setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
+            startActivity(intent);
+            finish(); // Close this activity to prevent it from staying in the background
+        });
 
         // Role toggle logic
         rgRole.setOnCheckedChangeListener((group, checkedId) -> {
@@ -72,7 +76,11 @@ public class RegisterActivity extends Activity {
             }
         });
 
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
+            startActivity(intent);
+            finish(); // Close this activity to prevent it from staying in the background
+        });
 
         cbOrgMember.setVisibility(rbStudent.isChecked() ? View.VISIBLE : View.GONE);
         layoutOrgPosition.setVisibility(View.GONE);
@@ -145,6 +153,7 @@ public class RegisterActivity extends Activity {
                 vals.put("has_org", hasOrg);
                 vals.put("org_role", orgPos);
                 vals.put("verified", 0);
+                vals.put("id_number", idNumber);
 
                 long userId = db.insert("users", null, vals);
                 if (userId != -1) {

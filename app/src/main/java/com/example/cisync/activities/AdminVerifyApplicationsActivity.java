@@ -68,10 +68,10 @@ public class AdminVerifyApplicationsActivity extends Activity {
             dbHelper = new DBHelper(this);
 
             // Initialize adapters
-            studentAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, studentAppList);
+            studentAdapter = new ArrayAdapter<>(this, R.layout.custom_list_item, studentAppList);
             lvStudentApplications.setAdapter(studentAdapter);
 
-            facultyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, facultyAppList);
+            facultyAdapter = new ArrayAdapter<>(this, R.layout.custom_list_item, facultyAppList);
             lvFacultyApplications.setAdapter(facultyAdapter);
         } catch (Exception e) {
             Log.e(TAG, "Error initializing UI components: " + e.getMessage(), e);
@@ -81,14 +81,14 @@ public class AdminVerifyApplicationsActivity extends Activity {
 
     private void setupListeners() {
         lvStudentApplications.setOnItemClickListener((parent, view, position, id) -> {
-            if (!studentAppList.isEmpty() && !studentAppList.get(0).equals("No pending student applications")) {
+            if (!studentAppList.isEmpty() && !studentAppList.get(0).equals("No Pending Student Registrations")) {
                 ApplicationData application = studentApplications.get(position);
                 showStudentApplicationDetailsDialog(application);
             }
         });
 
         lvFacultyApplications.setOnItemClickListener((parent, view, position, id) -> {
-            if (!facultyAppList.isEmpty() && !facultyAppList.get(0).equals("No pending faculty applications")) {
+            if (!facultyAppList.isEmpty() && !facultyAppList.get(0).equals("No Pending Faculty Registrations")) {
                 ApplicationData application = facultyApplications.get(position);
                 showFacultyApplicationDetailsDialog(application);
             }
@@ -118,8 +118,8 @@ public class AdminVerifyApplicationsActivity extends Activity {
             loadFacultyApplications(db);
 
             // Update headers with application counts
-            tvStudentHeader.setText("Student Applications (" + studentApplications.size() + ")");
-            tvFacultyHeader.setText("Faculty Applications (" + facultyApplications.size() + ")");
+            tvStudentHeader.setText("Student Registrations (" + studentApplications.size() + ")");
+            tvFacultyHeader.setText("Faculty Registrations (" + facultyApplications.size() + ")");
 
             // Update adapters
             studentAdapter.notifyDataSetChanged();
@@ -194,7 +194,7 @@ public class AdminVerifyApplicationsActivity extends Activity {
         }
 
         if (studentAppList.isEmpty()) {
-            studentAppList.add("No pending student applications");
+            studentAppList.add("No pending student registrations");
         }
     }
 
@@ -249,7 +249,7 @@ public class AdminVerifyApplicationsActivity extends Activity {
         }
 
         if (facultyAppList.isEmpty()) {
-            facultyAppList.add("No pending faculty applications");
+            facultyAppList.add("No pending faculty registrations");
         }
     }
 
@@ -299,7 +299,7 @@ public class AdminVerifyApplicationsActivity extends Activity {
             Button btnReject = dialogView.findViewById(R.id.btnReject);
 
             // Set text values
-            tvApplicationTitle.setText("Student Application Details");
+            tvApplicationTitle.setText("Student Registration Details");
             tvStudentId.setText(application.getIdNumber() != null && !application.getIdNumber().isEmpty() ?
                     application.getIdNumber() : "Not provided");
             tvStudentName.setText(application.getName());
@@ -346,7 +346,7 @@ public class AdminVerifyApplicationsActivity extends Activity {
             Button btnReject = dialogView.findViewById(R.id.btnReject);
 
             // Set text values
-            tvApplicationTitle.setText("Faculty Application Details");
+            tvApplicationTitle.setText("Faculty Registration Details");
             tvFacultyId.setText(application.getIdNumber() != null && !application.getIdNumber().isEmpty() ?
                     application.getIdNumber() : "Not provided");
             tvFacultyName.setText(application.getName());
@@ -401,12 +401,12 @@ public class AdminVerifyApplicationsActivity extends Activity {
             ContentValues transValues = new ContentValues();
             transValues.put("user_id", application.getUserId());
             transValues.put("action_type", "User Verification");
-            transValues.put("description", "Approved student application for " + application.getName());
+            transValues.put("description", "Approved student registration for " + application.getName());
             transValues.put("timestamp", System.currentTimeMillis());
             db.insert("transactions", null, transValues);
 
             db.setTransactionSuccessful();
-            Toast.makeText(this, "Student application approved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Student Registration Approved", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e(TAG, "Error approving student application: " + e.getMessage(), e);
             Toast.makeText(this, "Error approving application: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -442,12 +442,12 @@ public class AdminVerifyApplicationsActivity extends Activity {
             ContentValues transValues = new ContentValues();
             transValues.put("user_id", application.getUserId());
             transValues.put("action_type", "User Verification");
-            transValues.put("description", "Approved faculty application for " + application.getName());
+            transValues.put("description", "Approved faculty registration for " + application.getName());
             transValues.put("timestamp", System.currentTimeMillis());
             db.insert("transactions", null, transValues);
 
             db.setTransactionSuccessful();
-            Toast.makeText(this, "Faculty application approved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Faculty Registration Approved", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e(TAG, "Error approving faculty application: " + e.getMessage(), e);
             Toast.makeText(this, "Error approving application: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -475,13 +475,13 @@ public class AdminVerifyApplicationsActivity extends Activity {
             ContentValues transValues = new ContentValues();
             transValues.put("user_id", application.getUserId());
             transValues.put("action_type", "User Verification");
-            transValues.put("description", "Rejected " + application.getRole().toLowerCase() + " application for " +
+            transValues.put("description", "Rejected " + application.getRole().toLowerCase() + " registration for " +
                     application.getName());
             transValues.put("timestamp", System.currentTimeMillis());
             db.insert("transactions", null, transValues);
 
             db.setTransactionSuccessful();
-            Toast.makeText(this, "Application rejected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Registration Rejected", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e(TAG, "Error rejecting application: " + e.getMessage(), e);
             Toast.makeText(this, "Error rejecting application: " + e.getMessage(), Toast.LENGTH_SHORT).show();

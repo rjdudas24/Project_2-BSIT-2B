@@ -1,16 +1,27 @@
 package com.example.cisync.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "cisync.db";
     public static final int DB_VERSION = 1;
+    private static final String TAG = "DBHelper";
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+
+        // Call enhancement methods to ensure all required columns exist
+        try {
+            enhanceTransactionsTableIfNeeded();
+            enhanceNoticesTableIfNeeded();
+        } catch (Exception e) {
+            Log.e(TAG, "Error enhancing database tables: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -24,7 +35,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "role TEXT, " +
                 "has_org INTEGER DEFAULT 0, " +
                 "org_role TEXT, " +
-                "verified INTEGER DEFAULT 0)");
+                "verified INTEGER DEFAULT 0, " +
+                "id_number TEXT)");
 
         // Accountabilities table
         db.execSQL("CREATE TABLE accountabilities (" +
@@ -32,7 +44,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "student_id INTEGER, " +
                 "fee_name TEXT, " +
                 "amount TEXT, " +
-                "status INTEGER)");
+                "status INTEGER DEFAULT 0, " +
+                "posted_by INTEGER, " +
+                "posted_by_name TEXT, " +
+                "posted_by_position TEXT, " +
+                "target_type TEXT DEFAULT 'ALL', " +
+                "created_at INTEGER DEFAULT (strftime('%s','now') * 1000), " +
+                "FOREIGN KEY (student_id) REFERENCES users(id), " +
+                "FOREIGN KEY (posted_by) REFERENCES users(id))");
 
         // Documents table
         db.execSQL("CREATE TABLE documents (" +
@@ -44,20 +63,28 @@ public class DBHelper extends SQLiteOpenHelper {
                 "created_by TEXT, " +
                 "timestamp TEXT)");
 
-        // Notices table
+        // Notices table - with enhanced columns
         db.execSQL("CREATE TABLE notices (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "student_id INTEGER, " +
-                "content TEXT)");
+                "content TEXT, " +
+                "timestamp TEXT, " +
+                "title TEXT, " +
+                "target_type TEXT DEFAULT 'ALL', " +
+                "target_student_id INTEGER DEFAULT NULL, " +
+                "posted_by_name TEXT, " +
+                "posted_by_position TEXT)");
 
-        // Transactions table
+        // Transactions table - with enhanced columns
         db.execSQL("CREATE TABLE transactions (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "user_id INTEGER, " +
                 "action_type TEXT, " +
                 "description TEXT, " +
                 "timestamp LONG, " +
-                "read_status INTEGER DEFAULT 0)");
+                "read_status INTEGER DEFAULT 0, " +
+                "inquiry_id INTEGER DEFAULT NULL, " +
+                "FOREIGN KEY (inquiry_id) REFERENCES faculty_inquiries(id))");
 
         // Applications table - for the approval system
         db.execSQL("CREATE TABLE applications (" +
@@ -72,13 +99,25 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE faculty_inquiries (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "student_id INTEGER NOT NULL, " +
+                "faculty_id INTEGER NOT NULL, " +
                 "faculty_name TEXT NOT NULL, " +
                 "department TEXT NOT NULL, " +
                 "subject TEXT NOT NULL, " +
                 "description TEXT NOT NULL, " +
-                "status TEXT NOT NULL, " +
-                "created_at TEXT NOT NULL, " +
-                "FOREIGN KEY (student_id) REFERENCES users(id))");
+                "status TEXT NOT NULL DEFAULT 'Pending', " +
+                "created_at INTEGER NOT NULL, " +
+                "response_time INTEGER DEFAULT NULL, " +
+                "FOREIGN KEY (student_id) REFERENCES users(id), " +
+                "FOREIGN KEY (faculty_id) REFERENCES users(id))");
+
+        // Login History table
+        db.execSQL("CREATE TABLE IF NOT EXISTS login_history (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER, " +
+                "login_time INTEGER, " +
+                "logout_time INTEGER, " +
+                "device_info TEXT, " +
+                "FOREIGN KEY (user_id) REFERENCES users(id))");
 
         // Default admin account
         db.execSQL("INSERT INTO users (name, email, password, role, has_org, org_role, verified) VALUES " +
@@ -93,27 +132,181 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS notices");
         db.execSQL("DROP TABLE IF EXISTS transactions");
         db.execSQL("DROP TABLE IF EXISTS applications");
+        db.execSQL("DROP TABLE IF EXISTS faculty_inquiries");
+        db.execSQL("DROP TABLE IF EXISTS login_history");
         onCreate(db);
     }
 
+    /**
+     * Enhances the transactions table to ensure it has all required columns for the re-response system.
+     * This method adds read_status and inquiry_id columns if they don't exist.
+     */
+    public void enhanceTransactionsTableIfNeeded() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            // Check if transactions table exists
+            Cursor cursor = db.rawQuery(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='transactions'",
+                    null
+            );
+
+            if (cursor.getCount() > 0) {
+                cursor.close();
+
+                // Check existing columns
+                cursor = db.rawQuery("PRAGMA table_info(transactions)", null);
+                boolean hasReadStatus = false;
+                boolean hasInquiryId = false;
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        int nameIndex = cursor.getColumnIndex("name");
+                        if (nameIndex >= 0) { // Check if column exists before using index
+                            String columnName = cursor.getString(nameIndex);
+                            if ("read_status".equals(columnName)) hasReadStatus = true;
+                            if ("inquiry_id".equals(columnName)) hasInquiryId = true;
+                        }
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+
+                // Add missing columns only if they don't exist
+                if (!hasReadStatus) {
+                    db.execSQL("ALTER TABLE transactions ADD COLUMN read_status INTEGER DEFAULT 0");
+                    Log.d(TAG, "Added read_status column to transactions table");
+                }
+                if (!hasInquiryId) {
+                    db.execSQL("ALTER TABLE transactions ADD COLUMN inquiry_id INTEGER DEFAULT NULL");
+                    Log.d(TAG, "Added inquiry_id column to transactions table");
+                }
+
+            } else {
+                // Table doesn't exist, create it with enhanced structure
+                cursor.close();
+                db.execSQL("CREATE TABLE transactions (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "user_id INTEGER, " +
+                        "action_type TEXT, " +
+                        "description TEXT, " +
+                        "timestamp LONG, " +
+                        "read_status INTEGER DEFAULT 0, " +
+                        "inquiry_id INTEGER DEFAULT NULL, " +
+                        "FOREIGN KEY (inquiry_id) REFERENCES faculty_inquiries(id))");
+                Log.d(TAG, "Created enhanced transactions table");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error enhancing transactions table: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Enhances the notices table to ensure it has all required columns.
+     * Adds title, target_type, target_student_id, posted_by_name, and posted_by_position
+     * columns if they don't exist.
+     */
+    public void enhanceNoticesTableIfNeeded() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            // Check if notices table exists
+            Cursor cursor = db.rawQuery(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='notices'",
+                    null
+            );
+
+            if (cursor.getCount() > 0) {
+                cursor.close();
+
+                // Check existing columns - FIXED getColumnIndex issue
+                cursor = db.rawQuery("PRAGMA table_info(notices)", null);
+                boolean hasTitle = false;
+                boolean hasTargetType = false;
+                boolean hasPostedBy = false;
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        int nameIndex = cursor.getColumnIndex("name");
+                        if (nameIndex >= 0) { // Check if column exists before using index
+                            String columnName = cursor.getString(nameIndex);
+                            if ("title".equals(columnName)) hasTitle = true;
+                            if ("target_type".equals(columnName)) hasTargetType = true;
+                            if ("posted_by_name".equals(columnName)) hasPostedBy = true;
+                        }
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+
+                // Add missing columns only if they don't exist
+                if (!hasTitle) {
+                    db.execSQL("ALTER TABLE notices ADD COLUMN title TEXT");
+                    Log.d(TAG, "Added title column to notices table");
+                }
+                if (!hasTargetType) {
+                    db.execSQL("ALTER TABLE notices ADD COLUMN target_type TEXT DEFAULT 'ALL'");
+                    db.execSQL("ALTER TABLE notices ADD COLUMN target_student_id INTEGER DEFAULT NULL");
+                    Log.d(TAG, "Added targeting columns to notices table");
+                }
+                if (!hasPostedBy) {
+                    db.execSQL("ALTER TABLE notices ADD COLUMN posted_by_name TEXT");
+                    db.execSQL("ALTER TABLE notices ADD COLUMN posted_by_position TEXT");
+                    Log.d(TAG, "Added posted_by columns to notices table");
+                }
+
+            } else {
+                // Table doesn't exist, create it with enhanced structure
+                cursor.close();
+                db.execSQL("CREATE TABLE notices (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "student_id INTEGER, " +
+                        "content TEXT, " +
+                        "timestamp TEXT, " +
+                        "title TEXT, " +
+                        "target_type TEXT DEFAULT 'ALL', " +
+                        "target_student_id INTEGER DEFAULT NULL, " +
+                        "posted_by_name TEXT, " +
+                        "posted_by_position TEXT)");
+                Log.d(TAG, "Created enhanced notices table");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error enhancing notices table: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Adds sample accountabilities for a student.
+     * Useful for testing purposes.
+     *
+     * @param studentId The ID of the student to add sample accountabilities for.
+     */
     public void addSampleAccountabilities(int studentId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Clear any existing accountabilities for this student
-        db.delete("accountabilities", "student_id = ?", new String[]{String.valueOf(studentId)});
+        try {
+            // Clear any existing accountabilities for this student
+            db.delete("accountabilities", "student_id = ?", new String[]{String.valueOf(studentId)});
 
-        // Add sample data
-        String[] feeNames = {"College Fee", "Fines"};
-        String[] amounts = {"500", "210"};
-        int[] statuses = {1, 0,};  // 1 = paid, 0 = unpaid
+            // Add sample data with org officer information
+            String[] feeNames = {"College Fee", "Fines"};
+            String[] amounts = {"500", "210"};
+            int[] statuses = {1, 0};  // 1 = paid, 0 = unpaid
 
-        for (int i = 0; i < feeNames.length; i++) {
-            db.execSQL(
-                    "INSERT INTO accountabilities (student_id, fee_name, amount, status) VALUES (?, ?, ?, ?)",
-                    new Object[]{studentId, feeNames[i], amounts[i], statuses[i]}
-            );
+            for (int i = 0; i < feeNames.length; i++) {
+                ContentValues values = new ContentValues();
+                values.put("student_id", studentId);
+                values.put("fee_name", feeNames[i]);
+                values.put("amount", amounts[i]);
+                values.put("status", statuses[i]);
+                values.put("posted_by", 1); // Admin posted (sample)
+                values.put("posted_by_name", "Sample Treasurer");
+                values.put("posted_by_position", "Treasurer");
+                values.put("target_type", "ALL");
+                values.put("created_at", System.currentTimeMillis());
+
+                db.insert("accountabilities", null, values);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error adding sample accountabilities: " + e.getMessage(), e);
+        } finally {
+            db.close();
         }
-
-        db.close();
     }
 }
